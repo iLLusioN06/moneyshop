@@ -19,22 +19,21 @@ model User {
   id            String    @id @default(cuid())
   name          String?
   email         String    @unique
-  phone         String    @default("") // Cep telefonu (kayıt zorunlu)
+  phone         String    @default("")
   emailVerified DateTime?
   image         String?
-  password      String? // Hashlenmiş parola (credentials provider için)
-  role          String    @default("USER") // USER | ADMIN | MODERATOR
+  password      String?
+  role          String    @default("USER")
   isActive      Boolean   @default(true)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  // İlişkiler
   accounts     FinancialAccount[]
   categories   Category[]
   budgets      Budget[]
   transactions Transaction[]
   sessions     Session[]
-  accounts_    AuthAccount[] // NextAuth accounts
+  accounts_    AuthAccount[]
 }
 
 model AuthAccount {
@@ -81,8 +80,8 @@ model PendingRegistration {
   name      String
   email     String
   phone     String
-  password  String   // Hashlenmiş parola
-  code      String   // Hashlenmiş SMS kodu (SHA-256)
+  password  String
+  code      String
   expiresAt DateTime
   createdAt DateTime @default(now())
 
@@ -98,7 +97,7 @@ model FinancialAccount {
   id        String   @id @default(cuid())
   userId    String
   name      String
-  type      String   @default("CHECKING") // CHECKING | SAVINGS | CREDIT_CARD | INVESTMENT | CASH | LOAN
+  type      String   @default("CHECKING")
   balance   Float    @default(0)
   currency  String   @default("TRY")
   icon      String?
@@ -120,7 +119,7 @@ model Category {
   name      String
   icon      String   @default("circle")
   color     String   @default("#94a3b8")
-  type      String   @default("EXPENSE") // INCOME | EXPENSE
+  type      String   @default("EXPENSE")
   isDefault Boolean  @default(false)
   createdAt DateTime @default(now())
 
@@ -137,11 +136,11 @@ model Transaction {
   accountId   String
   userId      String
   categoryId  String?
-  type        String   @default("EXPENSE") // INCOME | EXPENSE | TRANSFER
+  type        String   @default("EXPENSE")
   amount      Float
   currency    String   @default("TRY")
   description String?
-  status      String   @default("COMPLETED") // COMPLETED | PENDING | FAILED | CANCELLED
+  status      String   @default("COMPLETED")
   date        DateTime @default(now())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -164,7 +163,7 @@ model Budget {
   amount     Float
   spent      Float     @default(0)
   currency   String    @default("TRY")
-  period     String    @default("MONTHLY") // WEEKLY | MONTHLY | YEARLY
+  period     String    @default("MONTHLY")
   startDate  DateTime  @default(now())
   endDate    DateTime?
   createdAt  DateTime  @default(now())

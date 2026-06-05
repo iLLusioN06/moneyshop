@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { signIn } from "next-auth/react"; // ✅ BUNU EKLEYİN
 import { Button, Input, Card, CardContent } from "@/components/ui";
 import { APP_NAME, ROUTES } from "@/lib/constants";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
@@ -24,30 +25,21 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      // SMS kodu göndermek için API'yi çağır
-      const res = await fetch("/api/auth/send-login-code", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
+      // ✅ DOĞRUDAN NextAuth İLE GİRİŞ YAP - SMS ATLA
+      const result = await signIn("credentials", {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || "Giriş yapılırken bir hata oluştu.");
+      if (result?.error) {
+        setError("E-posta veya şifre hatalı.");
         setIsLoading(false);
         return;
       }
 
-      // SMS doğrulama için bilgileri sessionStorage'da sakla
-      sessionStorage.setItem("pending_email", formData.email);
-      sessionStorage.setItem("pending_password", formData.password);
-
-      // SMS doğrulama sayfasına yönlendir
-      router.push(`/verify-sms?phone=${encodeURIComponent(data.phone)}&mode=login`);
+      // ✅ BAŞARILI GİRİŞ - DASHBOARD'A YÖNLENDİR
+      router.push("/dashboard");
       router.refresh();
     } catch {
       setError("Bir hata oluştu. Lütfen tekrar deneyin.");
