@@ -670,14 +670,14 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
             <div className="nav-type-menu">
               <button
                 className={`nav-type-link${activeType === "individual" ? " active" : ""}`}
-                onClick={() => setActiveType("individual")}
+                onClick={() => { setActiveType("individual"); setActiveSection(null); setActiveSubmenu(null); setActiveService(null); window.scrollTo({ top: 0, behavior: "smooth" }); }}
               >
                 {t(lang, "nav.individual")}
               </button>
               <span className="nav-type-sep">|</span>
               <button
                 className={`nav-type-link${activeType === "corporate" ? " active" : ""}`}
-                onClick={() => setActiveType("corporate")}
+                onClick={() => { setActiveType("corporate"); setActiveSection(null); setActiveSubmenu(null); setActiveService(null); window.scrollTo({ top: 0, behavior: "smooth" }); }}
               >
                 {t(lang, "nav.corporate")}
               </button>
@@ -821,14 +821,14 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
         <div className="mobile-type-menu">
           <button
             className={`nav-type-link${activeType === "individual" ? " active" : ""}`}
-            onClick={() => setActiveType("individual")}
+            onClick={() => { setActiveType("individual"); setActiveSection(null); setActiveSubmenu(null); setActiveService(null); window.scrollTo({ top: 0, behavior: "smooth" }); }}
           >
             {t(lang, "nav.individual")}
           </button>
           <span className="nav-type-sep">|</span>
           <button
             className={`nav-type-link${activeType === "corporate" ? " active" : ""}`}
-            onClick={() => setActiveType("corporate")}
+            onClick={() => { setActiveType("corporate"); setActiveSection(null); setActiveSubmenu(null); setActiveService(null); window.scrollTo({ top: 0, behavior: "smooth" }); }}
           >
             {t(lang, "nav.corporate")}
           </button>
