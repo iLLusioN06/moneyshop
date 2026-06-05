@@ -542,6 +542,11 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
 
   // Intersection Observer for scroll animations + counter animation
   useEffect(() => {
+    // activeType veya activeService değişince önceki animated class'ları temizle
+    document.querySelectorAll(".animate-on-scroll.animated").forEach((el) => {
+      el.classList.remove("animated");
+    });
+
     const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry, index) => {
@@ -595,7 +600,7 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
       observer.disconnect();
       counterObserver.disconnect();
     };
-  }, []);
+  }, [activeType, activeService]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
