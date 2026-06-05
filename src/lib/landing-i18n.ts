@@ -67,6 +67,7 @@ export const messages: Record<Language, NestedMessages> = {
       paymentDistribution: "Ödeme Dağıt",
       cardSolutions: "Kart Çözümleri",
       faq: "SSS",
+      pricing: "Fiyatlandırma",
     },
     hero: {
       badge: "CBI Lisanslı Ödeme Hizmet Sağlayıcı",
@@ -312,6 +313,7 @@ export const messages: Record<Language, NestedMessages> = {
         paymentDistribution: "Distribute Payments",
         cardSolutions: "Card Solutions",
         faq: "FAQ",
+        pricing: "Pricing",
       },
       hero: {
       badge: "CBI Licensed Payment Service Provider",
@@ -557,6 +559,7 @@ export const messages: Record<Language, NestedMessages> = {
         paymentDistribution: "توزيع المدفوعات",
         cardSolutions: "حلول البطاقات",
         faq: "الأسئلة الشائعة",
+        pricing: "التسعير",
       },
       hero: {
       badge: "مزود خدمة دفع مرخص من البنك المركزي العراقي",
@@ -800,6 +803,7 @@ export const messages: Record<Language, NestedMessages> = {
         paymentDistribution: "Belavkirina Dayînan",
         cardSolutions: "Çareseriyên Kartê",
         faq: "Pirsên Pir Pir tên Pirsîn",
+        pricing: "Biha",
       },
       hero: {
       badge: "Pêşkêşkarê Karûbarê Dayînê yê Destûrdar ê BHI",
@@ -1043,6 +1047,7 @@ export const messages: Record<Language, NestedMessages> = {
         paymentDistribution: "Distribuer les paiements",
         cardSolutions: "Solutions de cartes",
         faq: "FAQ",
+        pricing: "Tarifs",
       },
       hero: {
       badge: "Prestataire de services de paiement agréé par la BCI",
@@ -1286,6 +1291,7 @@ export const messages: Record<Language, NestedMessages> = {
         paymentDistribution: "Распределять платежи",
         cardSolutions: "Карточные решения",
         faq: "Часто задаваемые вопросы",
+        pricing: "Цены",
       },
       hero: {
       badge: "Лицензированный поставщик платежных услуг CBI",

@@ -805,7 +805,10 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
                   <a href="#roadmap">{t(lang, "nav.roadmap")}</a>
                 </li>
                 <li>
-                  <a href="#tech">{t(lang, "nav.technology")}</a>
+                  <a href="/pricing">{t(lang, "nav.pricing")}</a>
+                </li>
+                <li>
+                  <a href="/faq">{t(lang, "nav.faq")}</a>
                 </li>
               </>
             )}
@@ -880,8 +883,11 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
             <a href="#roadmap" onClick={closeMenu}>
               {t(lang, "nav.roadmap")}
             </a>
-            <a href="#tech" onClick={closeMenu}>
-              {t(lang, "nav.technology")}
+            <a href="/pricing" onClick={closeMenu}>
+              {t(lang, "nav.pricing")}
+            </a>
+            <a href="/faq" onClick={closeMenu}>
+              {t(lang, "nav.faq")}
             </a>
           </>
         )}
@@ -1020,7 +1026,7 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
                         <div className="phone-action-icon">
                           <i className="fas fa-ellipsis-h" />
                         </div>
-                        <div className="phone-action-label">{t(lang, "features.phoneMore")}</div>
+                        <div className="phone-action-label">{""}</div>
                       </div>
                     </div>
                     <div className="phone-recent">{t(lang, "features.phoneRecent")}</div>
@@ -1206,9 +1212,9 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
                         </div>
                         <h3>{t(lang, "services.fastTitle")}</h3>
                         <p>{t(lang, "services.fastDesc")}</p>
-                        <button type="button" className="service-link" onClick={(e) => handleServiceClick(e, "fast")}>
-                          {t(lang, "services.learnMore")} <i className="fas fa-arrow-right" />
-                        </button>
+                                                <button type="button" className="service-link" onClick={(e) => handleServiceClick(e, "fast")}>
+                                                  <i className="fas fa-arrow-right" />
+                                                </button>
                       </div>
                       <div className="service-card" onClick={(e) => handleServiceClick(e, "eft")}>
                         <div className="service-icon cyan">
@@ -1216,9 +1222,9 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
                         </div>
                         <h3>{t(lang, "services.eftTitle")}</h3>
                         <p>{t(lang, "services.eftDesc")}</p>
-                        <button type="button" className="service-link" onClick={(e) => handleServiceClick(e, "eft")}>
-                          {t(lang, "services.learnMore")} <i className="fas fa-arrow-right" />
-                        </button>
+                                                <button type="button" className="service-link" onClick={(e) => handleServiceClick(e, "eft")}>
+                                                  <i className="fas fa-arrow-right" />
+                                                </button>
                       </div>
                       <div className="service-card" onClick={(e) => handleServiceClick(e, "international")}>
                         <div className="service-icon sky">
@@ -1226,9 +1232,9 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
                         </div>
                         <h3>{t(lang, "services.internationalTitle")}</h3>
                         <p>{t(lang, "services.internationalDesc")}</p>
-                        <button type="button" className="service-link" onClick={(e) => handleServiceClick(e, "international")}>
-                          {t(lang, "services.learnMore")} <i className="fas fa-arrow-right" />
-                        </button>
+                                                <button type="button" className="service-link" onClick={(e) => handleServiceClick(e, "international")}>
+                                                  <i className="fas fa-arrow-right" />
+                                                </button>
                       </div>
                       <div className="service-card" onClick={(e) => handleServiceClick(e, "iban")}>
                         <div className="service-icon indigo">
@@ -1236,9 +1242,9 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
                         </div>
                         <h3>{t(lang, "services.ibanTitle")}</h3>
                         <p>{t(lang, "services.ibanDesc")}</p>
-                        <button type="button" className="service-link" onClick={(e) => handleServiceClick(e, "iban")}>
-                          {t(lang, "services.learnMore")} <i className="fas fa-arrow-right" />
-                        </button>
+                                                <button type="button" className="service-link" onClick={(e) => handleServiceClick(e, "iban")}>
+                                                  <i className="fas fa-arrow-right" />
+                                                </button>
                       </div>
                       <div className="service-card" onClick={(e) => handleServiceClick(e, "request")}>
                         <div className="service-icon emerald">
@@ -1246,9 +1252,9 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
                         </div>
                         <h3>{t(lang, "services.requestTitle")}</h3>
                         <p>{t(lang, "services.requestDesc")}</p>
-                        <button type="button" className="service-link" onClick={(e) => handleServiceClick(e, "request")}>
-                          {t(lang, "services.learnMore")} <i className="fas fa-arrow-right" />
-                        </button>
+                                                <button type="button" className="service-link" onClick={(e) => handleServiceClick(e, "request")}>
+                                                  <i className="fas fa-arrow-right" />
+                                                </button>
                       </div>
                       <div className="service-card" onClick={(e) => handleServiceClick(e, "secure")}>
                         <div className="service-icon pink">
@@ -1256,9 +1262,9 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
                         </div>
                         <h3>{t(lang, "services.secureTitle")}</h3>
                         <p>{t(lang, "services.secureDesc")}</p>
-                        <button type="button" className="service-link" onClick={(e) => handleServiceClick(e, "secure")}>
-                          {t(lang, "services.learnMore")} <i className="fas fa-arrow-right" />
-                        </button>
+                                                <button type="button" className="service-link" onClick={(e) => handleServiceClick(e, "secure")}>
+                                                  <i className="fas fa-arrow-right" />
+                                                </button>
                       </div>
                     </div>
                   </>
@@ -1266,9 +1272,6 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
                   <>
                     {/* Service Detail */}
                     <div className="service-detail">
-                      <button className="service-back-btn" onClick={handleServiceBack}>
-                        <i className="fas fa-arrow-left" /> {t(lang, "services.learnMore")}
-                      </button>
 
                       {activeService === "fast" && (
                         <div className="service-detail-content">
@@ -1715,9 +1718,6 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
             )}
             {activeSection === "card" && (
               <div className="service-detail">
-                <button className="service-back-btn" onClick={() => { setActiveSection(null); setActiveSubmenu(null); }}>
-                  <i className="fas fa-arrow-left" /> {t(lang, "services.learnMore")}
-                </button>
                 <div style={{display:"flex", gap:60, alignItems:"center"}}>
                   <div style={{flex:1}}>
                     <h2 style={{fontSize:50, fontWeight:800, lineHeight:1.15, marginBottom:20}}>
@@ -2101,9 +2101,6 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
             )}
             {activeSection === "investment" && (
               <div className="service-detail">
-                <button className="service-back-btn" onClick={() => { setActiveSection(null); setActiveSubmenu(null); }}>
-                  <i className="fas fa-arrow-left" /> {t(lang, "services.learnMore")}
-                </button>
                 <div style={{display:"flex", gap:60, alignItems:"center"}}>
                   <div style={{flex:1}}>
                     <h2 style={{fontSize:50, fontWeight:800, lineHeight:1.15, marginBottom:20}}>
@@ -2357,9 +2354,6 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
             )}
             {activeSection === "payment" && (
               <div className="service-detail">
-                <button className="service-back-btn" onClick={() => { setActiveSection(null); setActiveSubmenu(null); }}>
-                  <i className="fas fa-arrow-left" /> {t(lang, "services.learnMore")}
-                </button>
                 <div style={{display:"flex", gap:60, alignItems:"center"}}>
                   <div style={{flex:1}}>
                     <h2 style={{fontSize:50, fontWeight:800, lineHeight:1.15, marginBottom:20}}>
@@ -2613,9 +2607,6 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
             )}
             {activeSection === "physical-payment" && (
               <div className="service-detail">
-                <button className="service-back-btn" onClick={() => { setActiveSection(null); setActiveSubmenu(null); }}>
-                  <i className="fas fa-arrow-left" /> {t(lang, "services.learnMore")}
-                </button>
                 <div style={{display:"flex", gap:60, alignItems:"center"}}>
                   <div style={{flex:1}}>
                     <h2 style={{fontSize:50, fontWeight:800, lineHeight:1.15, marginBottom:20}}>
@@ -2864,9 +2855,6 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
             )}
             {activeSection === "online-payment" && (
               <div className="service-detail">
-                <button className="service-back-btn" onClick={() => { setActiveSection(null); setActiveSubmenu(null); }}>
-                  <i className="fas fa-arrow-left" /> {t(lang, "services.learnMore")}
-                </button>
                 <div style={{display:"flex", gap:60, alignItems:"center"}}>
                   <div style={{flex:1}}>
                     <h2 style={{fontSize:50, fontWeight:800, lineHeight:1.15, marginBottom:20}}>
@@ -3115,9 +3103,6 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
             )}
             {activeSection === "payment-distribution" && (
               <div className="service-detail">
-                <button className="service-back-btn" onClick={() => { setActiveSection(null); setActiveSubmenu(null); }}>
-                  <i className="fas fa-arrow-left" /> {t(lang, "services.learnMore")}
-                </button>
                 <div style={{display:"flex", gap:60, alignItems:"center"}}>
                   <div style={{flex:1}}>
                     <h2 style={{fontSize:50, fontWeight:800, lineHeight:1.15, marginBottom:20}}>
@@ -3366,9 +3351,6 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
             )}
             {activeSection === "card-solutions" && (
               <div className="service-detail">
-                <button className="service-back-btn" onClick={() => { setActiveSection(null); setActiveSubmenu(null); }}>
-                  <i className="fas fa-arrow-left" /> {t(lang, "services.learnMore")}
-                </button>
                 <div style={{display:"flex", gap:60, alignItems:"center"}}>
                   <div style={{flex:1}}>
                     <h2 style={{fontSize:50, fontWeight:800, lineHeight:1.15, marginBottom:20}}>
@@ -3666,7 +3648,7 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
               <h3>{t(lang, "services.posTitle")}</h3>
               <p>{t(lang, "services.posDesc")}</p>
               <a href="#" className="service-link">
-                {t(lang, "services.learnMore")} <i className="fas fa-arrow-right" />
+                <i className="fas fa-arrow-right" />
               </a>
             </div>
             <div className="service-card animate-on-scroll">
@@ -3676,7 +3658,7 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
               <h3>{t(lang, "services.gatewayTitle")}</h3>
               <p>{t(lang, "services.gatewayDesc")}</p>
               <a href="#" className="service-link">
-                {t(lang, "services.learnMore")} <i className="fas fa-arrow-right" />
+                <i className="fas fa-arrow-right" />
               </a>
             </div>
             <div className="service-card animate-on-scroll">
@@ -3686,7 +3668,7 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
               <h3>{t(lang, "services.merchantTitle")}</h3>
               <p>{t(lang, "services.merchantDesc")}</p>
               <a href="#" className="service-link">
-                {t(lang, "services.learnMore")} <i className="fas fa-arrow-right" />
+                <i className="fas fa-arrow-right" />
               </a>
             </div>
             <div className="service-card animate-on-scroll">
@@ -3696,7 +3678,7 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
               <h3>{t(lang, "services.settlementTitle")}</h3>
               <p>{t(lang, "services.settlementDesc")}</p>
               <a href="#" className="service-link">
-                {t(lang, "services.learnMore")} <i className="fas fa-arrow-right" />
+                <i className="fas fa-arrow-right" />
               </a>
             </div>
             <div className="service-card animate-on-scroll">
@@ -3706,7 +3688,7 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
               <h3>{t(lang, "services.bankTitle")}</h3>
               <p>{t(lang, "services.bankDesc")}</p>
               <a href="#" className="service-link">
-                {t(lang, "services.learnMore")} <i className="fas fa-arrow-right" />
+                <i className="fas fa-arrow-right" />
               </a>
             </div>
             <div className="service-card animate-on-scroll">
@@ -3716,7 +3698,7 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
               <h3>{t(lang, "services.linksTitle")}</h3>
               <p>{t(lang, "services.linksDesc")}</p>
               <a href="#" className="service-link">
-                {t(lang, "services.learnMore")} <i className="fas fa-arrow-right" />
+                <i className="fas fa-arrow-right" />
               </a>
             </div>
           </div>
@@ -3736,7 +3718,7 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
               <h3>{t(lang, "services.fastTitle")}</h3>
               <p>{t(lang, "services.fastDesc")}</p>
               <a href="#" className="service-link">
-                {t(lang, "services.learnMore")} <i className="fas fa-arrow-right" />
+                <i className="fas fa-arrow-right" />
               </a>
             </div>
             <div className="service-card animate-on-scroll">
@@ -3746,7 +3728,7 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
               <h3>{t(lang, "services.eftTitle")}</h3>
               <p>{t(lang, "services.eftDesc")}</p>
               <a href="#" className="service-link">
-                {t(lang, "services.learnMore")} <i className="fas fa-arrow-right" />
+                <i className="fas fa-arrow-right" />
               </a>
             </div>
             <div className="service-card animate-on-scroll">
@@ -3756,7 +3738,7 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
               <h3>{t(lang, "services.internationalTitle")}</h3>
               <p>{t(lang, "services.internationalDesc")}</p>
               <a href="#" className="service-link">
-                {t(lang, "services.learnMore")} <i className="fas fa-arrow-right" />
+                <i className="fas fa-arrow-right" />
               </a>
             </div>
             <div className="service-card animate-on-scroll">
@@ -3766,7 +3748,7 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
               <h3>{t(lang, "services.ibanTitle")}</h3>
               <p>{t(lang, "services.ibanDesc")}</p>
               <a href="#" className="service-link">
-                {t(lang, "services.learnMore")} <i className="fas fa-arrow-right" />
+                <i className="fas fa-arrow-right" />
               </a>
             </div>
             <div className="service-card animate-on-scroll">
@@ -3776,7 +3758,7 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
               <h3>{t(lang, "services.requestTitle")}</h3>
               <p>{t(lang, "services.requestDesc")}</p>
               <a href="#" className="service-link">
-                {t(lang, "services.learnMore")} <i className="fas fa-arrow-right" />
+                <i className="fas fa-arrow-right" />
               </a>
             </div>
             <div className="service-card animate-on-scroll">
@@ -3786,7 +3768,7 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
               <h3>{t(lang, "services.secureTitle")}</h3>
               <p>{t(lang, "services.secureDesc")}</p>
               <a href="#" className="service-link">
-                {t(lang, "services.learnMore")} <i className="fas fa-arrow-right" />
+                <i className="fas fa-arrow-right" />
               </a>
             </div>
           </div>
@@ -4125,7 +4107,7 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
                         <div className="phone-action-icon">
                           <i className="fas fa-ellipsis-h" />
                         </div>
-                        <div className="phone-action-label">{t(lang, "features.phoneMore")}</div>
+                        <div className="phone-action-label">{""}</div>
                       </div>
                     </div>
                     <div className="phone-recent">{t(lang, "features.phoneRecent")}</div>

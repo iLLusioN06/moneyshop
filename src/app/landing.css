@@ -175,6 +175,22 @@
   letter-spacing: -0.5px;
 }
 
+.landing-page .logo-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.landing-page .logo-arrow i {
+  font-size: 20px;
+  color: var(--primary);
+  transform: rotate(-90deg);
+}
+
 .landing-page .logo-text span {
   background: inherit;
   -webkit-background-clip: inherit;
@@ -704,7 +720,7 @@
 }
 
 .landing-page .section-content {
-  padding: 80px 0;
+  padding: 120px 0 80px;
 }
 
 .landing-page .section-content .section-container {
@@ -1788,6 +1804,7 @@
 /* Service Detail Page */
 .landing-page .service-detail {
   animation: fadeInUp 0.4s ease;
+  padding-top: 32px;
 }
 
 @keyframes fadeInUp {

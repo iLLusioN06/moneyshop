@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { LANGUAGES, type Language } from "@/lib/landing-i18n";
+import { LANGUAGES, type Language, getLangDir } from "@/lib/landing-i18n";
 import "../landing.css";
 
 type CardTier = "standart" | "silver" | "gold";
@@ -70,7 +70,7 @@ export default function CardApplicationPage() {
   const langMenuRef = useRef<HTMLDivElement>(null);
 
   const currentLang = LANGUAGES.find((l) => l.code === lang) || LANGUAGES[0];
-  const dir = currentLang.dir || "ltr";
+  const dir = getLangDir(lang);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -195,7 +195,8 @@ export default function CardApplicationPage() {
                 <li><a href="/#features">{currentLang.code === "tr" ? "Özellikler" : "Features"}</a></li>
                 <li><a href="/#compliance">{currentLang.code === "tr" ? "Uyumluluk" : "Compliance"}</a></li>
                 <li><a href="/#roadmap">{currentLang.code === "tr" ? "Yol Haritası" : "Roadmap"}</a></li>
-                <li><a href="/#tech">{currentLang.code === "tr" ? "Ücretler" : "Pricing"}</a></li>
+                <li><a href="/pricing">{currentLang.code === "tr" ? "Ücretler" : "Pricing"}</a></li>
+                <li><a href="/faq">{currentLang.code === "tr" ? "SSS" : "FAQ"}</a></li>
               </>
             )}
           </ul>
