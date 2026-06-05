@@ -1,0 +1,156 @@
+// =============================================
+// MoneyShop - Tip Tanımlamaları
+// =============================================
+
+// Kullanıcı Rolleri
+export type UserRole = "USER" | "ADMIN" | "MODERATOR";
+
+// Kullanıcı
+export interface User {
+  id: string;
+  name: string | null;
+  email: string;
+  phone: string;
+  password: string;
+  image: string | null;
+  role: UserRole;
+  emailVerified: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Hesap Türü
+export type AccountType = "CHECKING" | "SAVINGS" | "CREDIT_CARD" | "INVESTMENT" | "CASH" | "LOAN";
+
+// Para Birimi
+export type Currency = "TRY" | "USD" | "EUR" | "GBP" | "CHF" | "XAU" | "BTC" | "ETH";
+
+// Finansal Hesap
+export interface FinancialAccount {
+  id: string;
+  userId: string;
+  name: string;
+  type: AccountType;
+  balance: number;
+  currency: Currency;
+  icon: string | null;
+  color: string | null;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// İşlem Türü
+export type TransactionType = "INCOME" | "EXPENSE" | "TRANSFER";
+
+// İşlem Durumu
+export type TransactionStatus = "COMPLETED" | "PENDING" | "FAILED" | "CANCELLED";
+
+// İşlem Kategorisi
+export interface Category {
+  id: string;
+  userId: string;
+  name: string;
+  icon: string;
+  color: string;
+  type: TransactionType;
+  isDefault: boolean;
+  createdAt: Date;
+}
+
+// İşlem
+export interface Transaction {
+  id: string;
+  accountId: string;
+  userId: string;
+  categoryId: string | null;
+  type: TransactionType;
+  amount: number;
+  currency: Currency;
+  description: string | null;
+  status: TransactionStatus;
+  date: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  // İlişkiler
+  category?: Category;
+  account?: FinancialAccount;
+}
+
+// Bütçe
+export interface Budget {
+  id: string;
+  userId: string;
+  categoryId: string;
+  amount: number;
+  spent: number;
+  currency: Currency;
+  period: "WEEKLY" | "MONTHLY" | "YEARLY";
+  startDate: Date;
+  endDate: Date | null;
+  createdAt: Date;
+  category?: Category;
+}
+
+// Dashboard Özet İstatistikleri
+export interface DashboardSummary {
+  totalBalance: number;
+  totalIncome: number;
+  totalExpense: number;
+  netWorth: number;
+  currency: Currency;
+  incomeChange: number;  // yüzde değişim
+  expenseChange: number; // yüzde değişim
+  balanceChange: number; // yüzde değişim
+  recentTransactions: Transaction[];
+  monthlyData: MonthlyData[];
+  categoryBreakdown: CategoryBreakdown[];
+}
+
+export interface MonthlyData {
+  month: string;
+  income: number;
+  expense: number;
+}
+
+export interface CategoryBreakdown {
+  category: string;
+  color: string;
+  icon: string;
+  amount: number;
+  percentage: number;
+}
+
+// API Yanıt Tipleri
+export interface ApiResponse<T = unknown> {
+  success: boolean;
+  data?: T;
+  error?: string;
+  message?: string;
+}
+
+export interface PaginatedResponse<T> extends ApiResponse<T[]> {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+// Auth Tipleri
+export interface LoginInput {
+  email: string;
+  password: string;
+}
+
+export interface RegisterInput {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export interface AuthResponse {
+  user: Omit<User, "password">;
+  token: string;
+}

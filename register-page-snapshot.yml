@@ -1,0 +1,71 @@
+- generic [box=8,8,913,0]:
+  - generic [active] [box=8,8,0,0]:
+    - generic [ref=e3] [box=105,95,720,359]:
+      - generic [ref=e4] [box=106,96,720,42]:
+        - generic [ref=e5] [box=105,96,92,42]:
+          - navigation [ref=e6] [box=118,109,88,24]:
+            - button "previous" [disabled] [ref=e7] [box=118,109,24,24]:
+              - img "previous" [ref=e8] [box=122,113,16,16]
+            - generic [ref=e10] [box=150,113,24,16]:
+              - generic [ref=e11] [box=150,112,16,18]: 1/
+              - text: "1"
+            - button "next" [disabled] [ref=e12] [box=182,109,24,24]:
+              - img "next" [ref=e13] [box=186,113,16,16]
+          - img [box=190,96,60,42]
+        - generic [ref=e15] [box=652,96,173,42]:
+          - generic [ref=e16] [box=641,109,171,26]:
+            - img [ref=e17] [box=648,115,14,14]
+            - generic "Latest available version is detected (16.2.7)." [ref=e19] [box=666,114,73,16]: Next.js 16.2.7
+            - generic [ref=e20] [box=743,114,60,16]: Turbopack
+          - img [box=599,96,60,42]
+      - generic [ref=e21] [box=105,137,720,317]:
+        - dialog "Runtime Error" [ref=e22] [box=106,138,718,266]:
+          - generic [ref=e25] [box=106,138,718,266]:
+            - generic [ref=e26] [box=118,150,694,90]:
+              - generic [ref=e27] [box=118,150,694,28]:
+                - generic [ref=e29] [box=118,152,106,24]: Runtime Error
+                - generic [ref=e30] [box=716,150,96,28]:
+                  - button "Copy Error Info" [ref=e31] [cursor=pointer] [box=716,150,28,28]:
+                    - img [ref=e32] [box=723,157,14,14]
+                  - button "No related documentation found" [disabled] [ref=e34] [box=750,150,28,28]:
+                    - img [ref=e35] [box=757,157,14,14]
+                  - button "Attach Node.js inspector" [ref=e37] [cursor=pointer] [box=784,150,28,28]:
+                    - img [ref=e38] [box=791,157,14,14]
+              - generic [ref=e47] [box=122,192,690,48]: "Failed to load external module node:util/types: TypeError: Native module not found: node:util/types"
+            - generic [ref=e49] [box=118,256,694,136]:
+              - generic [ref=e50] [box=118,256,694,48]:
+                - paragraph [ref=e51] [box=122,266,105,24]:
+                  - text: Call Stack
+                  - generic [ref=e52] [box=206,268,20,20]: "10"
+                - button "Show 9 ignore-listed frame(s)" [ref=e53] [cursor=pointer] [box=587,264,223,28]:
+                  - text: Show 9 ignore-listed frame(s)
+                  - img [ref=e54] [box=788,270,16,16]
+              - generic [ref=e56] [box=118,304,694,88]:
+                - generic [ref=e57] [box=126,310,678,24]:
+                  - text: module evaluation
+                  - button "Sourcemapping failed. Click to log cause of error." [ref=e58] [cursor=pointer] [box=272,310,24,24]:
+                    - img [ref=e59] [box=276,314,16,16]
+                - text: file:///C:/Users/Mustafa/money-shop/.next/dev/server/edge/chunks/[root-of-the-server]__0ty47po._.js (48:35)
+          - generic [ref=e61] [box=118,410,696,44]: "1"
+          - generic [ref=e62] [box=130,410,672,44]: "2"
+        - contentinfo [ref=e63] [box=106,404,718,49]:
+          - region "Error feedback" [ref=e64] [box=634,417,178,24]:
+            - paragraph [ref=e65] [box=634,418,114,21]:
+              - link "Was this helpful?" [ref=e66] [cursor=pointer] [box=634,419,114,18]:
+                - /url: https://nextjs.org/telemetry#error-feedback
+            - button "Mark as helpful" [ref=e67] [cursor=pointer] [box=756,417,24,24]:
+              - img [ref=e68] [box=760,421,16,16]
+            - button "Mark as not helpful" [ref=e71] [cursor=pointer] [box=788,417,24,24]:
+              - img [ref=e72] [box=793,422,16,16]
+    - generic [ref=e78] [cursor=pointer] [box=20,811,118,32]:
+      - button "Open Next.js Dev Tools" [ref=e79] [box=22,811,32,32]:
+        - img [ref=e80] [box=22,807,40,40]
+      - generic [ref=e83] [box=56,811,80,32]:
+        - button "Open issues overlay" [ref=e84] [box=64,811,42,32]:
+          - generic [ref=e85] [box=64,809,8,36]:
+            - generic [ref=e86] [box=64,797,8,36]: "0"
+            - generic [ref=e87] [box=64,809,8,36]: "1"
+          - generic [ref=e88] [box=74,809,32,36]: Issue
+        - button "Collapse issues badge" [ref=e89] [box=108,815,24,24]:
+          - img [ref=e90] [box=114,821,12,12]
+  - alert [ref=e92] [box=7,-1,1,1]

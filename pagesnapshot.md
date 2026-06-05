@@ -1,0 +1,600 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - link " MoneyShop" [ref=e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e8]: 
+            - generic [ref=e9]: MoneyShop
+          - generic [ref=e10]:
+            - button "Bireysel" [ref=e11] [cursor=pointer]
+            - generic [ref=e12]: "|"
+            - button "Kurumsal" [ref=e13] [cursor=pointer]
+          - generic [ref=e14]:
+            - link "a admin" [ref=e561] [cursor=pointer]:
+              - /url: /dashboard
+              - generic [ref=e562]: a
+              - text: admin
+            - button " Çıkış Yap" [ref=e563] [cursor=pointer]:
+              - generic [ref=e564]: 
+              - text: Çıkış Yap
+            - button "Dil seç" [ref=e18] [cursor=pointer]:
+              - generic [ref=e19]: 
+              - generic [ref=e20]: 🇹🇷
+              - generic [ref=e21]: TR
+              - generic [ref=e22]: 
+        - list [ref=e23]:
+          - listitem [ref=e24]:
+            - link "Hizmetler" [ref=e25] [cursor=pointer]:
+              - /url: "#services"
+          - listitem [ref=e26]:
+            - link "Nasıl Çalışır" [ref=e27] [cursor=pointer]:
+              - /url: "#how-it-works"
+          - listitem [ref=e28]:
+            - link "MoneyShop Card" [ref=e29] [cursor=pointer]:
+              - /url: "#card"
+          - listitem [ref=e30]:
+            - link "Özellikler" [ref=e31] [cursor=pointer]:
+              - /url: "#features"
+          - listitem [ref=e32]:
+            - link "Uyumluluk" [ref=e33] [cursor=pointer]:
+              - /url: "#compliance"
+          - listitem [ref=e34]:
+            - link "Yol Haritası" [ref=e35] [cursor=pointer]:
+              - /url: "#roadmap"
+          - listitem [ref=e36]:
+            - link "Ücretler" [ref=e37] [cursor=pointer]:
+              - /url: "#tech"
+          - listitem [ref=e38]:
+            - link "SSS" [ref=e39] [cursor=pointer]:
+              - /url: "#faq"
+    - generic [ref=e42]:
+      - generic [ref=e43]:
+        - generic [ref=e44]:
+          - generic [ref=e45]: 
+          - text: CBI Lisanslı Ödeme Hizmet Sağlayıcı
+        - heading "Irak'ın Dijital Ödeme Devrimine Güç Veriyoruz" [level=1] [ref=e46]
+        - paragraph [ref=e47]: MoneyShop, Irak ve Kürdistan Bölgesi'ndeki işletmelere fiziksel POS'tan çevrimiçi ödeme geçitlerine kadar güvenli, uyumlu ve sorunsuz ödeme altyapısı sunar.
+        - generic [ref=e48]:
+          - link "Hemen Başvur " [ref=e49] [cursor=pointer]:
+            - /url: "#cta"
+            - text: Hemen Başvur
+            - generic [ref=e50]: 
+          - link " Demoyu İzle" [ref=e51] [cursor=pointer]:
+            - /url: "#"
+            - generic [ref=e52]: 
+            - text: Demoyu İzle
+        - generic [ref=e53]:
+          - generic [ref=e54]:
+            - heading "500" [level=3] [ref=e565]
+            - generic [ref=e56]: + Kullanıcı
+          - generic [ref=e57]:
+            - heading "99.9" [level=3] [ref=e566]
+            - generic [ref=e59]: "% Çalışma Süresi"
+          - generic [ref=e60]:
+            - heading "24" [level=3] [ref=e567]
+            - generic [ref=e62]: /7 Destek
+      - generic:
+        - generic [ref=e63]:
+          - generic [ref=e64]: 
+          - heading "Banka Entegrasyonu" [level=4] [ref=e65]
+          - paragraph [ref=e66]: Güvenli ve hızlı bankacılık işlemleri
+        - generic [ref=e67]:
+          - generic [ref=e68]: 
+          - heading "POS Terminal" [level=4] [ref=e69]
+          - paragraph [ref=e70]: 700+ cihaz ile kesintisiz hizmet
+        - generic [ref=e71]:
+          - generic [ref=e72]: 
+          - heading "Online Ödeme" [level=4] [ref=e73]
+          - paragraph [ref=e74]: Akıllı ödeme geçidi entegrasyonu
+    - generic [ref=e76]:
+      - paragraph [ref=e77]:
+        - generic [ref=e78]: 
+        - text: Irak'ın önde gelen kurumları tarafından güveniliyor
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - generic [ref=e81]: 
+          - text: Irak Merkez Bankası
+        - generic [ref=e82]:
+          - generic [ref=e83]: 
+          - text: KRG Maliye
+        - generic [ref=e84]:
+          - generic [ref=e85]: 
+          - text: Irak Bankaları
+        - generic [ref=e86]:
+          - generic [ref=e87]: 
+          - text: 500+ Tüccar
+    - generic [ref=e89]:
+      - generic [ref=e90]:
+        - paragraph [ref=e91]:
+          - generic [ref=e92]: 
+          - text: Hizmetler
+        - heading "Komple Ödeme Altyapısı" [level=2] [ref=e93]
+        - paragraph [ref=e94]: Irak pazarına özel olarak tasarlanmış, fiziksel POS'tan dijital ödeme geçitlerine kadar uçtan uca ödeme çözümleri.
+      - generic [ref=e95]:
+        - generic [ref=e96]:
+          - generic [ref=e98]: 
+          - heading "Fiziksel POS Terminalleri" [level=3] [ref=e99]
+          - paragraph [ref=e100]: Tüm yerel banka kartlarını destekleyen, mağaza içi ödeme kabulü için son teknoloji POS cihazları.
+          - generic [ref=e101]:
+            - text: Daha Fazla
+            - generic [ref=e102]: 
+        - generic [ref=e103]:
+          - generic [ref=e105]: 
+          - heading "Çevrimiçi Ödeme Geçidi" [level=3] [ref=e106]
+          - paragraph [ref=e107]: Çevrimiçi işletmeniz için kolay API entegrasyonu ile güvenli e-ticaret ödeme işleme.
+          - generic [ref=e108]:
+            - text: Daha Fazla
+            - generic [ref=e109]: 
+        - generic [ref=e110]:
+          - generic [ref=e112]: 
+          - heading "Tüccar Yönetimi" [level=3] [ref=e113]
+          - paragraph [ref=e114]: Komple tüccar kaydı, risk profili oluşturma, komisyon yönetimi ve analitik paneli.
+          - link "Daha Fazla " [ref=e115] [cursor=pointer]:
+            - /url: "#"
+            - text: Daha Fazla
+            - generic [ref=e116]: 
+        - generic [ref=e117]:
+          - generic [ref=e119]: 
+          - heading "Günlük Mutabakat" [level=3] [ref=e120]
+          - paragraph [ref=e121]: Tüccarlara zamanında ödeme sağlayan otomatik günlük mutabakat ve fon yerleşimi.
+          - link "Daha Fazla " [ref=e122] [cursor=pointer]:
+            - /url: "#"
+            - text: Daha Fazla
+            - generic [ref=e123]: 
+        - generic [ref=e124]:
+          - generic [ref=e126]: 
+          - heading "Banka Entegrasyonu" [level=3] [ref=e127]
+          - paragraph [ref=e128]: IQD işlemleri için lisanslı Irak bankalarıyla sorunsuz teknik ve operasyonel entegrasyon.
+          - link "Daha Fazla " [ref=e129] [cursor=pointer]:
+            - /url: "#"
+            - text: Daha Fazla
+            - generic [ref=e130]: 
+        - generic [ref=e131]:
+          - generic [ref=e133]: 
+          - heading "Ödeme Bağlantıları" [level=3] [ref=e134]
+          - paragraph [ref=e135]: Uzaktan tahsilat ve dijital fatura çözümleri için güvenli ödeme bağlantıları oluşturun.
+          - link "Daha Fazla " [ref=e136] [cursor=pointer]:
+            - /url: "#"
+            - text: Daha Fazla
+            - generic [ref=e137]: 
+    - generic [ref=e139]:
+      - generic [ref=e140]:
+        - paragraph [ref=e141]:
+          - generic [ref=e142]: 
+          - text: Nasıl Çalışır
+        - heading "Başlamak için 4 Basit Adım" [level=2] [ref=e143]
+        - paragraph [ref=e144]: Kayıttan ilk ödemenize kadar — onboarding sürecini sorunsuz ve hızlı hale getiriyoruz.
+      - generic [ref=e145]:
+        - generic [ref=e146]:
+          - generic [ref=e147]: "1"
+          - heading "Kayıt ve KYC" [level=3] [ref=e148]
+          - paragraph [ref=e149]: İşletme belgelerinizi gönderin ve güvenli portalımız üzerinden kimlik doğrulamayı tamamlayın.
+        - generic [ref=e150]:
+          - generic [ref=e151]: "2"
+          - heading "Sözleşme İmzala" [level=3] [ref=e152]
+          - paragraph [ref=e153]: Şeffaf komisyon oranları ve şartlarla tüccar sözleşmesini inceleyin ve imzalayın.
+        - generic [ref=e154]:
+          - generic [ref=e155]: "3"
+          - heading "Kurulum ve Entegrasyon" [level=3] [ref=e156]
+          - paragraph [ref=e157]: POS terminalinizi alın veya ödeme geçidi API'mizi web sitenize entegre edin.
+        - generic [ref=e158]:
+          - generic [ref=e159]: "4"
+          - heading "Kabul Etmeye Başla" [level=3] [ref=e160]
+          - paragraph [ref=e161]: Gerçek zamanlı panel takibi ile anında ödeme almaya başlayın.
+    - generic [ref=e164]:
+      - generic [ref=e169]:
+        - paragraph [ref=e170]: Günaydın 👋
+        - paragraph [ref=e171]: Ahmed'in Mağazası
+        - generic [ref=e172]:
+          - paragraph [ref=e173]: Bugünkü Gelir
+          - paragraph [ref=e174]: 1,250,000 IQD
+        - generic [ref=e175]:
+          - generic [ref=e176]:
+            - generic [ref=e178]: 
+            - paragraph [ref=e179]: Tara
+          - generic [ref=e180]:
+            - generic [ref=e182]: 
+            - paragraph [ref=e183]: Havale
+          - generic [ref=e184]:
+            - generic [ref=e186]: 
+            - paragraph [ref=e187]: Raporlar
+          - generic [ref=e188]:
+            - generic [ref=e190]: 
+            - paragraph [ref=e191]: Daha Fazla
+        - paragraph [ref=e192]: Hesap Hareketleri
+        - generic [ref=e193]:
+          - generic [ref=e194]:
+            - generic [ref=e196]: 
+            - generic [ref=e197]:
+              - paragraph [ref=e198]: POS Tahsilat
+              - paragraph [ref=e199]: Bugün, 14:32
+          - paragraph [ref=e200]: +45,000 IQD
+        - generic [ref=e201]:
+          - generic [ref=e202]:
+            - generic [ref=e204]: 
+            - generic [ref=e205]:
+              - paragraph [ref=e206]: FAST Transfer
+              - paragraph [ref=e207]: Bugün, 11:15
+          - paragraph [ref=e208]: "-12,500 IQD"
+      - generic [ref=e209]:
+        - generic [ref=e210]:
+          - paragraph [ref=e211]:
+            - generic [ref=e212]: 
+            - text: MoneyShop?
+          - heading "Neden MoneyShop?" [level=2] [ref=e213]
+          - paragraph [ref=e214]: Irak için inşa edildi, dijital ödemelerin geleceği için tasarlandı.
+        - generic [ref=e215]:
+          - generic [ref=e216]:
+            - generic [ref=e218]: 
+            - generic [ref=e219]:
+              - heading "Gerçek Zamanlı Panel" [level=4] [ref=e220]
+              - paragraph [ref=e221]: Sezgisel tüccar panelimiz aracılığıyla tüm işlemlerinizi, gelirlerinizi ve mutabakatlarınızı gerçek zamanlı izleyin.
+          - generic [ref=e222]:
+            - generic [ref=e224]: 
+            - generic [ref=e225]:
+              - heading "Banka Düzeyinde Güvenlik" [level=4] [ref=e226]
+              - paragraph [ref=e227]: Her işlemi koruyan uçtan uca şifreleme, dolandırıcılık tespiti ve PCI-DSS uyumlu altyapı.
+          - generic [ref=e228]:
+            - generic [ref=e230]: 
+            - generic [ref=e231]:
+              - heading "IQD Yerel İşleme" [level=4] [ref=e232]
+              - paragraph [ref=e233]: Tüm işlemler Irak Dinarı cinsinden işlenir ve yerel banka hesabınıza otomatik yerleşim sağlanır.
+          - generic [ref=e234]:
+            - generic [ref=e236]: 
+            - generic [ref=e237]:
+              - heading "Geliştirici Dostu API" [level=4] [ref=e238]
+              - paragraph [ref=e239]: Mevcut sistemlerinize ve uygulamalarınıza kolay entegrasyon için SDK'lar ile kapsamlı REST API.
+    - generic [ref=e241]:
+      - generic [ref=e242]:
+        - paragraph [ref=e243]:
+          - generic [ref=e244]: 
+          - text: Uyumluluk
+        - heading "Tamamen Düzenlenmiş ve Güvenli" [level=2] [ref=e245]
+        - paragraph [ref=e246]: Tam AML/KYC uyumluluğu ve kurumsal düzeyde güvenlik ile CBI düzenlemeleri altında faaliyet gösteriyoruz.
+      - generic [ref=e247]:
+        - generic [ref=e248]:
+          - generic [ref=e250]: 
+          - heading "KYC / AML Uyumluluğu" [level=3] [ref=e251]
+          - paragraph [ref=e252]: CBI gereklilikleri ve uluslararası standartlarla tam uyumlu Kapsamlı Müşteri Tanıma ve Kara Para Aklamayı Önleme prosedürleri.
+        - generic [ref=e253]:
+          - generic [ref=e255]: 
+          - heading "Veri Şifreleme" [level=3] [ref=e256]
+          - paragraph [ref=e257]: Hassas finansal bilgilerin tam korunmasını sağlayan askeri düzeyde SSL/TLS şifreleme, tokenizasyon ve güvenli veri depolama.
+        - generic [ref=e258]:
+          - generic [ref=e260]: 
+          - heading "İşlem İzleme" [level=3] [ref=e261]
+          - paragraph [ref=e262]: Yapay zeka destekli şüpheli aktivite tespiti, gerçek zamanlı dolandırıcılık izleme ve mevzuat uyumluluğu için kapsamlı denetim izleri.
+    - generic [ref=e264]:
+      - generic [ref=e265]:
+        - paragraph [ref=e266]:
+          - generic [ref=e267]: 
+          - text: Yol Haritası
+        - heading "Büyüme Yolculuğumuz" [level=2] [ref=e268]
+        - paragraph [ref=e269]: Irak'ın en güvenilir ödeme altyapısını oluşturmak için aşamalı bir yaklaşım.
+      - generic [ref=e270]:
+        - generic [ref=e274]:
+          - generic [ref=e275]: 1. Aşama — Temel
+          - heading "Şirket Kurulumu ve Lisanslama" [level=3] [ref=e276]
+          - list [ref=e277]:
+            - listitem [ref=e278]:
+              - generic [ref=e279]: 
+              - text: Irak'ta şirket tescil
+            - listitem [ref=e280]:
+              - generic [ref=e281]: 
+              - text: CBI lisans başvurusu ve onayı
+            - listitem [ref=e282]:
+              - generic [ref=e283]: 
+              - text: Banka ortaklıkları kuruldu
+            - listitem [ref=e284]:
+              - generic [ref=e285]: 
+              - text: Fiziksel POS altyapısı dağıtıldı
+        - generic [ref=e288]:
+          - generic [ref=e289]: 2. Aşama — Dijital Genişleme
+          - heading "Çevrimiçi Platform Lansmanı" [level=3] [ref=e290]
+          - list [ref=e291]:
+            - listitem [ref=e292]:
+              - generic [ref=e293]: 
+              - text: Çevrimiçi ödeme geçidi aktivasyonu
+            - listitem [ref=e294]:
+              - generic [ref=e295]: 
+              - text: Tüccar yönetim platformu
+            - listitem [ref=e296]:
+              - generic [ref=e297]: 
+              - text: Raporlama ve analitik paneli
+            - listitem [ref=e298]:
+              - generic [ref=e299]: 
+              - text: Tüccarlar için mobil uygulama
+        - generic [ref=e302]:
+          - generic [ref=e303]: 3. Aşama — Ölçeklenme ve Genişleme
+          - heading "Bölgesel Büyüme" [level=3] [ref=e304]
+          - list [ref=e305]:
+            - listitem [ref=e306]:
+              - generic [ref=e307]: 
+              - text: Ülke çapında hizmet genişletme
+            - listitem [ref=e308]:
+              - generic [ref=e309]: 
+              - text: Uluslararası ortaklıklar
+            - listitem [ref=e310]:
+              - generic [ref=e311]: 
+              - text: Gelişmiş fintech entegrasyonları
+            - listitem [ref=e312]:
+              - generic [ref=e313]: 
+              - text: Sınır ötesi ödeme yetenekleri
+    - generic [ref=e315]:
+      - generic [ref=e316]:
+        - paragraph [ref=e317]:
+          - generic [ref=e318]: 
+          - text: Ekonomik ve
+        - heading "Ekonomik ve Sosyal Etki" [level=2] [ref=e319]
+        - paragraph [ref=e320]: Irak'ın finansal ekosisteminde olumlu değişim yaratmak.
+      - generic [ref=e321]:
+        - generic [ref=e322]:
+          - generic [ref=e324]: 
+          - heading "Dijital Benimseme" [level=3] [ref=e325]
+          - paragraph [ref=e326]: Iraklı işletmeler ve tüketiciler arasında dijital ödeme benimsenmesini hızlandırmak.
+        - generic [ref=e327]:
+          - generic [ref=e329]: 
+          - heading "Formal Ekonomi" [level=3] [ref=e330]
+          - paragraph [ref=e331]: Şeffaf, izlenebilir dijital işlemler yoluyla kayıt dışı ekonomiyi azaltmak.
+        - generic [ref=e332]:
+          - generic [ref=e334]: 
+          - heading "Hızlı Tahsilat" [level=3] [ref=e335]
+          - paragraph [ref=e336]: İşletmelerin anında ve güvenli bir şekilde ödeme tahsil etmesini sağlamak.
+        - generic [ref=e337]:
+          - generic [ref=e339]: 
+          - heading "Bölgesel Büyüme" [level=3] [ref=e340]
+          - paragraph [ref=e341]: Fintech inovasyonu yoluyla KRG ve Irak'ın ekonomik kalkınmasına katkıda bulunmak.
+    - generic [ref=e343]:
+      - generic [ref=e344]:
+        - paragraph [ref=e345]:
+          - generic [ref=e346]: 
+          - text: Ücretler
+        - heading "Kurumsal Teknoloji Yığını" [level=2] [ref=e347]
+        - paragraph [ref=e348]: Maksimum performans, güvenlik ve ölçeklenebilirlik için son teknoloji ile inşa edildi.
+      - generic [ref=e349]:
+        - button "% Ücretler" [ref=e350] [cursor=pointer]:
+          - generic [ref=e351]: "%"
+          - text: Ücretler
+        - button " Limitler" [ref=e352] [cursor=pointer]:
+          - generic [ref=e353]: 
+          - text: Limitler
+      - generic [ref=e354]:
+        - generic [ref=e355]:
+          - generic [ref=e357]: 
+          - generic [ref=e358]:
+            - generic [ref=e359]: POS Komisyonu
+            - generic [ref=e360]: Fiziksel POS işlemleri için standart komisyon oranı
+          - generic [ref=e361]: "%0.7 - %1.5"
+        - generic [ref=e362]:
+          - generic [ref=e364]: 
+          - generic [ref=e365]:
+            - generic [ref=e366]: Online Ödeme Komisyonu
+            - generic [ref=e367]: Ödeme geçidi üzerinden yapılan işlemler
+          - generic [ref=e368]: "%0.5 - %0.9"
+        - generic [ref=e369]:
+          - generic [ref=e371]: 
+          - generic [ref=e372]:
+            - generic [ref=e373]: FAST Transfer
+            - generic [ref=e374]: 7/24 anında para transferi
+          - generic [ref=e375]: Ücretsiz
+        - generic [ref=e376]:
+          - generic [ref=e378]: 
+          - generic [ref=e379]:
+            - generic [ref=e380]: EFT İşlemleri
+            - generic [ref=e381]: Havale ve EFT gönderimleri
+          - generic [ref=e382]: Ücretsiz
+        - generic [ref=e383]:
+          - generic [ref=e385]: 
+          - generic [ref=e386]:
+            - generic [ref=e387]: Kart Aidatı
+            - generic [ref=e388]: Standart kart yıllık kullanım ücreti
+          - generic [ref=e389]: Ücretsiz
+        - generic [ref=e390]:
+          - generic [ref=e392]: 
+          - generic [ref=e393]:
+            - generic [ref=e394]: Hesap İşletim Ücreti
+            - generic [ref=e395]: Aylık hesap yönetim ücreti
+          - generic [ref=e396]: Ücretsiz
+        - generic [ref=e397]:
+          - generic [ref=e399]: 
+          - generic [ref=e400]:
+            - generic [ref=e401]: Ödeme Linki
+            - generic [ref=e402]: Ödeme linki oluşturma ve gönderme
+          - generic [ref=e403]: "%0.5"
+        - generic [ref=e404]:
+          - generic [ref=e406]: 
+          - generic [ref=e407]:
+            - generic [ref=e408]: Para Çekme
+            - generic [ref=e409]: Bakiyenizi banka hesabınıza çekme
+          - generic [ref=e410]: Ücretsiz
+    - generic [ref=e412]:
+      - generic [ref=e413]:
+        - paragraph [ref=e414]:
+          - generic [ref=e415]: 
+          - text: SSS
+        - heading "SSS" [level=2] [ref=e416]
+        - paragraph [ref=e417]: Sıkça sorulan soruların yanıtlarını burada bulabilirsiniz.
+      - generic [ref=e418]:
+        - generic [ref=e419]:
+          - button "MoneyShop nedir? " [ref=e420] [cursor=pointer]:
+            - generic [ref=e421]: MoneyShop nedir?
+            - generic [ref=e422]: 
+          - paragraph [ref=e423]: MoneyShop, Irak Merkez Bankası (CBI) lisanslı bir ödeme hizmet sağlayıcısıdır. İşletmelere fiziksel POS terminalleri, çevrimiçi ödeme geçidi, ödeme bağlantıları ve tüccar yönetimi gibi uçtan uca ödeme çözümleri sunar.
+        - generic [ref=e424]:
+          - button "Kimler MoneyShop kullanabilir? " [ref=e425] [cursor=pointer]:
+            - generic [ref=e426]: Kimler MoneyShop kullanabilir?
+            - generic [ref=e427]: 
+          - paragraph [ref=e428]: Irak ve Kürdistan Bölgesi'nde faaliyet gösteren tüm işletmeler MoneyShop hizmetlerinden yararlanabilir. Bireysel kullanıcılar için de para transferi, kart ve ödeme işlemleri sunuyoruz.
+        - generic [ref=e429]:
+          - button "POS terminaline nasıl başvurabilirim? " [ref=e430] [cursor=pointer]:
+            - generic [ref=e431]: POS terminaline nasıl başvurabilirim?
+            - generic [ref=e432]: 
+          - paragraph [ref=e433]: Ana sayfamızdaki 'Hemen Başvur' butonuna tıklayarak veya satış ekibimizle iletişime geçerek başvuru yapabilirsiniz. Başvurunuz 24 saat içinde değerlendirilir ve onaylanır.
+        - generic [ref=e434]:
+          - button "İşlem ücretleri ne kadar? " [ref=e435] [cursor=pointer]:
+            - generic [ref=e436]: İşlem ücretleri ne kadar?
+            - generic [ref=e437]: 
+          - paragraph [ref=e438]: Ücretler, seçtiğiniz hizmet paketine göre değişiklik gösterir. Detaylı ücret bilgisi için 'Ücretler' sayfamızı ziyaret edebilir veya müşteri hizmetlerimizden bilgi alabilirsiniz.
+        - generic [ref=e439]:
+          - button "Online ödeme sistemi nasıl entegre edilir? " [ref=e440] [cursor=pointer]:
+            - generic [ref=e441]: Online ödeme sistemi nasıl entegre edilir?
+            - generic [ref=e442]: 
+          - paragraph [ref=e443]: Geliştirici dostu REST API'imiz ve SDK'larımız sayesinde web sitenize kolayca entegrasyon sağlayabilirsiniz. Teknik dokümantasyon ve örnek kodlar için API dokümanlarımızı inceleyebilirsiniz.
+        - generic [ref=e444]:
+          - button "Güvenlik önlemleriniz nelerdir? " [ref=e445] [cursor=pointer]:
+            - generic [ref=e446]: Güvenlik önlemleriniz nelerdir?
+            - generic [ref=e447]: 
+          - paragraph [ref=e448]: Tüm işlemler uçtan uca SSL/TLS şifreleme ile korunur. PCI-DSS uyumlu altyapımız, 3D Secure doğrulama ve yapay zeka destekli dolandırıcılık tespit sistemimiz ile maksimum güvenlik sağlanır.
+        - generic [ref=e449]:
+          - button "Para transferleri ne kadar sürer? " [ref=e450] [cursor=pointer]:
+            - generic [ref=e451]: Para transferleri ne kadar sürer?
+            - generic [ref=e452]: 
+          - paragraph [ref=e453]: FAST transferleri saniyeler içinde gerçekleşir. EFT işlemleri dakikalar içinde tamamlanır. Uluslararası transfer süreleri gönderilen ülkeye ve bankaya göre 1-3 iş günü arasında değişir.
+        - generic [ref=e454]:
+          - button "Müşteri desteğine nasıl ulaşabilirim? " [ref=e455] [cursor=pointer]:
+            - generic [ref=e456]: Müşteri desteğine nasıl ulaşabilirim?
+            - generic [ref=e457]: 
+          - paragraph [ref=e458]: 7/24 canlı destek hattımız, e-posta ve mobil uygulama üzerinden destek talebi oluşturma seçeneklerimizle her zaman yanınızdayız. Ayrıca SSS sayfamızda sıkça sorulan soruların yanıtlarını bulabilirsiniz.
+    - generic [ref=e460]:
+      - heading "Ödeme Deneyiminizi Dönüştürmeye Hazır mısınız?" [level=2] [ref=e461]:
+        - text: Ödeme Deneyiminizi
+        - text: Dönüştürmeye Hazır mısınız?
+      - paragraph [ref=e462]: Dijital ödemeleri güvenli ve verimli bir şekilde kabul etmek için MoneyShop'u kullanan yüzlerce Iraklı işletmeye katılın.
+      - generic [ref=e463]:
+        - link "Tüccar Hesabına Başvur " [ref=e464] [cursor=pointer]:
+          - /url: "#"
+          - text: Tüccar Hesabına Başvur
+          - generic [ref=e465]: 
+        - link " Satış Ekibiyle İletişime Geç" [ref=e466] [cursor=pointer]:
+          - /url: "#"
+          - generic [ref=e467]: 
+          - text: Satış Ekibiyle İletişime Geç
+    - contentinfo [ref=e468]:
+      - generic [ref=e469]:
+        - generic [ref=e470]:
+          - generic [ref=e471]:
+            - generic [ref=e472]:
+              - generic [ref=e474]: 
+              - generic [ref=e475]: MoneyShop
+            - paragraph [ref=e476]: Irak'ın lider Ödeme Hizmet Sağlayıcısı, Kürdistan Bölgesi ve ötesindeki işletmelere güvenli ve uyumlu dijital ödeme çözümleri sunar.
+          - generic [ref=e477]:
+            - heading "Hizmetler" [level=4] [ref=e478]
+            - list [ref=e479]:
+              - listitem [ref=e480]:
+                - link " POS Terminalleri" [ref=e481] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e482]: 
+                  - text: POS Terminalleri
+              - listitem [ref=e483]:
+                - link " Çevrimiçi Ödemeler" [ref=e484] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e485]: 
+                  - text: Çevrimiçi Ödemeler
+              - listitem [ref=e486]:
+                - link " Ödeme Bağlantıları" [ref=e487] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e488]: 
+                  - text: Ödeme Bağlantıları
+              - listitem [ref=e489]:
+                - link " Tüccar Portalı" [ref=e490] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e491]: 
+                  - text: Tüccar Portalı
+              - listitem [ref=e492]:
+                - link " API Entegrasyonu" [ref=e493] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e494]: 
+                  - text: API Entegrasyonu
+          - generic [ref=e495]:
+            - heading "Şirket" [level=4] [ref=e496]
+            - list [ref=e497]:
+              - listitem [ref=e498]:
+                - link " Hakkımızda" [ref=e499] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e500]: 
+                  - text: Hakkımızda
+              - listitem [ref=e501]:
+                - link " Kariyer" [ref=e502] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e503]: 
+                  - text: Kariyer
+              - listitem [ref=e504]:
+                - link " Basın" [ref=e505] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e506]: 
+                  - text: Basın
+              - listitem [ref=e507]:
+                - link " Blog" [ref=e508] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e509]: 
+                  - text: Blog
+              - listitem [ref=e510]:
+                - link " İletişim" [ref=e511] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e512]: 
+                  - text: İletişim
+          - generic [ref=e513]:
+            - heading "Yasal" [level=4] [ref=e514]
+            - list [ref=e515]:
+              - listitem [ref=e516]:
+                - link " Gizlilik Politikası" [ref=e517] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e518]: 
+                  - text: Gizlilik Politikası
+              - listitem [ref=e519]:
+                - link " Kullanım Şartları" [ref=e520] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e521]: 
+                  - text: Kullanım Şartları
+              - listitem [ref=e522]:
+                - link " AML Politikası" [ref=e523] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e524]: 
+                  - text: AML Politikası
+              - listitem [ref=e525]:
+                - link " KYC Politikası" [ref=e526] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e527]: 
+                  - text: KYC Politikası
+              - listitem [ref=e528]:
+                - link " Çerez Politikası" [ref=e529] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e530]: 
+                  - text: Çerez Politikası
+          - generic [ref=e531]:
+            - heading "İletişim" [level=4] [ref=e532]
+            - list [ref=e533]:
+              - listitem [ref=e534]:
+                - link " Erbil, Kürdistan Bölgesi, Irak" [ref=e535] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e536]: 
+                  - text: Erbil, Kürdistan Bölgesi, Irak
+              - listitem [ref=e537]:
+                - link " +964 750 XXX XXXX" [ref=e538] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e539]: 
+                  - text: +964 750 XXX XXXX
+              - listitem [ref=e540]:
+                - link " info@moneyshop.iq" [ref=e541] [cursor=pointer]:
+                  - /url: "#"
+                  - generic [ref=e542]: 
+                  - text: info@moneyshop.iq
+              - listitem [ref=e543]:
+                - 'link " Paz-Per: 09:00 - 18:00" [ref=e544] [cursor=pointer]':
+                  - /url: "#"
+                  - generic [ref=e545]: 
+                  - text: "Paz-Per: 09:00 - 18:00"
+        - generic [ref=e546]:
+          - paragraph [ref=e547]: © 2025 MoneyShop PSP. Tüm hakları saklıdır. Irak Merkez Bankası tarafından lisanslanmıştır.
+          - generic [ref=e548]:
+            - link "Gizlilik" [ref=e549] [cursor=pointer]:
+              - /url: "#"
+            - link "Şartlar" [ref=e550] [cursor=pointer]:
+              - /url: "#"
+            - link "Site Haritası" [ref=e551] [cursor=pointer]:
+              - /url: "#"
+  - button "Open Next.js Dev Tools" [ref=e557] [cursor=pointer]:
+    - img [ref=e558]
+  - alert [ref=e568]

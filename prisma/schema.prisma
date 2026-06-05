@@ -1,0 +1,177 @@
+// =============================================
+// MoneyShop - Prisma Şeması
+// =============================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// =============================================
+// Auth Modelleri (NextAuth v5 uyumlu)
+// =============================================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  phone         String    @default("") // Cep telefonu (kayıt zorunlu)
+  emailVerified DateTime?
+  image         String?
+  password      String? // Hashlenmiş parola (credentials provider için)
+  role          String    @default("USER") // USER | ADMIN | MODERATOR
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // İlişkiler
+  accounts     FinancialAccount[]
+  categories   Category[]
+  budgets      Budget[]
+  transactions Transaction[]
+  sessions     Session[]
+  accounts_    AuthAccount[] // NextAuth accounts
+}
+
+model AuthAccount {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// =============================================
+// SMS Doğrulama (Kayıt)
+// =============================================
+
+model PendingRegistration {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String
+  password  String   // Hashlenmiş parola
+  code      String   // Hashlenmiş SMS kodu (SHA-256)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([phone])
+  @@map("pending_registrations")
+}
+
+// =============================================
+// Finansal Modeller
+// =============================================
+
+model FinancialAccount {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  type      String   @default("CHECKING") // CHECKING | SAVINGS | CREDIT_CARD | INVESTMENT | CASH | LOAN
+  balance   Float    @default(0)
+  currency  String   @default("TRY")
+  icon      String?
+  color     String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@index([userId])
+  @@map("financial_accounts")
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  icon      String   @default("circle")
+  color     String   @default("#94a3b8")
+  type      String   @default("EXPENSE") // INCOME | EXPENSE
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  budgets      Budget[]
+
+  @@index([userId])
+  @@map("categories")
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  accountId   String
+  userId      String
+  categoryId  String?
+  type        String   @default("EXPENSE") // INCOME | EXPENSE | TRANSFER
+  amount      Float
+  currency    String   @default("TRY")
+  description String?
+  status      String   @default("COMPLETED") // COMPLETED | PENDING | FAILED | CANCELLED
+  date        DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  account  FinancialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([accountId])
+  @@index([categoryId])
+  @@index([date])
+  @@map("transactions")
+}
+
+model Budget {
+  id         String    @id @default(cuid())
+  userId     String
+  categoryId String
+  amount     Float
+  spent      Float     @default(0)
+  currency   String    @default("TRY")
+  period     String    @default("MONTHLY") // WEEKLY | MONTHLY | YEARLY
+  startDate  DateTime  @default(now())
+  endDate    DateTime?
+  createdAt  DateTime  @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([categoryId])
+  @@map("budgets")
+}

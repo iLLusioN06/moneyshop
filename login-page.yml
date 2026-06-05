@@ -1,0 +1,39 @@
+- generic [ref=e1] [box=0,0,1920,893]:
+  - button "Open Next.js Dev Tools" [ref=e43] [cursor=pointer] [box=22,839,32,32]:
+    - img [ref=e44] [box=22,835,40,40]
+  - alert [ref=e47] [box=-1,-1,1,1]
+  - generic [ref=e60] [box=737,189,446,516]:
+    - generic [ref=e61] [box=769,221,382,128]:
+      - generic [ref=e63] [box=949,233,22,32]: M
+      - heading "MoneyShop" [level=1] [ref=e64] [box=891,293,139,32]
+      - paragraph [ref=e65] [box=890,329,139,20]: Hesabınıza giriş yapın
+    - generic [ref=e66] [box=769,381,382,248]:
+      - generic [ref=e67] [box=769,381,382,66]:
+        - generic [ref=e68] [box=769,381,382,20]: E-posta
+        - generic [ref=e69] [box=769,407,382,40]:
+          - generic [box=769,407,28,40]:
+            - img [box=781,419,16,16]
+          - textbox "E-posta" [active] [ref=e70] [box=769,407,382,40]:
+            - /placeholder: ornek@email.com
+            - text: test@example.com
+      - generic [ref=e71] [box=769,463,382,66]:
+        - generic [ref=e72] [box=769,463,382,66]:
+          - generic [ref=e73] [box=769,463,382,20]: Parola
+          - generic [ref=e74] [box=769,489,382,40]:
+            - generic [box=769,489,28,40]:
+              - img [box=781,501,16,16]
+            - textbox "Parola" [ref=e75] [box=769,489,382,40]:
+              - /placeholder: ••••••••
+        - button [ref=e76] [box=1123,501,16,16]:
+          - img [ref=e77] [box=1123,501,16,16]
+      - generic [ref=e80] [box=769,545,382,20]:
+        - generic [ref=e81] [box=769,545,93,20]:
+          - checkbox "Beni hatırla" [ref=e82] [box=769,548,13,13]
+          - text: Beni hatırla
+        - link "Parolamı unuttum" [ref=e83] [cursor=pointer] [box=1038,545,113,20]:
+          - /url: "#"
+      - button "Giriş Yap" [ref=e84] [box=769,581,382,48]
+    - paragraph [ref=e85] [box=769,653,382,20]:
+      - text: Hesabınız yok mu?
+      - link "Kayıt Ol" [ref=e86] [cursor=pointer] [box=997,654,51,18]:
+        - /url: /register

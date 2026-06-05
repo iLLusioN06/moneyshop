@@ -1,0 +1,2011 @@
+Total messages: 198 (Errors: 100, Warnings: 0)
+Returning 100 messages for level "error"
+
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+[ERROR] ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component] @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_1gdrd03._.js:1945
+Error: ./src/app/page.tsx:2530:111
+Unterminated string constant
+  2528 | ...
+  2529 | ...
+> 2530 | ...ock"}}">Ödeme öncesi ve sonrası anında bildirim.</span>
+       |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2531 | ...
+  2532 | ...
+  2533 | ...nd:"#fff", border:"1px solid var(--gray-3)", borderRadius:14}}>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./src/app/page.tsx:2530:111)
+    at Object.getCompilationErrors (file://C:\Users\Mustafa\money-shop\node_modules\next\dist\server\dev\hot-reloader-turbopack.js:1186:59)
+    at DevBundlerService.getCompilationError (file://C:\Users\Mustafa\money-shop\node_modules\next\dist\server\lib\dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file://C:\Users\Mustafa\money-shop\node_modules\next\dist\server\dev\next-dev-server.js:720:42)
+    at DevServer.findPageComponents (file://C:\Users\Mustafa\money-shop\node_modules\next\dist\server\dev\next-dev-server.js:690:43)
+    at async DevServer.renderErrorToResponseImpl (file://C:\Users\Mustafa\money-shop\node_modules\next\dist\server\base-server.js:1753:26)
