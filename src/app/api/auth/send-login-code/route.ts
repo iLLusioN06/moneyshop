@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 import { compare } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { generateSmsCode, hashSmsCode, sendSms } from "@/lib/sms";
+import { withRateLimit } from "@/lib/rate-limit";
+import { createAuditLog, getRequestMetadata } from "@/lib/audit";
 
-export async function POST(req: Request) {
+async function handler(req: Request) {
   try {
     const { email, password } = await req.json();
 
@@ -61,6 +63,17 @@ export async function POST(req: Request) {
     // SMS gönder
     await sendSms(user.phone, smsCode);
 
+    // Denetim günlüğü
+    const meta = getRequestMetadata(req);
+    await createAuditLog({
+      userId: user.id,
+      action: "LOGIN",
+      entity: "USER",
+      entityId: user.id,
+      ip: meta.ip,
+      userAgent: meta.userAgent,
+    });
+
     return NextResponse.json({
       success: true,
       message: "SMS kodunuz gönderildi.",
@@ -69,8 +82,10 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("Send login code error:", error);
     return NextResponse.json(
-      { error: "Giriş yapılırken bir hata oluştu." },
+      { error: "Giriş kodu gönderilirken hata oluştu." },
       { status: 500 }
     );
   }
 }
+
+export const POST = withRateLimit({ maxRequests: 5, windowMs: 60_000 }, handler);

@@ -40,6 +40,16 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# dev artifacts
+dev-error*.txt
+dev-output*.txt
+next-dev.log
+payment-errors.log
+
+# screenshots & snapshots
+*.png
+*-snapshot.yml
+screenshots/
+
 # playwright
 .playwright-mcp/
-*.png

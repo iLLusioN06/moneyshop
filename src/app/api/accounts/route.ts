@@ -5,6 +5,8 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { withRateLimit } from "@/lib/rate-limit";
+import { createAuditLog, getRequestMetadata } from "@/lib/audit";
 
 // GET /api/accounts - Kullanıcının hesaplarını listele
 export async function GET() {
@@ -29,16 +31,12 @@ export async function GET() {
   }
 }
 
-// POST /api/accounts - Yeni hesap oluştur (sadece admin)
-export async function POST(req: Request) {
+// POST /api/accounts - Yeni hesap oluştur
+async function postHandler(req: Request) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Yetkilendirme gerekli." }, { status: 401 });
-    }
-
-    if (session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Bu işlem için yetkiniz yok." }, { status: 403 });
     }
 
     const body = await req.json();
@@ -63,6 +61,18 @@ export async function POST(req: Request) {
       },
     });
 
+    // Denetim günlüğü
+    const meta = getRequestMetadata(req);
+    await createAuditLog({
+      userId: session.user.id,
+      action: "CREATE",
+      entity: "ACCOUNT",
+      entityId: account.id,
+      details: { name, type, balance, currency },
+      ip: meta.ip,
+      userAgent: meta.userAgent,
+    });
+
     return NextResponse.json(
       { success: true, data: account },
       { status: 201 }
@@ -75,3 +85,5 @@ export async function POST(req: Request) {
     );
   }
 }
+
+export const POST = withRateLimit({ maxRequests: 10, windowMs: 60_000 }, postHandler);

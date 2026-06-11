@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hashSmsCode } from "@/lib/sms";
+import { withRateLimit } from "@/lib/rate-limit";
 
-export async function POST(req: Request) {
+async function handler(req: Request) {
   try {
     const { phone, code } = await req.json();
 
@@ -58,3 +59,5 @@ export async function POST(req: Request) {
     );
   }
 }
+
+export const POST = withRateLimit({ maxRequests: 5, windowMs: 60_000 }, handler);

@@ -28,12 +28,17 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  accounts     FinancialAccount[]
-  categories   Category[]
-  budgets      Budget[]
-  transactions Transaction[]
-  sessions     Session[]
-  accounts_    AuthAccount[]
+  accounts              FinancialAccount[]
+  categories            Category[]
+  budgets               Budget[]
+  transactions          Transaction[]
+  recurringTransactions RecurringTransaction[]
+  investments           Investment[]
+  auditLogs             AuditLog[]
+  sessions              Session[]
+  accounts_             AuthAccount[]
+  emailSettings         EmailNotificationSetting[]
+  emailLogs             EmailLog[]
 }
 
 model AuthAccount {
@@ -69,6 +74,57 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+// =============================================
+// Denetim Günlüğü (Audit Log)
+// =============================================
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String                        // CREATE | UPDATE | DELETE | LOGIN | LOGOUT | VERIFY | etc.
+  entity    String                        // "USER" | "ACCOUNT" | "TRANSACTION" | "TRANSFER" | etc.
+  entityId  String?                       // İlgili kaydın ID'si (opsiyonel)
+  details   Json?    @default("{}")       // Değişiklik detayları
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([action])
+  @@index([entity])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// =============================================
+// Yatırım Takibi
+// =============================================
+
+model Investment {
+  id          String   @id @default(cuid())
+  userId      String
+  accountId   String
+  name        String                        // Örn: "Apple", "BTC", "Altın"
+  symbol      String                        // Örn: "AAPL", "BTC", "XAU"
+  type        String   @default("STOCK")    // STOCK | CRYPTO | COMMODITY | FUND | OTHER
+  shares      Float                         // Adet / Miktar
+  buyPrice    Float                         // Birim alış fiyatı
+  currentPrice Float   @default(0)          // Güncel birim fiyat (manuel girilir)
+  currency    String   @default("TRY")
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user    User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account FinancialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([accountId])
+  @@map("investments")
 }
 
 // =============================================
@@ -108,6 +164,8 @@ model FinancialAccount {
 
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   transactions Transaction[]
+  recurringTransactions RecurringTransaction[]
+  investments           Investment[]
 
   @@index([userId])
   @@map("financial_accounts")
@@ -126,6 +184,7 @@ model Category {
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   transactions Transaction[]
   budgets      Budget[]
+  recurringTransactions RecurringTransaction[]
 
   @@index([userId])
   @@map("categories")
@@ -144,6 +203,14 @@ model Transaction {
   date        DateTime @default(now())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  // Transfer bilgileri
+  recipientName  String?
+  recipientIban  String?
+  recipientBank  String?
+  transferFee    Float    @default(0)
+  // Para transferlerinde karşı tarafın kullanıcı ID'si (MoneyShop içi transferlerde)
+  recipientUserId String?
 
   account  FinancialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
   user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -174,4 +241,87 @@ model Budget {
   @@index([userId])
   @@index([categoryId])
   @@map("budgets")
+}
+
+// =============================================
+// Tekrarlanan İşlemler
+// =============================================
+
+model RecurringTransaction {
+  id            String   @id @default(cuid())
+  userId        String
+  accountId     String
+  categoryId    String?
+  type          String   @default("EXPENSE")   // INCOME | EXPENSE | TRANSFER
+  amount        Float
+  currency      String   @default("TRY")
+  description   String?
+  frequency     String                        // DAILY | WEEKLY | BIWEEKLY | MONTHLY | QUARTERLY | YEARLY
+  intervalCount Int      @default(1)           // Her N periyotta bir
+  dayOfMonth    Int?                           // Ayın kaçında (MONTHLY/QUARTERLY/YEARLY için)
+  dayOfWeek     Int?                           // Haftanın kaçıncı günü (WEEKLY için, 0=Pazar)
+  startDate     DateTime
+  endDate       DateTime?                      // null = süresiz
+  nextDate      DateTime                       // Bir sonraki işlem tarihi
+  lastProcessed DateTime?
+  status        String   @default("ACTIVE")    // ACTIVE | PAUSED | COMPLETED | CANCELLED
+  totalOccurrences Int?                          // Toplam tekrar sayısı (null=sınırsız)
+  occurrenceCount Int    @default(0)            // Gerçekleşen tekrar sayısı
+  transferRecipientName  String?                // TRANSFER için alıcı adı
+  transferRecipientIban  String?                // TRANSFER için IBAN
+  transferRecipientBank  String?                // TRANSFER için banka
+  recipientUserId String?                       // MoneyShop içi transfer alıcı ID
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account  FinancialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  category Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([accountId])
+  @@index([status])
+  @@index([nextDate])
+  @@map("recurring_transactions")
+}
+
+// =============================================
+// E-posta Bildirimleri
+// =============================================
+
+model EmailNotificationSetting {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  email     String                        // Bildirimlerin gönderileceği e-posta adresi
+  enabled   Boolean  @default(false)      // Master toggle
+  // Event toggles
+  onTransaction Boolean @default(true)    // Yeni işlem eklendiğinde
+  onTransfer    Boolean @default(true)    // Para transferi gerçekleştiğinde
+  onBudgetAlert Boolean @default(true)    // Bütçe limiti aşıldığında
+  onMonthlyReport Boolean @default(false) // Aylık özet rapor
+  onLargeTransaction Boolean @default(true) // Yüksek tutarlı işlem (>10000)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("email_notification_settings")
+}
+
+model EmailLog {
+  id        String   @id @default(cuid())
+  userId    String
+  to        String                        // Alıcı e-posta adresi
+  subject   String                        // E-posta konusu
+  body      String   @db.Text             // E-posta içeriği (düz metin)
+  event     String                        // TRANSACTION | TRANSFER | BUDGET_ALERT | MONTHLY_REPORT | TEST
+  status    String   @default("SENT")     // SENT | FAILED
+  error     String?                       // Hata mesajı (varsa)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("email_logs")
 }

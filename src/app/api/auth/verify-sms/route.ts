@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hashSmsCode } from "@/lib/sms";
+import { withRateLimit } from "@/lib/rate-limit";
+import { createAuditLog, getRequestMetadata } from "@/lib/audit";
 
-export async function POST(req: Request) {
+async function handler(req: Request) {
   try {
     const { phone, code } = await req.json();
 
@@ -83,6 +85,17 @@ export async function POST(req: Request) {
       where: { id: pending.id },
     });
 
+    // Denetim günlüğü
+    const meta = getRequestMetadata(req);
+    await createAuditLog({
+      userId: user.id,
+      action: "REGISTER",
+      entity: "USER",
+      entityId: user.id,
+      ip: meta.ip,
+      userAgent: meta.userAgent,
+    });
+
     return NextResponse.json(
       {
         success: true,
@@ -98,3 +111,5 @@ export async function POST(req: Request) {
     );
   }
 }
+
+export const POST = withRateLimit({ maxRequests: 5, windowMs: 60_000 }, handler);

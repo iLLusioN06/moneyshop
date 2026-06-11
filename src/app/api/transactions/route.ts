@@ -5,6 +5,9 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@prisma/client";
+import { withRateLimit } from "@/lib/rate-limit";
+import { createAuditLog, getRequestMetadata } from "@/lib/audit";
 
 // GET /api/transactions - İşlemleri listele (filtreleme + sayfalama)
 export async function GET(req: Request) {
@@ -29,7 +32,7 @@ export async function GET(req: Request) {
     const skip = (page - 1) * limit;
 
     // Filtreleri oluştur
-    const where: Record<string, unknown> = {
+    const where: Prisma.TransactionWhereInput = {
       userId,
     };
 
@@ -39,8 +42,8 @@ export async function GET(req: Request) {
     if (status) where.status = status;
     if (startDate || endDate) {
       where.date = {};
-      if (startDate) (where.date as Record<string, unknown>).gte = new Date(startDate);
-      if (endDate) (where.date as Record<string, unknown>).lte = new Date(endDate);
+      if (startDate) (where.date as { gte?: Date; lte?: Date }).gte = new Date(startDate);
+      if (endDate) (where.date as { gte?: Date; lte?: Date }).lte = new Date(endDate);
     }
     if (search) {
       where.description = { contains: search, mode: "insensitive" };
@@ -48,7 +51,7 @@ export async function GET(req: Request) {
 
     const [transactions, total] = await Promise.all([
       prisma.transaction.findMany({
-        where: where as any,
+        where,
         include: {
           category: true,
           account: true,
@@ -57,7 +60,7 @@ export async function GET(req: Request) {
         skip,
         take: limit,
       }),
-      prisma.transaction.count({ where: where as any }),
+      prisma.transaction.count({ where }),
     ]);
 
     return NextResponse.json({
@@ -78,7 +81,7 @@ export async function GET(req: Request) {
 }
 
 // POST /api/transactions - Yeni işlem oluştur (bakiye güncellemesi ile)
-export async function POST(req: Request) {
+async function postHandler(req: Request) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -145,6 +148,18 @@ export async function POST(req: Request) {
       return txRecord;
     });
 
+    // Denetim günlüğü
+    const meta = getRequestMetadata(req);
+    await createAuditLog({
+      userId: session.user.id,
+      action: "CREATE",
+      entity: "TRANSACTION",
+      entityId: transaction.id,
+      details: { type, amount, accountId, description },
+      ip: meta.ip,
+      userAgent: meta.userAgent,
+    });
+
     return NextResponse.json(
       { success: true, data: transaction },
       { status: 201 }
@@ -157,3 +172,5 @@ export async function POST(req: Request) {
     );
   }
 }
+
+export const POST = withRateLimit({ maxRequests: 20, windowMs: 60_000 }, postHandler);

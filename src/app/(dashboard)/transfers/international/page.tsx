@@ -33,7 +33,7 @@ export default function InternationalPage() {
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link
-          href="/dashboard/transfers"
+          href="/transfers"
           className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-surface-dark-secondary transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />

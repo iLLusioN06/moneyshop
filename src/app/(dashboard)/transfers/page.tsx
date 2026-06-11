@@ -23,7 +23,7 @@ import {
 const transferServices = [
   {
     id: "fast",
-    href: "/dashboard/transfers/fast",
+    href: "/transfers/fast",
     title: "FAST Para Transferi",
     desc: "7/24 anında para transferi. Saniyeler içinde gönderin, hemen ulaşsın.",
     icon: Bolt,
@@ -33,7 +33,7 @@ const transferServices = [
   },
   {
     id: "eft",
-    href: "/dashboard/transfers/eft",
+    href: "/transfers/eft",
     title: "Havale & EFT",
     desc: "Geleneksel bankacılık işlemlerinizi tek platformdan yönetin.",
     icon: ArrowLeftRight,
@@ -43,7 +43,7 @@ const transferServices = [
   },
   {
     id: "international",
-    href: "/dashboard/transfers/international",
+    href: "/transfers/international",
     title: "Yurt Dışından Para Al",
     desc: "Dünyanın her yerinden para almanın en kolay yolu.",
     icon: Globe,
@@ -53,7 +53,7 @@ const transferServices = [
   },
   {
     id: "iban",
-    href: "/dashboard/transfers/iban",
+    href: "/transfers/iban",
     title: "MoneyShop IBAN & Kolay Adres",
     desc: "Size özel IBAN ve kolay adresinizle para transferlerini zahmetsiz hale getirin.",
     icon: QrCode,
@@ -63,7 +63,7 @@ const transferServices = [
   },
   {
     id: "request",
-    href: "/dashboard/transfers/request",
+    href: "/transfers/request",
     title: "Ödeme İste",
     desc: "Müşterilerinizden veya iş ortaklarınızdan tek tıkla ödeme isteyin.",
     icon: HandCoins,
@@ -178,10 +178,10 @@ function TransfersContent() {
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
-              { label: "Kendi Hesabıma", href: "/dashboard/transfers/fast", icon: ArrowLeftRight, color: "text-blue-500" },
-              { label: "Başka Hesaba", href: "/dashboard/transfers/eft", icon: ArrowLeftRight, color: "text-purple-500" },
-              { label: "IBAN ile", href: "/dashboard/transfers/iban", icon: QrCode, color: "text-indigo-500" },
-              { label: "QR ile Gönder", href: "/dashboard/transfers/iban", icon: QrCode, color: "text-emerald-500" },
+              { label: "Kendi Hesabıma", href: "/transfers/fast", icon: ArrowLeftRight, color: "text-blue-500" },
+              { label: "Başka Hesaba", href: "/transfers/eft", icon: ArrowLeftRight, color: "text-purple-500" },
+              { label: "IBAN ile", href: "/transfers/iban", icon: QrCode, color: "text-indigo-500" },
+              { label: "QR ile Gönder", href: "/transfers/iban", icon: QrCode, color: "text-emerald-500" },
             ].map((item) => {
               const Icon = item.icon;
               return (

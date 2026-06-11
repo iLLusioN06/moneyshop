@@ -18,10 +18,14 @@ type TranslationDict = Record<string, Record<DashboardLang, string>>;
 const dict: TranslationDict = {
   // --- NAV ---
   "nav.dashboard":           { tr: "Genel Bakış", en: "Overview", ar: "نظرة عامة", ku: "Têgihiştinî", fr: "Aperçu", ru: "Обзор" },
-  "nav.transactions":        { tr: "İşlem Geçmişi", en: "Transaction History", ar: "سجل المعاملات", ku: "Dîroka Danûstandinan", fr: "Historique des transactions", ru: "История операций" },
+  "nav.accounts":           { tr: "Hesaplar", en: "Accounts", ar: "الحسابات", ku: "Hesab", fr: "Comptes", ru: "Счета" },
+"nav.transactions":        { tr: "İşlem Geçmişi", en: "Transaction History", ar: "سجل المعاملات", ku: "Dîroka Danûstandinan", fr: "Historique des transactions", ru: "История операций" },
   "nav.transfers":           { tr: "Para Transferi", en: "Money Transfer", ar: "تحويل الأموال", ku: "Veguhestina Pere", fr: "Transfert d'argent", ru: "Перевод денег" },
   "nav.deposit":             { tr: "Para Yatır", en: "Deposit", ar: "إيداع", ku: "Pere Bixe", fr: "Dépôt", ru: "Пополнить" },
   "nav.withdraw":            { tr: "Para Çek", en: "Withdraw", ar: "سحب", ku: "Pere Derxe", fr: "Retrait", ru: "Снять" },
+  "nav.recurring":           { tr: "Tekrarlanan İşlemler", en: "Recurring Transactions", ar: "المعاملات المتكررة", ku: "Danûstandinên Dubare", fr: "Transactions récurrentes", ru: "Повторяющиеся операции" },
+  "nav.portfolio":          { tr: "Yatırım Portföyü", en: "Portfolio", ar: "محفظة الاستثمار", ku: "Portfoliyoya Veberhênanê", fr: "Portefeuille d'investissement", ru: "Инвестиционный портфель" },
+"nav.reports":             { tr: "Raporlar", en: "Reports", ar: "التقارير", ku: "Rapor", fr: "Rapports", ru: "Отчеты" },
   "nav.budgets":             { tr: "Bütçeler", en: "Budgets", ar: "الميزانيات", ku: "Budce", fr: "Budgets", ru: "Бюджеты" },
   "nav.payments":            { tr: "Ödemeler", en: "Payments", ar: "المدفوعات", ku: "Dedan", fr: "Paiements", ru: "Платежи" },
   "nav.card":                { tr: "MoneyShop Card", en: "MoneyShop Card", ar: "بطاقة MoneyShop", ku: "Karta MoneyShop", fr: "Carte MoneyShop", ru: "Карта MoneyShop" },
@@ -30,11 +34,18 @@ const dict: TranslationDict = {
   "nav.user":                { tr: "Kullanıcı", en: "User", ar: "مستخدم", ku: "Bikarhêner", fr: "Utilisateur", ru: "Пользователь" },
   "nav.admin":               { tr: "Yönetici", en: "Admin", ar: "مدير", ku: "Rêveber", fr: "Administrateur", ru: "Администратор" },
   "nav.close":               { tr: "Menüyü kapat", en: "Close menu", ar: "إغلاق القائمة", ku: "Menu bigre", fr: "Fermer le menu", ru: "Закрыть меню" },
+  "nav.adminPanel":          { tr: "Admin Paneli", en: "Admin Panel", ar: "لوحة الإدارة", ku: "Panela Rêveberiyê", fr: "Panneau d'administration", ru: "Панель администратора" },
+  "nav.adminUsers":          { tr: "Kullanıcılar", en: "Users", ar: "المستخدمون", ku: "Bikarhêner", fr: "Utilisateurs", ru: "Пользователи" },
+  "nav.adminTransactions":   { tr: "Tüm İşlemler", en: "All Transactions", ar: "جميع المعاملات", ku: "Hemî Danûstandin", fr: "Toutes les transactions", ru: "Все операции" },
+  "header.admin":            { tr: "Admin", en: "Admin", ar: "الإدارة", ku: "Rêveberî", fr: "Admin", ru: "Админ" },
 
   // --- HEADER ---
   "header.dashboard":        { tr: "Genel Bakış", en: "Overview", ar: "نظرة عامة", ku: "Têgihiştinî", fr: "Aperçu", ru: "Обзор" },
   "header.accounts":         { tr: "Hesaplar", en: "Accounts", ar: "الحسابات", ku: "Hesab", fr: "Comptes", ru: "Счета" },
   "header.transactions":     { tr: "İşlemler", en: "Transactions", ar: "المعاملات", ku: "Danûstandin", fr: "Transactions", ru: "Операции" },
+  "header.portfolio":       { tr: "Yatırım Portföyü", en: "Portfolio", ar: "محفظة الاستثمار", ku: "Portfoliyoya Veberhênanê", fr: "Portefeuille d'investissement", ru: "Инвестиционный портфель" },
+"header.recurring":        { tr: "Tekrarlanan İşlemler", en: "Recurring", ar: "المتكررة", ku: "Dubare", fr: "Récurrent", ru: "Повторяющиеся" },
+  "header.reports":          { tr: "Raporlar", en: "Reports", ar: "التقارير", ku: "Rapor", fr: "Rapports", ru: "Отчеты" },
   "header.categories":       { tr: "Kategoriler", en: "Categories", ar: "الفئات", ku: "Kategorî", fr: "Catégories", ru: "Категории" },
   "header.budgets":          { tr: "Bütçeler", en: "Budgets", ar: "الميزانيات", ku: "Budce", fr: "Budgets", ru: "Бюджеты" },
   "header.settings":         { tr: "Ayarlar", en: "Settings", ar: "الإعدادات", ku: "Eyar", fr: "Paramètres", ru: "Настройки" },
@@ -42,6 +53,9 @@ const dict: TranslationDict = {
   "header.subtitle":         { tr: "Finansal durumunuzu takip edin", en: "Track your financial status", ar: "تتبع حالتك المالية", ku: "Rewşa xwe ya darayî bişopîne", fr: "Suivez votre situation financière", ru: "Отслеживайте свое финансовое состояние" },
   "header.search":           { tr: "Ara...", en: "Search...", ar: "بحث...", ku: "Lêbigere...", fr: "Rechercher...", ru: "Поиск..." },
   "header.menuToggle":       { tr: "Menüyü aç/kapat", en: "Toggle menu", ar: "فتح/إغلاق القائمة", ku: "Menu veke/bigre", fr: "Ouvrir/fermer le menu", ru: "Открыть/закрыть меню" },
+  "header.notifications":    { tr: "Bildirimler", en: "Notifications", ar: "الإشعارات", ku: "Agahdarî", fr: "Notifications", ru: "Уведомления" },
+  "header.noNotifications": { tr: "Bildirim bulunmuyor", en: "No notifications", ar: "لا توجد إشعارات", ku: "Ti agahdarî tune", fr: "Aucune notification", ru: "Нет уведомлений" },
+  "budget.alert":            { tr: "Bütçe Uyarısı", en: "Budget Alert", ar: "تنبيه الميزانية", ku: "Hişyariya Budceyê", fr: "Alerte budget", ru: "Бюджетное предупреждение" },
 
   // --- DASHBOARD ---
   "dash.welcome":            { tr: "Hoş Geldiniz", en: "Welcome", ar: "مرحباً", ku: "Bi xêr hatî", fr: "Bienvenue", ru: "Добро пожаловать" },
@@ -157,6 +171,7 @@ const dict: TranslationDict = {
   "common.loading":          { tr: "Yükleniyor...", en: "Loading...", ar: "جارٍ التحميل...", ku: "Tê barkirin...", fr: "Chargement...", ru: "Загрузка..." },
   "common.error":            { tr: "Hata", en: "Error", ar: "خطأ", ku: "Çewtî", fr: "Erreur", ru: "Ошибка" },
   "common.retry":            { tr: "Tekrar Dene", en: "Retry", ar: "إعادة المحاولة", ku: "Dîsa Biceribîne", fr: "Réessayer", ru: "Повторить" },
+  "common.noResults":        { tr: "Sonuç bulunamadı", en: "No results found", ar: "لم يتم العثور على نتائج", ku: "Ti encam nehate dîtin", fr: "Aucun résultat trouvé", ru: "Результатов не найдено" },
 };
 
 export function t(key: string, fallback?: string): string {

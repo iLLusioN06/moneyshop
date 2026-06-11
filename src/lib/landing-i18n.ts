@@ -3,6 +3,7 @@
 // =============================================
 
 export type Language = "tr" | "en" | "ar" | "ku" | "fr" | "ru";
+export type Dir = "ltr" | "rtl";
 
 export const LANGUAGES: { code: Language; label: string; flag: string }[] = [
   { code: "tr", label: "Türkçe", flag: "🇹🇷" },

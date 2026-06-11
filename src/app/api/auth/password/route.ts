@@ -6,8 +6,9 @@ import { NextResponse } from "next/server";
 import { hash, compare } from "bcryptjs";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { withRateLimit } from "@/lib/rate-limit";
 
-export async function PUT(req: Request) {
+async function handler(req: Request) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -80,3 +81,5 @@ export async function PUT(req: Request) {
     );
   }
 }
+
+export const PUT = withRateLimit({ maxRequests: 3, windowMs: 60_000 }, handler);

@@ -2,6 +2,7 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 import { AuthProvider } from "@/components/auth-provider";
 import { RouteGuard } from "@/components/route-guard";
+import { ErrorBoundary } from "@/components/error-boundary";
 
 export default function DashboardLayout({
   children,
@@ -10,6 +11,7 @@ export default function DashboardLayout({
 }) {
   return (
     <AuthProvider>
+      <ErrorBoundary>
       <div className="flex h-screen overflow-hidden">
         {/* Sidebar */}
         <Sidebar />
@@ -24,6 +26,7 @@ export default function DashboardLayout({
           </main>
         </div>
       </div>
+      </ErrorBoundary>
     </AuthProvider>
   );
 }

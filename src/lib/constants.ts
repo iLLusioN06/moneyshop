@@ -23,6 +23,10 @@ export const ROUTES = {
   WITHDRAW: "/withdraw",
   PAYMENTS: "/payments",
   CARD: "/card",
+  ADMIN: "/admin",
+  RECURRING: "/recurring",
+  REPORTS: "/reports",
+  PORTFOLIO: "/portfolio",
 } as const;
 
 // API route'ları

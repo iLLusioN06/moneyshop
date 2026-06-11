@@ -37,6 +37,9 @@
   --color-loss: #ef4444;
   --color-pending: #f59e0b;
 
+  /* Opacity Variants */
+  --color-secondary-10: rgba(59, 130, 246, 0.1);
+
   /* Fonts */
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
@@ -108,6 +111,63 @@ body {
 ::selection {
   background: var(--color-secondary);
   color: white;
+}
+
+/* ============================================= */
+/* Dark Mode — .dark class aktifken geçerli      */
+/* ============================================= */
+.dark {
+  /* Surface Colors */
+  --color-surface: #0f172a;
+  --color-surface-secondary: #1e293b;
+  --color-surface-tertiary: #334155;
+  --color-surface-dark: #020617;
+  --color-surface-dark-secondary: #0f172a;
+  --color-surface-dark-tertiary: #1e293b;
+
+  /* Text Colors */
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #64748b;
+  --color-text-dark-primary: #f8fafc;
+  --color-text-dark-secondary: #cbd5e1;
+  --color-text-dark-muted: #64748b;
+
+  /* Border Colors */
+  --color-border: #334155;
+  --color-border-dark: #475569;
+
+  /* Ana Renkler - Dark Varyant (daha soft/dimm) */
+  --color-primary: #1e293b;
+  --color-primary-light: #334155;
+  --color-secondary: #60a5fa;
+  --color-secondary-dark: #3b82f6;
+  --color-accent: #34d399;
+  --color-accent-dark: #10b981;
+  --color-danger: #f87171;
+  --color-warning: #fbbf24;
+  --color-info: #22d3ee;
+
+  /* Finansal Durum - Dark Varyant */
+  --color-profit: #34d399;
+  --color-loss: #f87171;
+  --color-pending: #fbbf24;
+
+  /* Opacity Variants */
+  --color-secondary-10: rgba(96, 165, 250, 0.15);
+
+  /* Scrollbar */
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-text-muted);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-secondary);
+  }
+}
+
+.dark body {
+  background: var(--color-surface-secondary);
+  color: var(--color-text-primary);
 }
 
 /* Card shine animation */

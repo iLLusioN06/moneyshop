@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import { hash } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { generateSmsCode, hashSmsCode, sendSms } from "@/lib/sms";
+import { withRateLimit } from "@/lib/rate-limit";
 
-export async function POST(req: Request) {
+async function handler(req: Request) {
   try {
     const { name, email, phone, password } = await req.json();
 
@@ -97,3 +98,5 @@ export async function POST(req: Request) {
     );
   }
 }
+
+export const POST = withRateLimit({ maxRequests: 3, windowMs: 60_000 }, handler);

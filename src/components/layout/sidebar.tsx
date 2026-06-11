@@ -9,29 +9,39 @@ import { useAppStore } from "@/stores/app-store";
 import { getAccessibleNavItems } from "@/lib/permissions";
 import {
   LayoutDashboard,
+  Wallet,
   ArrowUpDown,
   ArrowLeftRight,
   HandCoins,
   Banknote,
+  Repeat,
+  BarChart3,
+  FileText,
   PiggyBank,
   Receipt,
   CreditCard,
   LogOut,
   User,
   X,
+  Shield,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { t } from "@/lib/dashboard-i18n";
 
 const allNavItems: { href: string; labelKey: string; icon: React.ElementType }[] = [
   { href: ROUTES.DASHBOARD, labelKey: "nav.dashboard", icon: LayoutDashboard },
+  { href: ROUTES.ACCOUNTS, labelKey: "nav.accounts", icon: Wallet },
   { href: ROUTES.TRANSACTIONS, labelKey: "nav.transactions", icon: ArrowUpDown },
   { href: ROUTES.TRANSFERS, labelKey: "nav.transfers", icon: ArrowLeftRight },
+  { href: ROUTES.RECURRING, labelKey: "nav.recurring", icon: Repeat },
+  { href: ROUTES.PORTFOLIO, labelKey: "nav.portfolio", icon: BarChart3 },
   { href: ROUTES.DEPOSIT, labelKey: "nav.deposit", icon: HandCoins },
   { href: ROUTES.WITHDRAW, labelKey: "nav.withdraw", icon: Banknote },
   { href: ROUTES.BUDGETS, labelKey: "nav.budgets", icon: PiggyBank },
   { href: ROUTES.PAYMENTS, labelKey: "nav.payments", icon: Receipt },
   { href: ROUTES.CARD, labelKey: "nav.card", icon: CreditCard },
+  { href: ROUTES.REPORTS, labelKey: "nav.reports", icon: FileText },
+  { href: ROUTES.ADMIN, labelKey: "nav.adminPanel", icon: Shield },
   { href: ROUTES.PROFILE, labelKey: "nav.profile", icon: User },
 ];
 

@@ -14,14 +14,15 @@ export interface NavItem {
 
 // Admin yetkisi gerektiren route'lar
 export const ADMIN_ROUTES = [
-  "/accounts",
   "/categories",
   "/settings",
+  "/admin",
 ];
 
 // Herkesin erişebileceği route'lar
 export const PUBLIC_ROUTES = [
   "/dashboard",
+  "/accounts",
   "/transactions",
   "/budgets",
   "/profile",

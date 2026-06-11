@@ -5,6 +5,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { createAuditLog, getRequestMetadata } from "@/lib/audit";
 
 // GET /api/accounts/[id] - Hesap detayı
 export async function GET(
@@ -40,7 +41,7 @@ export async function GET(
   }
 }
 
-// PUT /api/accounts/[id] - Hesap güncelle (sadece admin)
+// PUT /api/accounts/[id] - Hesap güncelle
 export async function PUT(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -49,10 +50,6 @@ export async function PUT(
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Yetkilendirme gerekli." }, { status: 401 });
-    }
-
-    if (session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Bu işlem için yetkiniz yok." }, { status: 403 });
     }
 
     const { id } = await params;
@@ -85,6 +82,18 @@ export async function PUT(
       },
     });
 
+    // Denetim günlüğü
+    const meta = getRequestMetadata(req);
+    await createAuditLog({
+      userId: session.user.id,
+      action: "UPDATE",
+      entity: "ACCOUNT",
+      entityId: id,
+      details: body,
+      ip: meta.ip,
+      userAgent: meta.userAgent,
+    });
+
     return NextResponse.json({ success: true, data: account });
   } catch (error) {
     console.error("Account PUT error:", error);
@@ -95,7 +104,7 @@ export async function PUT(
   }
 }
 
-// DELETE /api/accounts/[id] - Hesap sil (soft delete, sadece admin)
+// DELETE /api/accounts/[id] - Hesap sil (soft delete)
 export async function DELETE(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -104,10 +113,6 @@ export async function DELETE(
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Yetkilendirme gerekli." }, { status: 401 });
-    }
-
-    if (session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Bu işlem için yetkiniz yok." }, { status: 403 });
     }
 
     const { id } = await params;
@@ -127,6 +132,17 @@ export async function DELETE(
     await prisma.financialAccount.update({
       where: { id },
       data: { isActive: false },
+    });
+
+    // Denetim günlüğü
+    const meta = getRequestMetadata(_req);
+    await createAuditLog({
+      userId: session.user.id,
+      action: "DEACTIVATE",
+      entity: "ACCOUNT",
+      entityId: id,
+      ip: meta.ip,
+      userAgent: meta.userAgent,
     });
 
     return NextResponse.json({

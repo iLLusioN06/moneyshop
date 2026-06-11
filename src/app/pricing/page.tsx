@@ -9,6 +9,20 @@ import "../landing.css";
 
 type PricingTab = "fees" | "limits";
 
+interface PricingFeeItem {
+  name: string;
+  fee: string;
+  note: string;
+}
+
+interface PricingLimitItem {
+  name: string;
+  limit: string;
+  note: string;
+}
+
+type PricingItem = PricingFeeItem | PricingLimitItem;
+
 const feesData = {
   individual: [
     { name: "Hesap Açılış Ücreti", fee: "Ücretsiz", note: "Hiçbir ücret ödemeden hesap açın." },
@@ -107,6 +121,9 @@ export default function PricingPage() {
   const currentLang = LANGUAGES.find((l) => l.code === lang) || LANGUAGES[0];
   const dir = getLangDir(lang);
 
+  const currentFee = (item: PricingItem): string =>
+    "fee" in item ? (item as PricingFeeItem).fee : (item as PricingLimitItem).limit;
+
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
@@ -129,7 +146,7 @@ export default function PricingPage() {
   };
 
   const typeKey = activeType === "corporate" ? "corporate" : "individual";
-  const dataSource = activeTab === "fees" ? feesData[typeKey] : limitsData[typeKey];
+  const dataSource: PricingItem[] = activeTab === "fees" ? feesData[typeKey] : limitsData[typeKey];
 
   return (
     <div className="landing-page">
@@ -311,14 +328,10 @@ export default function PricingPage() {
                 {dataSource.map((item, i) => (
                   <tr key={i} style={{ borderBottom: "1px solid var(--gray-2)" }}>
                     <td style={{ padding: "14px 20px", fontWeight: 500, color: "var(--dark)" }}>
-                      {activeTab === "fees" ? (
-                        <><i className="fas fa-circle" style={{ fontSize: 6, color: "var(--primary)", marginRight: 12, verticalAlign: "middle" }} />{item.name}</>
-                      ) : (
-                        <><i className="fas fa-circle" style={{ fontSize: 6, color: "var(--primary)", marginRight: 12, verticalAlign: "middle" }} />{item.name}</>
-                      )}
+                      <><i className="fas fa-circle" style={{ fontSize: 6, color: "var(--primary)", marginRight: 12, verticalAlign: "middle" }} />{item.name}</>
                     </td>
                     <td style={{ padding: "14px 20px", fontWeight: 700, color: "var(--primary)" }}>
-                      {activeTab === "fees" ? (item as any).fee : (item as any).limit}
+                      {currentFee(item)}
                     </td>
                     <td style={{ padding: "14px 20px", color: "var(--gray-5)", fontSize: 13 }}>
                       {item.note}

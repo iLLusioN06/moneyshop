@@ -72,9 +72,50 @@ export interface Transaction {
   date: Date;
   createdAt: Date;
   updatedAt: Date;
+  // Transfer bilgileri
+  recipientName?: string | null;
+  recipientIban?: string | null;
+  recipientBank?: string | null;
+  transferFee?: number;
+  recipientUserId?: string | null;
   // İlişkiler
   category?: Category;
   account?: FinancialAccount;
+}
+
+// Tekrarlanan İşlem
+export type RecurringFrequency = "DAILY" | "WEEKLY" | "BIWEEKLY" | "MONTHLY" | "QUARTERLY" | "YEARLY";
+export type RecurringStatus = "ACTIVE" | "PAUSED" | "COMPLETED" | "CANCELLED";
+
+export interface RecurringTransaction {
+  id: string;
+  userId: string;
+  accountId: string;
+  categoryId: string | null;
+  type: TransactionType;
+  amount: number;
+  currency: Currency;
+  description: string | null;
+  frequency: RecurringFrequency;
+  intervalCount: number;
+  dayOfMonth: number | null;
+  dayOfWeek: number | null;
+  startDate: Date;
+  endDate: Date | null;
+  nextDate: Date;
+  lastProcessed: Date | null;
+  status: RecurringStatus;
+  totalOccurrences: number | null;
+  occurrenceCount: number;
+  transferRecipientName: string | null;
+  transferRecipientIban: string | null;
+  transferRecipientBank: string | null;
+  recipientUserId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  // İlişkiler
+  account?: FinancialAccount;
+  category?: Category;
 }
 
 // Bütçe
