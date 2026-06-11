@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import { Bell, Search, Menu, X } from "lucide-react";
+import { Bell, Search, Menu, X, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -28,7 +28,7 @@ export function Header() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const title = t(pageTitleKeys[pathname] ?? "") || "MoneyShop";
-  const { sidebarOpen, setSidebarOpen } = useAppStore();
+  const { sidebarOpen, setSidebarOpen, theme, setTheme } = useAppStore();
   const [query, setQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
@@ -134,6 +134,20 @@ export function Header() {
           aria-label={t("header.search")}
         >
           <Search className="w-5 h-5" />
+        </button>
+
+        {/* Dark Mode Toggle */}
+        <button
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          className="p-2 rounded-lg hover:bg-surface-tertiary text-text-muted transition-colors"
+          aria-label="Tema değiştir"
+          title="Koyu/Açık tema"
+        >
+          {theme === "dark" ? (
+            <Sun className="w-5 h-5 text-pending" />
+          ) : (
+            <Moon className="w-5 h-5" />
+          )}
         </button>
 
         {/* Notifications */}

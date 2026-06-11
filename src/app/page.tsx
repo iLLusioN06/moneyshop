@@ -22,7 +22,6 @@ import { FeaturesSection } from "@/components/landing/features-section";
 import { ComplianceSection } from "@/components/landing/compliance-section";
 import { RoadmapSection } from "@/components/landing/roadmap-section";
 import { ImpactSection } from "@/components/landing/impact-section";
-import { TechSection } from "@/components/landing/tech-section";
 import { CTASection } from "@/components/landing/cta-section";
 import { FooterSection } from "@/components/landing/footer-section";
 
@@ -2416,7 +2415,6 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
       <ComplianceSection lang={lang} t={t} />
       <RoadmapSection lang={lang} t={t} tArray={tArray} />
       <ImpactSection lang={lang} t={t} />
-      <TechSection lang={lang} t={t} />
       <CTASection lang={lang} t={t} />
       <FooterSection lang={lang} t={t} tArray={tArray} />
       </>

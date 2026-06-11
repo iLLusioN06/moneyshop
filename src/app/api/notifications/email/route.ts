@@ -3,14 +3,13 @@
 // =============================================
 
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 // GET /api/notifications/email - Kullanıcının e-posta bildirim ayarlarını getir
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ success: false, error: "Oturum açmanız gerekiyor." }, { status: 401 });
     }
@@ -46,7 +45,7 @@ export async function GET() {
 // PUT /api/notifications/email - E-posta bildirim ayarlarını güncelle
 export async function PUT(request: Request) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ success: false, error: "Oturum açmanız gerekiyor." }, { status: 401 });
     }

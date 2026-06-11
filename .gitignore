@@ -53,3 +53,7 @@ screenshots/
 
 # playwright
 .playwright-mcp/
+
+# temporary development logs
+tmp/
+dev-server.log

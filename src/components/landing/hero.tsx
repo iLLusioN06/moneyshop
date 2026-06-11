@@ -152,7 +152,7 @@ export function Hero({ lang, dir, t, activeSection }: HeroProps) {
               </div>
 
               <div className="hero-store-buttons">
-                <a href="#" className="store-btn store-apple">
+                <a href="https://apps.apple.com" target="_blank" rel="noopener noreferrer" className="store-btn store-apple">
                   <svg className="store-icon" viewBox="0 0 384 512" width="24" height="24">
                     <path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-111.9-57.2-139.8zM231.2 59c0-25.6-9.5-47.7-28.5-66.2C185.2 6.8 164.7 0 141.8 0c0 28.9 8.1 52.4 24.3 70.6 16.7 18.6 38.8 29.4 63.3 28.5 0-26.2 1.1-43.5 1.8-59.5z" />
                   </svg>
@@ -160,7 +160,7 @@ export function Hero({ lang, dir, t, activeSection }: HeroProps) {
                     <span className="store-btn-big">App Store</span>
                   </div>
                 </a>
-                <a href="#" className="store-btn store-googleplay">
+                <a href="https://play.google.com/store" target="_blank" rel="noopener noreferrer" className="store-btn store-googleplay">
                   <svg className="store-icon" viewBox="0 0 512 512" width="24" height="24">
                     <path fill="#EA4335" d="M127.4 432.8c-2.1 1.2-4.4 1.7-6.7 1.7-3.3 0-6.5-1.2-9-3.5-3.7-3.4-5.5-8.5-5-13.7L117 341.8l47.3-49.1 63.1 63.1-100 77zM58.8 65.3C53.7 70.5 51 78.2 51 87.1v337.8c0 8.9 2.7 16.5 7.6 21.8l248-214.4L58.8 65.3zM347.5 213.7l-55.6-55.5-70.3 70.3 63.1 63.1 62.8-76.9c.2-.2.3-.3.3-.5 1.2-1.4 1.9-3.1 2.1-4.9.1-.4.1-.8.1-1.2 0-1.2-.3-2.4-.8-3.5-.7-1.5-1.8-2.8-3.1-3.6z"/>
                     <path fill="#FBBC04" d="M347.5 213.7 278 278.4l-55.6 55.5 63.1 63.1 62-76.8c.3-.4.6-.8.9-1.3 1.5-2.2 2.4-4.8 2.4-7.6v-87.2c0-1.6-.3-3.1-.8-4.5-.1-.1-.1-.2-.1-.3-.7-1.6-1.7-3-3-4.1z"/>
