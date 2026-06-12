@@ -8,12 +8,6 @@ import "../landing.css";
 
 type CardTier = "standart" | "silver" | "gold";
 
-const cardGradients: Record<CardTier, string> = {
-  standart: "linear-gradient(135deg, #0c3483 0%, #1a5fc7 50%, #3489e8 100%)",
-  silver: "linear-gradient(135deg, #4a4a5a 0%, #6e6e82 50%, #8e8ea8 100%)",
-  gold: "linear-gradient(135deg, #8a6d1f 0%, #c9a84c 50%, #f7e08a 100%)",
-};
-
 const cardData: Record<CardTier, { icon: string; benefits: { icon: string; title: string; desc: string }[] }> = {
   standart: {
     icon: "fa-wallet",

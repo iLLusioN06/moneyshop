@@ -7,8 +7,6 @@ import { LANGUAGES, type Language, t } from "@/lib/landing-i18n";
 import { getLangDir } from "@/lib/landing-i18n";
 import "../landing.css";
 
-type FaqItem = { q: string; a: string };
-
 const copy = {
   tr: {
     title: "SSS",

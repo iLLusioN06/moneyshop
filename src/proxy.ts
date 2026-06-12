@@ -1,16 +1,16 @@
 // =============================================
-// MoneyShop - Middleware (Route Koruması)
+// MoneyShop - Proxy (Route Koruması)
 // =============================================
-// Middleware runs on Edge Runtime — avoid importing server-only modules (bcryptjs, prisma).
+// Proxy runs on Node.js Runtime — avoid importing server-only modules (bcryptjs, prisma).
 
 import NextAuth from "next-auth";
 import { authConfig } from "@/lib/auth.config";
 
 const { auth } = NextAuth(authConfig);
 
-export { auth as middleware };
+export { auth as proxy };
 
-// Middleware'in çalışacağı route'lar
+// Proxy'in çalışacağı route'lar
 export const config = {
   matcher: [
     // Sadece dashboard ve API route'ları korumaya al
