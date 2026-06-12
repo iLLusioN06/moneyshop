@@ -51,5 +51,8 @@ payment-errors.log
 *-snapshot.yml
 screenshots/
 
+# tmp
+tmp/
+
 # playwright
 .playwright-mcp/
