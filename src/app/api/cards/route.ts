@@ -30,12 +30,6 @@ export async function GET() {
 
     let card = await prisma.card.findFirst({
       where: { userId: session.user.id },
-      include: {
-        transactions: {
-          take: 10,
-          orderBy: { date: "desc" },
-        },
-      },
     });
 
     // Kart yoksa otomatik STANDARD kart oluştur
@@ -58,25 +52,29 @@ export async function GET() {
           monthlyLimit: 50000,
           currency: "IQD",
         },
-        include: {
-          transactions: {
-            take: 10,
-            orderBy: { date: "desc" },
-          },
-        },
       });
     }
+
+    // Transactions'ları ayrı çek
+    const transactions = await prisma.transaction.findMany({
+      where: { cardId: card.id },
+      take: 10,
+      orderBy: { date: "desc" },
+    });
 
     // Hassas bilgileri maskele
     const safeCard = {
       ...card,
       cardNumber: maskCardNumber(card.cardNumber),
       cvv: "***",
+      transactions,
     };
 
     return NextResponse.json({ success: true, data: safeCard });
   } catch (error) {
     console.error("Cards GET error:", error);
+    const errMsg = error instanceof Error ? error.message : "Bilinmeyen hata";
+    console.error("Cards GET error:", errMsg);
     return NextResponse.json(
       { error: "Kart bilgileri alınırken bir hata oluştu." },
       { status: 500 }
