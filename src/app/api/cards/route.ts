@@ -6,14 +6,14 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-function generateCardNumber(): string {
-  const prefix = "5200"; // MoneyShop BIN
-  const rest = Array.from({ length: 12 }, () => Math.floor(Math.random() * 10)).join("");
-  return `${prefix}${rest}`;
-}
-
 function maskCardNumber(num: string): string {
   return `**** **** **** ${num.slice(-4)}`;
+}
+
+function generateCardNumber(): string {
+  const prefix = "5200";
+  const rest = Array.from({ length: 12 }, () => Math.floor(Math.random() * 10)).join("");
+  return `${prefix}${rest}`;
 }
 
 function generateCvv(): string {
@@ -28,31 +28,15 @@ export async function GET() {
       return NextResponse.json({ error: "Yetkilendirme gerekli." }, { status: 401 });
     }
 
-    let card = await prisma.card.findFirst({
+    const card = await prisma.card.findFirst({
       where: { userId: session.user.id },
     });
 
-    // Kart yoksa otomatik STANDARD kart oluştur
     if (!card) {
-      const cardNumber = generateCardNumber();
-      const cvv = generateCvv();
-      const now = new Date();
-
-      card = await prisma.card.create({
-        data: {
-          userId: session.user.id,
-          cardType: "STANDARD",
-          cardNumber,
-          cardHolderName: session.user.name || "Kullanıcı",
-          expiryMonth: now.getMonth() + 1,
-          expiryYear: now.getFullYear() + 5,
-          cvv,
-          status: "ACTIVE",
-          dailyLimit: 5000,
-          monthlyLimit: 50000,
-          currency: "IQD",
-        },
-      });
+      return NextResponse.json(
+        { error: "Kart bulunamadı. Lütfen kayıt işleminizi tamamlayın." },
+        { status: 404 }
+      );
     }
 
     // Transactions'ları ayrı çek

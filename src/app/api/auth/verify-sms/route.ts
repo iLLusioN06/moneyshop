@@ -4,6 +4,16 @@ import { hashSmsCode } from "@/lib/sms";
 import { withRateLimit } from "@/lib/rate-limit";
 import { createAuditLog, getRequestMetadata } from "@/lib/audit";
 
+function generateCardNumber(): string {
+  const prefix = "5200";
+  const rest = Array.from({ length: 12 }, () => Math.floor(Math.random() * 10)).join("");
+  return `${prefix}${rest}`;
+}
+
+function generateCvv(): string {
+  return String(Math.floor(100 + Math.random() * 899));
+}
+
 async function handler(req: Request) {
   try {
     const { phone, code } = await req.json();
@@ -54,6 +64,27 @@ async function handler(req: Request) {
         email: pending.email,
         phone: pending.phone,
         password: pending.password,
+      },
+    });
+
+    // Varsayılan MoneyShop Card oluştur (Standart)
+    const now = new Date();
+    const cardNumber = generateCardNumber();
+    const cvv = generateCvv();
+
+    await prisma.card.create({
+      data: {
+        userId: user.id,
+        cardType: "STANDARD",
+        cardNumber,
+        cardHolderName: user.name || "Kullanıcı",
+        expiryMonth: now.getMonth() + 1,
+        expiryYear: now.getFullYear() + 5,
+        cvv,
+        status: "ACTIVE",
+        dailyLimit: 5000,
+        monthlyLimit: 50000,
+        currency: "IQD",
       },
     });
 
