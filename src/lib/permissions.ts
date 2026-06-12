@@ -30,7 +30,7 @@ export const PUBLIC_ROUTES = [
   "/deposit",
   "/withdraw",
   "/payments",
-  "/card",
+  "/my-card",
 ];
 
 // Role bazlı route kontrolü
