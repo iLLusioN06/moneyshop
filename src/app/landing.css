@@ -17,6 +17,7 @@
   --gray-2: #9CA3BF;
   --gray-3: #D1D5DB;
   --gray-4: #F3F4F6;
+  --gray-5: #6B7280;
   --white: #FFFFFF;
   --success: #10B981;
   --warning: #F59E0B;
@@ -246,7 +247,7 @@
   border-radius: 12px;
   border: 1.5px solid rgba(0, 0, 0, 0.12);
   background: rgba(255, 255, 255, 0.9);
-  color: #1a1a2e;
+  color: var(--dark-2);
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -260,11 +261,11 @@
 .dark .landing-page .nav-theme-toggle {
   background: rgba(30, 36, 72, 0.8);
   border-color: rgba(255, 255, 255, 0.15);
-  color: #fbbf24;
+  color: var(--warning);
 }
 .dark .landing-page .nav-theme-toggle:hover {
-  border-color: #fbbf24;
-  color: #fbbf24;
+  border-color: var(--warning);
+  color: var(--warning);
 }
 
 .landing-page .mobile-theme-toggle {
@@ -397,7 +398,7 @@
   height: 28px;
   border-radius: 50%;
   background: var(--gradient-1);
-  color: #fff;
+  color: var(--white);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -684,7 +685,7 @@
 }
 
 .landing-page .store-btn.store-apple {
-  color: #000;
+  color: var(--dark);
 }
 
 .landing-page .store-btn .store-icon {
@@ -1166,7 +1167,7 @@
 .landing-page .card-magnetic-strip {
   width: 100%;
   height: 40px;
-  background: #1a1a1a;
+  background: var(--dark);
   margin-top: 28px;
 }
 
@@ -1256,17 +1257,6 @@
   box-shadow: 0 12px 40px rgba(0,0,0,0.45);
 }
 
-.landing-page .card-bg-shine {
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(45deg, transparent 35%, rgba(255,255,255,0.08) 50%, transparent 65%);
-  animation: lCardShine 4s infinite;
-  pointer-events: none;
-}
-
 @keyframes lCardShine {
   0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
   100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
@@ -1318,17 +1308,6 @@
   height: 4px;
   background: rgba(255,255,255,0.3);
   border-radius: 1px;
-}
-
-
-
-.landing-page .hero-card-label {
-  display: block;
-  font-size: 7px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: rgba(255,255,255,0.5);
-  margin-bottom: 2px;
 }
 
 .landing-page .hero-card-value {
