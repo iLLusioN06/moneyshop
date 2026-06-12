@@ -8,6 +8,7 @@ import {
   CardContent,
   Button,
   Input,
+  EmptyState,
 } from "@/components/ui";
 import { ErrorBoundary } from "@/components/error-boundary";
 import {
@@ -172,12 +173,12 @@ export default function FastTransferPage() {
         <div className="flex items-center gap-4">
           <button
             onClick={() => setShowConfirm(false)}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-surface-dark-secondary transition-colors"
+            className="p-2 rounded-lg hover:bg-surface-tertiary transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-text-dark-primary">
+            <h1 className="text-2xl font-bold text-text-primary">
               Transferi Onayla
             </h1>
           </div>
@@ -187,44 +188,44 @@ export default function FastTransferPage() {
           <CardContent className="p-6 space-y-6">
             {/* Amount */}
             <div className="text-center">
-              <p className="text-sm text-gray-500 dark:text-text-dark-muted mb-1">
+              <p className="text-sm text-text-muted mb-1">
                 Gönderilecek Tutar
               </p>
-              <p className="text-4xl font-bold text-gray-900 dark:text-text-dark-primary">
+              <p className="text-4xl font-bold text-text-primary">
                 {formatCurrency(parseFloat(amount), selectedAccount?.currency)}
               </p>
             </div>
 
-            <div className="border-t border-gray-200 dark:border-border-dark" />
+            <div className="border-t border-border" />
 
             {/* Details */}
             <div className="space-y-3">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500 dark:text-text-dark-muted">Alıcı</span>
-                <span className="font-medium text-gray-900 dark:text-text-dark-primary">
+                <span className="text-text-muted">Alıcı</span>
+                <span className="font-medium text-text-primary">
                   {recipientIdentifier}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500 dark:text-text-dark-muted">Gönderen Hesap</span>
-                <span className="font-medium text-gray-900 dark:text-text-dark-primary">
+                <span className="text-text-muted">Gönderen Hesap</span>
+                <span className="font-medium text-text-primary">
                   {selectedAccount?.name}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500 dark:text-text-dark-muted">Kalan Bakiye</span>
-                <span className="font-medium text-gray-900 dark:text-text-dark-primary">
+                <span className="text-text-muted">Kalan Bakiye</span>
+                <span className="font-medium text-text-primary">
                   {selectedAccount && formatCurrency(selectedAccount.balance - parseFloat(amount), selectedAccount.currency)}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500 dark:text-text-dark-muted">Komisyon</span>
+                <span className="text-text-muted">Komisyon</span>
                 <span className="font-medium text-emerald-500">Ücretsiz</span>
               </div>
               {description && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500 dark:text-text-dark-muted">Açıklama</span>
-                  <span className="font-medium text-gray-900 dark:text-text-dark-primary">{description}</span>
+                  <span className="text-text-muted">Açıklama</span>
+                  <span className="font-medium text-text-primary">{description}</span>
                 </div>
               )}
             </div>
@@ -310,7 +311,7 @@ export default function FastTransferPage() {
       <div className="flex items-center gap-4">
         <Link
           href="/transfers"
-          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-surface-dark-secondary transition-colors"
+          className="p-2 rounded-lg hover:bg-surface-tertiary transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
@@ -319,11 +320,11 @@ export default function FastTransferPage() {
             <div className="w-8 h-8 bg-emerald-500/10 text-emerald-500 rounded-lg flex items-center justify-center">
               <Bolt className="w-4 h-4" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-text-dark-primary">
+            <h1 className="text-2xl font-bold text-text-primary">
               FAST Para Transferi
             </h1>
           </div>
-          <p className="text-sm text-gray-500 dark:text-text-dark-secondary mt-1">
+          <p className="text-sm text-text-muted mt-1">
             7/24 anında para transferi — saniyeler içinde gönderin
           </p>
         </div>
@@ -340,18 +341,18 @@ export default function FastTransferPage() {
               <CardContent className="space-y-4">
                 {/* Sender Account */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-text-dark-secondary mb-1">
+                  <label className="block text-sm font-medium text-text-secondary mb-1">
                     Gönderen Hesap
                   </label>
                   {accountsLoading ? (
-                    <div className="h-10 bg-gray-100 dark:bg-surface-dark-secondary rounded-lg animate-pulse" />
+                    <div className="h-10 bg-surface-tertiary rounded-lg animate-pulse" />
                   ) : accounts.length === 0 ? (
                     <div className="text-sm text-loss p-2">
                       Henüz hesabınız yok. Lütfen önce bir hesap oluşturun.
                     </div>
                   ) : (
                     <select
-                      className="w-full h-10 px-3 rounded-lg border border-gray-200 dark:border-border-dark bg-white dark:bg-surface-dark text-gray-900 dark:text-text-dark-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
+                      className="w-full h-10 px-3 rounded-lg border border-border bg-surface text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
                       value={senderAccountId}
                       onChange={(e) => setSenderAccountId(e.target.value)}
                       required
@@ -367,28 +368,28 @@ export default function FastTransferPage() {
 
                 {/* Recipient */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-text-dark-secondary mb-1">
+                  <label className="block text-sm font-medium text-text-secondary mb-1">
                     Alıcı E-posta veya Kullanıcı Adı
                   </label>
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                     <input
                       type="text"
-                      className="w-full h-10 pl-9 pr-3 rounded-lg border border-gray-200 dark:border-border-dark bg-white dark:bg-surface-dark text-gray-900 dark:text-text-dark-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
+                      className="w-full h-10 pl-9 pr-3 rounded-lg border border-border bg-surface text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
                       placeholder="ornek@email.com veya kullaniciadi"
                       value={recipientIdentifier}
                       onChange={(e) => setRecipientIdentifier(e.target.value)}
                       required
                     />
                   </div>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-text-muted mt-1">
                     MoneyShop kullanıcısının e-posta adresi veya kullanıcı adı
                   </p>
                 </div>
 
                 {/* Amount */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-text-dark-secondary mb-1">
+                  <label className="block text-sm font-medium text-text-secondary mb-1">
                     Tutar
                   </label>
                   <div className="relative">
@@ -397,7 +398,7 @@ export default function FastTransferPage() {
                       step="0.01"
                       min="0.01"
                       placeholder="0.00"
-                      className="w-full h-10 px-3 rounded-lg border border-gray-200 dark:border-border-dark bg-white dark:bg-surface-dark text-gray-900 dark:text-text-dark-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
+                      className="w-full h-10 px-3 rounded-lg border border-border bg-surface text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
                       required
@@ -412,12 +413,12 @@ export default function FastTransferPage() {
 
                 {/* Description */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-text-dark-secondary mb-1">
-                    Açıklama <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
+                  <label className="block text-sm font-medium text-text-secondary mb-1">
+                    Açıklama <span className="text-text-muted font-normal">(isteğe bağlı)</span>
                   </label>
                   <input
                     type="text"
-                    className="w-full h-10 px-3 rounded-lg border border-gray-200 dark:border-border-dark bg-white dark:bg-surface-dark text-gray-900 dark:text-text-dark-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
+                    className="w-full h-10 px-3 rounded-lg border border-border bg-surface text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
                     placeholder="Açıklama girin..."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
@@ -425,7 +426,7 @@ export default function FastTransferPage() {
                 </div>
 
                 {error && (
-                  <div className="flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
+                  <div className="shake-alert flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
                     <AlertCircle className="w-4 h-4 flex-shrink-0" />
                     {error}
                     <button onClick={() => setError("")} className="ml-auto">
@@ -435,7 +436,7 @@ export default function FastTransferPage() {
                 )}
 
                 {selectedAccount && parseFloat(amount || "0") > selectedAccount.balance && (
-                  <div className="flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
+                  <div className="shake-alert flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
                     <AlertCircle className="w-4 h-4 flex-shrink-0" />
                     Yetersiz bakiye. Mevcut bakiye: {formatCurrency(selectedAccount.balance, selectedAccount.currency)}
                   </div>
@@ -462,19 +463,19 @@ export default function FastTransferPage() {
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500 dark:text-text-dark-muted">Minimum</span>
+                <span className="text-text-muted">Minimum</span>
                 <span className="font-medium">1 IQD</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500 dark:text-text-dark-muted">Maksimum</span>
+                <span className="text-text-muted">Maksimum</span>
                 <span className="font-medium">50.000 IQD</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500 dark:text-text-dark-muted">Komisyon</span>
+                <span className="text-text-muted">Komisyon</span>
                 <span className="font-medium text-emerald-500">Ücretsiz</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500 dark:text-text-dark-muted">İşlem Süresi</span>
+                <span className="text-text-muted">İşlem Süresi</span>
                 <span className="font-medium text-emerald-500">Anında</span>
               </div>
             </CardContent>
@@ -488,26 +489,27 @@ export default function FastTransferPage() {
               {recentLoading ? (
                 <div className="space-y-3">
                   {[1, 2, 3].map((i) => (
-                    <div key={i} className="h-12 bg-gray-100 dark:bg-surface-dark-secondary rounded-lg animate-pulse" />
+                    <div key={i} className="h-12 bg-surface-tertiary rounded-lg animate-pulse" />
                   ))}
                 </div>
               ) : recentTransfers.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-6 text-gray-400 dark:text-text-dark-muted">
-                  <Clock className="w-8 h-8 mb-2" />
-                  <p className="text-sm">Henüz transfer yok</p>
-                </div>
+                <EmptyState
+                  icon={Clock}
+                  title="Henüz transfer yok"
+                  gradient="from-secondary to-indigo-600"
+                />
               ) : (
                 <div className="space-y-2">
                   {recentTransfers.map((tx) => (
                     <div
                       key={tx.id}
-                      className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-surface-dark-secondary transition-colors"
+                      className="flex items-center justify-between p-2 rounded-lg hover:bg-surface-secondary hover:bg-surface-tertiary transition-colors"
                     >
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-gray-900 dark:text-text-dark-primary truncate">
+                        <p className="text-sm font-medium text-text-primary truncate">
                           {tx.recipientName || "Transfer"}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-text-dark-muted">
+                        <p className="text-xs text-text-muted">
                           {formatDate(new Date(tx.date), "relative")}
                         </p>
                       </div>

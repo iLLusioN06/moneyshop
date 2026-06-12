@@ -10,6 +10,7 @@ import {
   Input,
   Badge,
   CardSkeleton,
+  EmptyState,
 } from "@/components/ui";
 import { cn } from "@/lib/utils";
 import { ErrorBoundary } from "@/components/error-boundary";
@@ -234,7 +235,7 @@ export default function CategoriesPage() {
 
       {/* Error */}
       {fetchError && (
-        <div className="flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
+        <div className="shake-alert flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           {fetchError}
           <button onClick={() => refetch()} className="ml-auto">
@@ -252,20 +253,20 @@ export default function CategoriesPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Income Categories */}
-          <Card>
-            <CardHeader>
+          <Card className="overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-secondary/5 to-transparent border-b border-border">
               <CardTitle>Gelir Kategorileri</CardTitle>
             </CardHeader>
             <CardContent>
               {incomeCategories.length === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-sm text-text-muted mb-3">
-                    Henüz gelir kategorisi yok
-                  </p>
-                  <Button variant="outline" size="sm" onClick={() => openAddModal("INCOME")}>
-                    <Plus className="w-4 h-4" />
-                    Ekle
-                  </Button>
+                <div className="py-4">
+                  <EmptyState
+                    icon={Plus}
+                    title="Henüz gelir kategorisi yok"
+                    description="Gelirlerinizi kategorize etmek için ekleyin."
+                    action={{ label: "Ekle", onClick: () => openAddModal("INCOME"), icon: Plus }}
+                    gradient="from-profit to-emerald-600"
+                  />
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -283,20 +284,20 @@ export default function CategoriesPage() {
           </Card>
 
           {/* Expense Categories */}
-          <Card>
-            <CardHeader>
+          <Card className="overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-secondary/5 to-transparent border-b border-border">
               <CardTitle>Gider Kategorileri</CardTitle>
             </CardHeader>
             <CardContent>
               {expenseCategories.length === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-sm text-text-muted mb-3">
-                    Henüz gider kategorisi yok
-                  </p>
-                  <Button variant="outline" size="sm" onClick={() => openAddModal("EXPENSE")}>
-                    <Plus className="w-4 h-4" />
-                    Ekle
-                  </Button>
+                <div className="py-4">
+                  <EmptyState
+                    icon={Plus}
+                    title="Henüz gider kategorisi yok"
+                    description="Giderlerinizi kategorize etmek için ekleyin."
+                    action={{ label: "Ekle", onClick: () => openAddModal("EXPENSE"), icon: Plus }}
+                    gradient="from-loss to-rose-600"
+                  />
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -335,7 +336,7 @@ export default function CategoriesPage() {
             <CardContent>
               <div className="space-y-4">
                 {formError && (
-                  <div className="p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
+                  <div className="shake-alert p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
                     {formError}
                   </div>
                 )}
@@ -417,7 +418,7 @@ export default function CategoriesPage() {
                 Kategoriyi Sil
               </h3>
               {deleteError && (
-                <div className="mb-4 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
+                <div className="shake-alert mb-4 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
                   {deleteError}
                 </div>
               )}

@@ -7,6 +7,7 @@ import {
   CardTitle,
   CardContent,
   Button,
+  EmptyState,
 } from "@/components/ui";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { useAccounts } from "@/hooks";
@@ -245,25 +246,31 @@ function PortfolioContent() {
       {/* Summary Cards */}
       {summary && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card>
+          <Card className="overflow-hidden">
+            <div className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent px-4 py-2 border-b border-border">
+              <p className="text-xs font-semibold text-text-secondary uppercase tracking-wider">Toplam Maliyet</p>
+            </div>
             <CardContent className="p-4">
-              <p className="text-sm text-text-muted">Toplam Maliyet</p>
               <p className="text-xl font-bold text-text-primary mt-1">
                 {formatCurrency(summary.totalCost, "TRY")}
               </p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="overflow-hidden">
+            <div className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent px-4 py-2 border-b border-border">
+              <p className="text-xs font-semibold text-text-secondary uppercase tracking-wider">Güncel Değer</p>
+            </div>
             <CardContent className="p-4">
-              <p className="text-sm text-text-muted">Güncel Değer</p>
               <p className="text-xl font-bold text-text-primary mt-1">
                 {formatCurrency(summary.totalCurrent, "TRY")}
               </p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="overflow-hidden">
+            <div className="bg-gradient-to-r from-profit/10 via-profit/5 to-transparent px-4 py-2 border-b border-border">
+              <p className="text-xs font-semibold text-text-secondary uppercase tracking-wider">Kar / Zarar</p>
+            </div>
             <CardContent className="p-4">
-              <p className="text-sm text-text-muted">Kar/Zarar</p>
               <div className="flex items-center gap-2 mt-1">
                 {summary.totalProfit >= 0 ? (
                   <TrendingUp className="w-5 h-5 text-profit" />
@@ -276,9 +283,11 @@ function PortfolioContent() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="overflow-hidden">
+            <div className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent px-4 py-2 border-b border-border">
+              <p className="text-xs font-semibold text-text-secondary uppercase tracking-wider">Getiri Oranı</p>
+            </div>
             <CardContent className="p-4">
-              <p className="text-sm text-text-muted">Getiri Oranı</p>
               <span className={`text-xl font-bold mt-1 ${summary.profitPercent >= 0 ? "text-profit" : "text-loss"}`}>
                 %{summary.profitPercent.toFixed(2)}
               </span>
@@ -319,8 +328,8 @@ function PortfolioContent() {
 
       {/* Add Form */}
       {showForm && (
-        <Card>
-          <CardHeader>
+        <Card className="overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent">
             <CardTitle>Yeni Yatırım Ekle</CardTitle>
           </CardHeader>
           <CardContent>
@@ -463,18 +472,21 @@ function PortfolioContent() {
           <Loader2 className="w-8 h-8 animate-spin text-text-muted" />
         </div>
       ) : error ? (
-        <Card>
+        <Card className="overflow-hidden">
           <CardContent className="flex flex-col items-center py-12">
             <AlertCircle className="w-12 h-12 text-loss mb-4" />
             <p className="text-text-muted">{error}</p>
           </CardContent>
         </Card>
       ) : investments.length === 0 ? (
-        <Card>
-          <CardContent className="flex flex-col items-center py-12">
-            <BarChart3 className="w-12 h-12 text-text-muted/40 mb-4" />
-            <p className="text-text-muted">Henüz yatırım eklenmemiş.</p>
-          </CardContent>
+        <Card className="overflow-hidden">
+          <EmptyState
+            icon={BarChart3}
+            title="Henüz yatırım eklenmemiş"
+            description="Portföyünüzü oluşturmak için ilk yatırımınızı ekleyin."
+            action={{ label: "Yatırım Ekle", onClick: () => setShowForm(true), icon: Plus }}
+            gradient="from-accent to-emerald-600"
+          />
         </Card>
       ) : (
         <div className="space-y-3">
@@ -485,7 +497,7 @@ function PortfolioContent() {
             const profitPct = totalCost > 0 ? (profit / totalCost) * 100 : 0;
 
             return (
-              <Card key={inv.id} className="hover:shadow-md transition-shadow">
+              <Card key={inv.id} className="hover:shadow-md transition-shadow overflow-hidden">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">

@@ -9,6 +9,7 @@ import {
   Button,
   Input,
   Badge,
+  EmptyState,
 } from "@/components/ui";
 import { formatCurrency, formatDate, cn } from "@/lib/utils";
 import { TRANSACTION_TYPES, TRANSACTION_STATUS } from "@/lib/constants";
@@ -228,7 +229,13 @@ export default function TransactionsPage() {
       </div>
 
       {/* Filters */}
-      <Card>
+      <Card className="overflow-hidden">
+        <div className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent px-5 py-3 border-b border-border">
+          <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2">
+            <Filter className="w-4 h-4 text-secondary" />
+            Filtrele
+          </h3>
+        </div>
         <CardContent className="p-4">
           <div className="flex flex-wrap items-end gap-3">
             <div className="flex-1 min-w-[150px]">
@@ -325,7 +332,7 @@ export default function TransactionsPage() {
 
       {/* Error */}
       {error && (
-        <div className="flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
+        <div className="shake-alert flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           {error}
           <button onClick={() => setError("")} className="ml-auto">
@@ -335,7 +342,13 @@ export default function TransactionsPage() {
       )}
 
       {/* List */}
-      <Card>
+      <Card className="overflow-hidden">
+        <div className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent px-5 py-3 border-b border-border">
+          <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2">
+            <ArrowUpDown className="w-4 h-4 text-secondary" />
+            İşlem Geçmişi
+          </h3>
+        </div>
         <CardContent className="p-0">
           {isLoading ? (
             <div className="p-6 space-y-4">
@@ -351,21 +364,16 @@ export default function TransactionsPage() {
               ))}
             </div>
           ) : transactions.length === 0 ? (
-            <div className="p-12 text-center">
-              <Receipt className="w-12 h-12 text-text-muted mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-text-primary mb-1">
-                İşlem bulunamadı
-              </h3>
-              <p className="text-sm text-text-muted mb-4">
-                {filterType || filterAccount || filterSearch
-                  ? "Filtrelere uygun işlem bulunamadı."
-                  : "Henüz hiç işlem eklenmemiş."}
-              </p>
-              <Button onClick={openAddModal}>
-                <Plus className="w-4 h-4" />
-                İlk İşlemi Ekle
-              </Button>
-            </div>
+            <EmptyState
+              icon={Receipt}
+              title={filterType || filterAccount || filterSearch
+                ? "İşlem bulunamadı"
+                : "Henüz işlem eklenmemiş"}
+              description={filterType || filterAccount || filterSearch
+                ? "Filtrelere uygun işlem bulunamadı."
+                : "İlk işleminizi ekleyerek finansal takibinize başlayın."}
+              action={(!filterType && !filterAccount && !filterSearch) ? { label: "İlk İşlemi Ekle", onClick: openAddModal, icon: Plus } : undefined}
+            />
           ) : (
             <div className="divide-y divide-border">
               {transactions.map((t) => (
@@ -491,8 +499,8 @@ export default function TransactionsPage() {
       {/* Add Transaction Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <Card className="w-full max-w-lg">
-            <CardHeader>
+          <Card className="w-full max-w-lg overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent">
               <div className="flex items-center justify-between">
                 <CardTitle>Yeni İşlem</CardTitle>
                 <button
@@ -506,7 +514,7 @@ export default function TransactionsPage() {
             <CardContent>
               <div className="space-y-4">
                 {formError && (
-                  <div className="p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
+                  <div className="shake-alert p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
                     {formError}
                   </div>
                 )}
@@ -620,7 +628,7 @@ export default function TransactionsPage() {
       {/* Delete Confirmation */}
       {deleteId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <Card className="w-full max-w-sm">
+          <Card className="w-full max-w-sm overflow-hidden">
             <CardContent className="p-6 text-center">
               <AlertCircle className="w-12 h-12 text-loss mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-text-primary mb-1">

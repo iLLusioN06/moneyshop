@@ -4,7 +4,6 @@ import { type RefObject } from "react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { LANGUAGES, type Dir, type Language } from "@/lib/landing-i18n";
-import { useAppStore } from "@/stores/app-store";
 
 interface NavbarProps {
   scrolled: boolean;
@@ -29,21 +28,6 @@ interface NavbarProps {
   setLangMenuOpen: (v: boolean) => void;
   setMenuOpen: (v: boolean) => void;
   changeLang: (code: Language) => void;
-}
-
-function ThemeToggle() {
-  const { theme, setTheme } = useAppStore();
-  const isDark = theme === "dark";
-  return (
-    <button
-      className="nav-theme-toggle"
-      onClick={() => setTheme(isDark ? "light" : "dark")}
-      aria-label={isDark ? "Açık temaya geç" : "Koyu temaya geç"}
-      title={isDark ? "Açık Tema" : "Koyu Tema"}
-    >
-      <i className={`fas ${isDark ? "fa-sun" : "fa-moon"}`} />
-    </button>
-  );
 }
 
 export function Navbar({
@@ -130,9 +114,6 @@ export function Navbar({
               </>
             )}
 
-            {/* Theme Toggle */}
-            <ThemeToggle />
-
             {/* Language Switcher */}
             <div className="lang-dropdown" ref={langMenuRef}>
               <button className="nav-lang" onClick={() => setLangMenuOpen(!langMenuOpen)} aria-label="Dil seç">
@@ -157,11 +138,6 @@ export function Navbar({
                 </div>
               )}
             </div>
-          </div>
-
-          {/* Mobile Theme Toggle */}
-          <div className="mobile-theme-toggle">
-            <ThemeToggle />
           </div>
 
           <button

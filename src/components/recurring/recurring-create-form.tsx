@@ -413,7 +413,7 @@ export function RecurringCreateForm({ show, onClose, onSuccess }: RecurringCreat
 
             {/* Error */}
             {error && (
-              <div className="flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
+              <div className="shake-alert flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
                 <AlertCircle className="w-4 h-4 flex-shrink-0" />
                 {error}
               </div>

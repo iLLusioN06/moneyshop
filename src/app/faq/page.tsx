@@ -511,11 +511,9 @@ export default function FaqPage() {
           </h1>
           <p style={{ fontSize: 16, color: "var(--gray-5)", maxWidth: 500, margin: "0 auto 48px" }}>
             {c.subtitle}
-          </p>
-
-          <div style={{ textAlign: "left", display: "flex", flexDirection: "column", gap: 24 }}>
+          </p>            <div style={{ textAlign: "left", display: "flex", flexDirection: "column", gap: 24 }}>
             {faqData.map((group) => (
-              <div key={group.categoryKey} style={{ background: "#fff", borderRadius: 16, border: "1px solid var(--gray-3)", overflow: "hidden" }}>
+              <div key={group.categoryKey} style={{ background: "var(--white)", borderRadius: 16, border: "1px solid var(--gray-3)", overflow: "hidden" }}>
                 <div style={{ padding: "18px 24px", background: "var(--gradient-1)", borderBottom: "1px solid var(--gray-3)", display: "flex", alignItems: "center", gap: 10 }}>
                   <i className={group.icon} style={{ color: "#fff", fontSize: 18, width: 24, textAlign: "center" }} />
                   <h2 style={{ fontSize: 17, fontWeight: 700, margin: 0, color: "#fff" }}>{c.categories[group.categoryKey]}</h2>
@@ -568,7 +566,7 @@ export default function FaqPage() {
             ))}
           </div>
 
-          <div style={{ marginTop: 48, padding: 32, background: "#fff", borderRadius: 16, border: "1px solid var(--gray-3)" }}>
+          <div style={{ marginTop: 48, padding: 32, background: "var(--white)", borderRadius: 16, border: "1px solid var(--gray-3)" }}>
             <i className="fas fa-headset" style={{ fontSize: 32, color: "var(--primary)", marginBottom: 12 }} />
             <h3 style={{ fontSize: 18, fontWeight: 700, margin: "0 0 8px" }}>{c.notFoundTitle}</h3>
             <p style={{ fontSize: 14, color: "var(--gray-5)", margin: "0 0 20px" }}>

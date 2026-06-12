@@ -743,7 +743,7 @@ export default function PricingPage() {
                 style={{
                   padding: "8px 24px", borderRadius: 10, fontFamily: "inherit", fontSize: 14, fontWeight: 600,
                   cursor: "pointer", border: "none", transition: "all 0.3s",
-                  background: activeType === "individual" ? "#fff" : "transparent",
+                  background: activeType === "individual" ? "var(--white)" : "transparent",
                   color: activeType === "individual" ? "var(--dark)" : "var(--gray-5)",
                   boxShadow: activeType === "individual" ? "0 2px 8px rgba(0,0,0,0.08)" : "none",
                 }}
@@ -755,7 +755,7 @@ export default function PricingPage() {
                 style={{
                   padding: "8px 24px", borderRadius: 10, fontFamily: "inherit", fontSize: 14, fontWeight: 600,
                   cursor: "pointer", border: "none", transition: "all 0.3s",
-                  background: activeType === "corporate" ? "#fff" : "transparent",
+                  background: activeType === "corporate" ? "var(--white)" : "transparent",
                   color: activeType === "corporate" ? "var(--dark)" : "var(--gray-5)",
                   boxShadow: activeType === "corporate" ? "0 2px 8px rgba(0,0,0,0.08)" : "none",
                 }}
@@ -771,7 +771,7 @@ export default function PricingPage() {
                 style={{
                   padding: "14px 36px", fontFamily: "inherit", fontSize: 16, fontWeight: 700,
                   cursor: "pointer", border: "none", transition: "all 0.3s",
-                  background: activeTab === "fees" ? "var(--primary)" : "#fff",
+                  background: activeTab === "fees" ? "var(--primary)" : "var(--white)",
                   color: activeTab === "fees" ? "#fff" : "var(--gray-5)",
                 }}
               >
@@ -783,7 +783,7 @@ export default function PricingPage() {
                 style={{
                   padding: "14px 36px", fontFamily: "inherit", fontSize: 16, fontWeight: 700,
                   cursor: "pointer", border: "none", transition: "all 0.3s",
-                  background: activeTab === "limits" ? "var(--primary)" : "#fff",
+                  background: activeTab === "limits" ? "var(--primary)" : "var(--white)",
                   color: activeTab === "limits" ? "#fff" : "var(--gray-5)",
                 }}
               >
@@ -794,7 +794,7 @@ export default function PricingPage() {
           </div>
 
           {/* Table */}
-          <div style={{ textAlign: "left", overflow: "hidden", borderRadius: 16, border: "1px solid var(--gray-3)", background: "#fff" }}>
+          <div style={{ textAlign: "left", overflow: "hidden", borderRadius: 16, border: "1px solid var(--gray-3)", background: "var(--white)" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
               <thead>
                 <tr style={{ background: "var(--gradient-1)", borderBottom: "1px solid var(--gray-3)" }}>

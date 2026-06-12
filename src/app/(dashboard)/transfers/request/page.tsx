@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent, Button, Input } from "@/components/ui";
+import { Card, CardHeader, CardTitle, CardContent, Button, Input, EmptyState } from "@/components/ui";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { ArrowLeft, HandCoins, Link2, Copy, Check, Users, Clock } from "lucide-react";
 import Link from "next/link";
@@ -30,7 +30,7 @@ export default function RequestPage() {
       <div className="flex items-center gap-4">
         <Link
           href="/transfers"
-          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-surface-dark-secondary transition-colors"
+          className="p-2 rounded-lg hover:bg-surface-tertiary transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
@@ -39,7 +39,7 @@ export default function RequestPage() {
             <div className="w-8 h-8 bg-emerald-500/10 text-emerald-500 rounded-lg flex items-center justify-center">
               <HandCoins className="w-4 h-4" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-text-dark-primary">
+            <h1 className="text-2xl font-bold text-text-primary">
               Ödeme İste
             </h1>
           </div>
@@ -58,7 +58,7 @@ export default function RequestPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-text-dark-secondary mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   Talep Tutarı (IQD)
                 </label>
                 <Input
@@ -69,7 +69,7 @@ export default function RequestPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-text-dark-secondary mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   Açıklama
                 </label>
                 <Input
@@ -89,12 +89,12 @@ export default function RequestPage() {
               </Button>
 
               {createdLink && (
-                <div className="bg-gray-50 dark:bg-surface-dark-secondary rounded-lg p-4 space-y-2">
-                  <label className="text-xs text-gray-500 dark:text-text-dark-muted">
+                <div className="bg-surface-secondary rounded-lg p-4 space-y-2">
+                  <label className="text-xs text-text-muted">
                     Ödeme Linkin Hazır
                   </label>
                   <div className="flex items-center gap-2">
-                    <code className="flex-1 text-sm font-mono text-gray-900 dark:text-text-dark-primary bg-white dark:bg-surface-dark px-3 py-2 rounded border border-gray-200 dark:border-border-dark truncate">
+                    <code className="flex-1 text-sm font-mono text-text-primary bg-surface px-3 py-2 rounded border border-border truncate">
                       {createdLink}
                     </code>
                     <button
@@ -132,7 +132,7 @@ export default function RequestPage() {
                 <button
                   key={t}
                   onClick={() => setAmount(t.replace(/[^0-9]/g, ""))}
-                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-text-dark-secondary hover:bg-gray-100 dark:hover:bg-surface-dark-secondary transition-colors"
+                  className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:bg-surface-tertiary transition-colors"
                 >
                   {t}
                 </button>
@@ -145,10 +145,11 @@ export default function RequestPage() {
               <CardTitle>Son Talepler</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col items-center justify-center py-6 text-gray-400">
-                <Clock className="w-8 h-8 mb-2" />
-                <p className="text-sm">Henüz talep yok</p>
-              </div>
+              <EmptyState
+                icon={Clock}
+                title="Henüz talep yok"
+                gradient="from-secondary to-indigo-600"
+              />
             </CardContent>
           </Card>
 
@@ -157,10 +158,11 @@ export default function RequestPage() {
               <CardTitle>Kayıtlı Alıcılar</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col items-center justify-center py-6 text-gray-400">
-                <Users className="w-8 h-8 mb-2" />
-                <p className="text-sm">Henüz alıcı eklenmemiş</p>
-              </div>
+              <EmptyState
+                icon={Users}
+                title="Henüz alıcı eklenmemiş"
+                gradient="from-secondary to-indigo-600"
+              />
             </CardContent>
           </Card>
         </div>

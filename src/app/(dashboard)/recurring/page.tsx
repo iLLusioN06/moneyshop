@@ -7,6 +7,7 @@ import {
   CardTitle,
   CardContent,
   Button,
+  EmptyState,
 } from "@/components/ui";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { RecurringCreateForm } from "@/components/recurring/recurring-create-form";
@@ -156,15 +157,18 @@ function RecurringList() {
           </CardContent>
         </Card>
       ) : items.length === 0 ? (
-        <Card>
-          <CardContent className="flex flex-col items-center py-12">
-            <Repeat className="w-12 h-12 text-text-muted/40 mb-4" />
-            <p className="text-text-muted">
-              {activeTab === "ACTIVE"
-                ? "Henüz tekrarlanan işlem bulunmuyor."
-                : `"${statusLabels[activeTab]}" durumunda işlem bulunmuyor.`}
-            </p>
-          </CardContent>
+        <Card className="overflow-hidden">
+          <EmptyState
+            icon={Repeat}
+            title={activeTab === "ACTIVE"
+              ? "Henüz tekrarlanan işlem bulunmuyor"
+              : `"${statusLabels[activeTab]}" durumunda işlem bulunmuyor`}
+            description={activeTab === "ACTIVE"
+              ? "Düzenli gelir/giderlerinizi otomatikleştirmek için bir tekrarlanan işlem oluşturun."
+              : undefined}
+            action={activeTab === "ACTIVE" ? { label: "Yeni İşlem", onClick: () => setShowCreateForm(true), icon: Plus } : undefined}
+            gradient="from-secondary to-indigo-600"
+          />
         </Card>
       ) : (
         <div className="space-y-3">

@@ -516,7 +516,7 @@ export default function CardApplicationPage() {
                 style={{
                   flex: 1, maxWidth: 260, padding: "20px 24px", borderRadius: 16, cursor: "pointer", fontFamily: "inherit", textAlign: "left",
                   border: selectedTier === tier ? "2px solid var(--primary)" : "2px solid var(--gray-3)",
-                  background: "var(--white)",
+                  background: "var(--card-bg)",
                   transition: "all 0.3s ease", boxShadow: selectedTier === tier ? "0 8px 30px rgba(0,82,255,0.15)" : "none",
                 }}
               >
@@ -568,7 +568,7 @@ export default function CardApplicationPage() {
                   {cardData[selectedTier].benefits.map((b, i) => {
                     const benefit = c.benefits[selectedTier]?.[i];
                     return (
-                      <div key={i} className="service-feature" style={{ gap: 14, padding: "12px 16px", background: "#fff", border: "1px solid var(--gray-3)", borderRadius: 14 }}>
+                      <div key={i} className="service-feature" style={{ gap: 14, padding: "12px 16px", background: "var(--white)", border: "1px solid var(--gray-3)", borderRadius: 14 }}>
                         <i className={`fas ${b.icon}`} style={{ fontSize: 16, color: "var(--primary)", marginTop: 2 }} />
                         <div>
                           <strong style={{ fontSize: 13 }}>{benefit?.title || b.title}</strong>

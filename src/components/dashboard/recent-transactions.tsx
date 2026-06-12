@@ -22,8 +22,8 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
   const router = useRouter();
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="overflow-hidden">
+      <CardHeader className="bg-gradient-to-r from-secondary/5 to-transparent border-b border-border">
         <div className="flex items-center justify-between">
           <CardTitle>{t("dash.recentTransactions")}</CardTitle>
           <button
@@ -42,10 +42,11 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
           </div>
         ) : (
           <div className="space-y-1">
-            {transactions.map((tx) => (
+            {transactions.map((tx, idx) => (
               <div
                 key={tx.id}
-                className="flex items-center justify-between p-2.5 rounded-lg hover:bg-surface-tertiary transition-colors cursor-pointer group"
+                className="flex items-center justify-between p-2.5 rounded-lg hover:bg-surface-tertiary hover:scale-[1.01] transition-all duration-200 cursor-pointer group animate-[slide-up_0.3s_ease-out] opacity-0 [animation-fill-mode:forwards]"
+                style={{ animationDelay: `${idx * 0.05}s` }}
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <div

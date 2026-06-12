@@ -54,5 +54,9 @@ screenshots/
 # tmp
 tmp/
 
+# dev artifacts
+dev.log
+nul
+
 # playwright
 .playwright-mcp/

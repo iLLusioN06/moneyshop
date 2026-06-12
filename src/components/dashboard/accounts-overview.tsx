@@ -13,8 +13,8 @@ export function AccountsOverview({ accounts }: AccountsOverviewProps) {
   const router = useRouter();
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="overflow-hidden">
+      <CardHeader className="bg-gradient-to-r from-secondary/5 to-transparent border-b border-border">
         <div className="flex items-center justify-between">
           <div>
             <CardTitle>{t("dash.accounts")}</CardTitle>
@@ -37,11 +37,11 @@ export function AccountsOverview({ accounts }: AccountsOverviewProps) {
           {accounts.map((account) => (
             <div
               key={account.id}
-              className="flex items-center justify-between p-4 rounded-xl border border-border hover:border-secondary/30 hover:shadow-sm transition-all duration-200 cursor-pointer group"
+              className="flex items-center justify-between p-4 rounded-xl bg-surface border border-border hover:border-secondary/30 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group"
             >
               <div className="flex items-center gap-3">
                 <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg"
+                  className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-sm group-hover:scale-110 transition-transform"
                   style={{ backgroundColor: account.color || "#3b82f6" }}
                 >
                   {account.name.charAt(0)}

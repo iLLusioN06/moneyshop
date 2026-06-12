@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent, Button, Input } from "@/components/ui";
+import { Card, CardHeader, CardTitle, CardContent, Button, Input, EmptyState } from "@/components/ui";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { ArrowLeft, Globe, MapPin, Clock, ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -34,7 +34,7 @@ export default function InternationalPage() {
       <div className="flex items-center gap-4">
         <Link
           href="/transfers"
-          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-surface-dark-secondary transition-colors"
+          className="p-2 rounded-lg hover:bg-surface-tertiary transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
@@ -43,7 +43,7 @@ export default function InternationalPage() {
             <div className="w-8 h-8 bg-sky-500/10 text-sky-500 rounded-lg flex items-center justify-center">
               <Globe className="w-4 h-4" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-text-dark-primary">
+            <h1 className="text-2xl font-bold text-text-primary">
               Yurt Dışından Para Al
             </h1>
           </div>
@@ -71,24 +71,24 @@ export default function InternationalPage() {
                 </div>
               </div>
 
-              <div className="bg-gray-50 dark:bg-surface-dark-secondary rounded-lg p-4 space-y-2">
-                <label className="text-xs text-gray-500 dark:text-text-dark-muted">Senin IBAN'ın</label>
-                <p className="text-sm font-mono font-medium text-gray-900 dark:text-text-dark-primary">
+              <div className="bg-surface-secondary rounded-lg p-4 space-y-2">
+                <label className="text-xs text-text-muted">Senin IBAN'ın</label>
+                <p className="text-sm font-mono font-medium text-text-primary">
                   IQ12 3456 7890 1234 5678 901
                 </p>
-                <label className="text-xs text-gray-500 dark:text-text-dark-muted mt-2">Banka Adı</label>
-                <p className="text-sm font-medium text-gray-900 dark:text-text-dark-primary">
+                <label className="text-xs text-text-muted mt-2">Banka Adı</label>
+                <p className="text-sm font-medium text-text-primary">
                   MoneyShop Finansal Hizmetler A.Ş.
                 </p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-text-dark-secondary mb-1">
+                  <label className="block text-sm font-medium text-text-secondary mb-1">
                     Gönderen Ülke
                   </label>
                   <select
-                    className="w-full h-10 px-3 rounded-lg border border-gray-200 dark:border-border-dark bg-white dark:bg-surface-dark text-gray-900 dark:text-text-dark-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
+                    className="w-full h-10 px-3 rounded-lg border border-border bg-surface text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
                     value={country}
                     onChange={(e) => setCountry(e.target.value)}
                   >
@@ -99,10 +99,10 @@ export default function InternationalPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-text-dark-secondary mb-1">
+                  <label className="block text-sm font-medium text-text-secondary mb-1">
                     Para Birimi
                   </label>
-                  <select className="w-full h-10 px-3 rounded-lg border border-gray-200 dark:border-border-dark bg-white dark:bg-surface-dark text-gray-900 dark:text-text-dark-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50">
+                  <select className="w-full h-10 px-3 rounded-lg border border-border bg-surface text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50">
                     <option value="">Birim seçin</option>
                     {currencies.map((c) => (
                       <option key={c.code} value={c.code}>{c.symbol} {c.code} - {c.name}</option>
@@ -112,7 +112,7 @@ export default function InternationalPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-text-dark-secondary mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   Beklenen Tutar
                 </label>
                 <Input
@@ -146,7 +146,7 @@ export default function InternationalPage() {
               ].map((item) => (
                 <div key={item.cur} className="flex items-center justify-between text-sm">
                   <span className="font-medium">{item.cur}</span>
-                  <span className="text-gray-900 dark:text-text-dark-primary">{item.rate} IQD</span>
+                  <span className="text-text-primary">{item.rate} IQD</span>
                   <span className={item.change.startsWith("+") ? "text-emerald-500" : "text-red-500"}>
                     {item.change}%
                   </span>
@@ -160,10 +160,11 @@ export default function InternationalPage() {
               <CardTitle>Son Gelen Transferler</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col items-center justify-center py-6 text-gray-400">
-                <Clock className="w-8 h-8 mb-2" />
-                <p className="text-sm">Henüz transfer yok</p>
-              </div>
+              <EmptyState
+                icon={Clock}
+                title="Henüz transfer yok"
+                gradient="from-secondary to-indigo-600"
+              />
             </CardContent>
           </Card>
         </div>

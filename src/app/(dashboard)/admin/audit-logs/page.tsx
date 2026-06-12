@@ -118,7 +118,13 @@ function AuditLogContent() {
       </div>
 
       {/* Filters */}
-      <Card>
+      <Card className="overflow-hidden">
+        <div className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent px-5 py-3 border-b border-border">
+          <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2">
+            <Search className="w-4 h-4 text-secondary" />
+            Filtrele
+          </h3>
+        </div>
         <CardContent className="p-4">
           <form onSubmit={handleSearch} className="flex flex-wrap gap-3 items-end">
             <div>
@@ -184,14 +190,14 @@ function AuditLogContent() {
           ))}
         </div>
       ) : error ? (
-        <Card>
+        <Card className="overflow-hidden">
           <CardContent className="flex flex-col items-center py-12">
             <AlertCircle className="w-12 h-12 text-loss mb-4" />
             <p className="text-text-muted">{error}</p>
           </CardContent>
         </Card>
       ) : logs.length === 0 ? (
-        <Card>
+        <Card className="overflow-hidden">
           <CardContent className="flex flex-col items-center py-12">
             <History className="w-12 h-12 text-text-muted/40 mb-4" />
             <p className="text-text-muted">Henüz günlük kaydı bulunmuyor.</p>
@@ -207,7 +213,7 @@ function AuditLogContent() {
               return (
                 <Card
                   key={log.id}
-                  className="hover:shadow-md transition-shadow cursor-pointer"
+                  className="hover:shadow-md transition-shadow cursor-pointer overflow-hidden"
                   onClick={() => setExpandedId(isExpanded ? null : log.id)}
                 >
                   <CardContent className="p-4">

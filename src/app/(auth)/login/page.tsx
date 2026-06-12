@@ -32,11 +32,12 @@ export default function LoginPage() {
         redirect: false,
       });
 
-      if (result?.error) {
-        setError("E-posta veya şifre hatalı.");
-        setIsLoading(false);
-        return;
-      }
+        if (result?.error) {
+          // Show a generic error message for invalid credentials (email/username or password)
+          setError("Kullanıcı adı veya şifre hatalı.");
+          setIsLoading(false);
+          return;
+        }
 
       // ✅ BAŞARILI GİRİŞ - DASHBOARD'A YÖNLENDİR
       router.push("/dashboard");
@@ -70,7 +71,7 @@ export default function LoginPage() {
 
           {/* Error Message */}
           {error && (
-            <div className="mb-4 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
+            <div className="shake-alert mb-4 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
               {error}
             </div>
           )}
@@ -78,16 +79,16 @@ export default function LoginPage() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
-              label="E-posta"
-              type="email"
-              placeholder="ornek@email.com"
+              label="E-posta / Kullanıcı Adı"
+              type="text"
+              placeholder="ornek@email.com veya kullanıcı adı"
               value={formData.email}
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
               }
               icon={<Mail className="w-4 h-4" />}
               required
-              autoComplete="email"
+              autoComplete="username"
             />
 
             <div className="relative">

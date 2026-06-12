@@ -8,6 +8,7 @@ import {
   CardContent,
   Button,
   Input,
+  EmptyState,
 } from "@/components/ui";
 import { ErrorBoundary } from "@/components/error-boundary";
 import {
@@ -184,12 +185,12 @@ export default function EftTransferPage() {
         <div className="flex items-center gap-4">
           <button
             onClick={() => setShowConfirm(false)}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-surface-dark-secondary transition-colors"
+            className="p-2 rounded-lg hover:bg-surface-tertiary transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-text-dark-primary">
+            <h1 className="text-2xl font-bold text-text-primary">
               Transferi Onayla
             </h1>
           </div>
@@ -198,43 +199,43 @@ export default function EftTransferPage() {
         <Card className="max-w-lg mx-auto">
           <CardContent className="p-6 space-y-6">
             <div className="text-center">
-              <p className="text-sm text-gray-500 dark:text-text-dark-muted mb-1">
+              <p className="text-sm text-text-muted mb-1">
                 Gönderilecek Tutar
               </p>
-              <p className="text-4xl font-bold text-gray-900 dark:text-text-dark-primary">
+              <p className="text-4xl font-bold text-text-primary">
                 {formatCurrency(parseFloat(amount), selectedAccount?.currency)}
               </p>
             </div>
 
-            <div className="border-t border-gray-200 dark:border-border-dark" />
+            <div className="border-t border-border" />
 
             <div className="space-y-3">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500 dark:text-text-dark-muted">Alıcı</span>
-                <span className="font-medium text-gray-900 dark:text-text-dark-primary">{recipientName}</span>
+                <span className="text-text-muted">Alıcı</span>
+                <span className="font-medium text-text-primary">{recipientName}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500 dark:text-text-dark-muted">IBAN</span>
-                <span className="font-medium text-gray-900 dark:text-text-dark-primary font-mono text-xs">{recipientIban}</span>
+                <span className="text-text-muted">IBAN</span>
+                <span className="font-medium text-text-primary font-mono text-xs">{recipientIban}</span>
               </div>
               {recipientBank && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500 dark:text-text-dark-muted">Banka</span>
-                  <span className="font-medium text-gray-900 dark:text-text-dark-primary">{recipientBank}</span>
+                  <span className="text-text-muted">Banka</span>
+                  <span className="font-medium text-text-primary">{recipientBank}</span>
                 </div>
               )}
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500 dark:text-text-dark-muted">Gönderen</span>
-                <span className="font-medium text-gray-900 dark:text-text-dark-primary">{selectedAccount?.name}</span>
+                <span className="text-text-muted">Gönderen</span>
+                <span className="font-medium text-text-primary">{selectedAccount?.name}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500 dark:text-text-dark-muted">Kalan Bakiye</span>
-                <span className="font-medium text-gray-900 dark:text-text-dark-primary">
+                <span className="text-text-muted">Kalan Bakiye</span>
+                <span className="font-medium text-text-primary">
                   {selectedAccount && formatCurrency(selectedAccount.balance - parseFloat(amount), selectedAccount.currency)}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500 dark:text-text-dark-muted">Ücret</span>
+                <span className="text-text-muted">Ücret</span>
                 <span className="font-medium">5 IQD</span>
               </div>
             </div>
@@ -297,7 +298,7 @@ export default function EftTransferPage() {
       <div className="flex items-center gap-4">
         <Link
           href="/transfers"
-          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-surface-dark-secondary transition-colors"
+          className="p-2 rounded-lg hover:bg-surface-tertiary transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
@@ -306,7 +307,7 @@ export default function EftTransferPage() {
             <div className="w-8 h-8 bg-cyan-500/10 text-cyan-500 rounded-lg flex items-center justify-center">
               <ArrowLeftRight className="w-4 h-4" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-text-dark-primary">
+            <h1 className="text-2xl font-bold text-text-primary">
               Havale & EFT
             </h1>
           </div>
@@ -327,16 +328,16 @@ export default function EftTransferPage() {
               <CardContent className="space-y-4">
                 {/* Sender Account */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-text-dark-secondary mb-1">
+                  <label className="block text-sm font-medium text-text-secondary mb-1">
                     Gönderen Hesap
                   </label>
                   {accountsLoading ? (
-                    <div className="h-10 bg-gray-100 dark:bg-surface-dark-secondary rounded-lg animate-pulse" />
+                    <div className="h-10 bg-surface-tertiary rounded-lg animate-pulse" />
                   ) : accounts.length === 0 ? (
                     <div className="text-sm text-loss p-2">Henüz hesabınız yok.</div>
                   ) : (
                     <select
-                      className="w-full h-10 px-3 rounded-lg border border-gray-200 dark:border-border-dark bg-white dark:bg-surface-dark text-gray-900 dark:text-text-dark-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
+                      className="w-full h-10 px-3 rounded-lg border border-border bg-surface text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
                       value={senderAccountId}
                       onChange={(e) => setSenderAccountId(e.target.value)}
                       required
@@ -351,11 +352,11 @@ export default function EftTransferPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-text-dark-secondary mb-1">
+                  <label className="block text-sm font-medium text-text-secondary mb-1">
                     Alıcı Banka
                   </label>
                   <select
-                    className="w-full h-10 px-3 rounded-lg border border-gray-200 dark:border-border-dark bg-white dark:bg-surface-dark text-gray-900 dark:text-text-dark-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
+                    className="w-full h-10 px-3 rounded-lg border border-border bg-surface text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
                     value={recipientBank}
                     onChange={(e) => setRecipientBank(e.target.value)}
                   >
@@ -367,7 +368,7 @@ export default function EftTransferPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-text-dark-secondary mb-1">
+                  <label className="block text-sm font-medium text-text-secondary mb-1">
                     Alıcı IBAN <span className="text-loss">*</span>
                   </label>
                   <Input
@@ -380,7 +381,7 @@ export default function EftTransferPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-text-dark-secondary mb-1">
+                    <label className="block text-sm font-medium text-text-secondary mb-1">
                       Alıcı Adı <span className="text-loss">*</span>
                     </label>
                     <Input
@@ -391,7 +392,7 @@ export default function EftTransferPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-text-dark-secondary mb-1">
+                    <label className="block text-sm font-medium text-text-secondary mb-1">
                       Tutar <span className="text-loss">*</span>
                     </label>
                     <div className="relative">
@@ -400,7 +401,7 @@ export default function EftTransferPage() {
                         step="0.01"
                         min="0.01"
                         placeholder="0.00"
-                        className="w-full h-10 px-3 rounded-lg border border-gray-200 dark:border-border-dark bg-white dark:bg-surface-dark text-gray-900 dark:text-text-dark-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
+                        className="w-full h-10 px-3 rounded-lg border border-border bg-surface text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
                         required
@@ -415,7 +416,7 @@ export default function EftTransferPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-text-dark-secondary mb-1">
+                  <label className="block text-sm font-medium text-text-secondary mb-1">
                     Açıklama <span className="text-gray-400 font-normal">(isteğe bağlı)</span>
                   </label>
                   <Input
@@ -426,7 +427,7 @@ export default function EftTransferPage() {
                 </div>
 
                 {error && (
-                  <div className="flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
+                  <div className="shake-alert flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
                     <AlertCircle className="w-4 h-4 flex-shrink-0" />
                     {error}
                     <button onClick={() => setError("")} className="ml-auto">
@@ -436,7 +437,7 @@ export default function EftTransferPage() {
                 )}
 
                 {selectedAccount && parseFloat(amount || "0") > selectedAccount.balance && (
-                  <div className="flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
+                  <div className="shake-alert flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
                     <AlertCircle className="w-4 h-4 flex-shrink-0" />
                     Yetersiz bakiye. Mevcut: {formatCurrency(selectedAccount.balance, selectedAccount.currency)}
                   </div>
@@ -463,19 +464,19 @@ export default function EftTransferPage() {
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500 dark:text-text-dark-muted">Minimum</span>
+                <span className="text-text-muted">Minimum</span>
                 <span className="font-medium">100 IQD</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500 dark:text-text-dark-muted">Maksimum</span>
+                <span className="text-text-muted">Maksimum</span>
                 <span className="font-medium">250.000 IQD</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500 dark:text-text-dark-muted">Ücret</span>
+                <span className="text-text-muted">Ücret</span>
                 <span className="font-medium">5 IQD</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500 dark:text-text-dark-muted">Süre</span>
+                <span className="text-text-muted">Süre</span>
                 <span className="font-medium">~15 dk</span>
               </div>
             </CardContent>
@@ -489,26 +490,27 @@ export default function EftTransferPage() {
               {recentLoading ? (
                 <div className="space-y-3">
                   {[1, 2, 3].map((i) => (
-                    <div key={i} className="h-12 bg-gray-100 dark:bg-surface-dark-secondary rounded-lg animate-pulse" />
+                    <div key={i} className="h-12 bg-surface-tertiary rounded-lg animate-pulse" />
                   ))}
                 </div>
               ) : recentTransfers.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-6 text-gray-400 dark:text-text-dark-muted">
-                  <Clock className="w-8 h-8 mb-2" />
-                  <p className="text-sm">Henüz EFT yapılmamış</p>
-                </div>
+                <EmptyState
+                  icon={Clock}
+                  title="Henüz EFT yapılmamış"
+                  gradient="from-secondary to-indigo-600"
+                />
               ) : (
                 <div className="space-y-2">
                   {recentTransfers.map((tx) => (
                     <div
                       key={tx.id}
-                      className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-surface-dark-secondary transition-colors"
+                      className="flex items-center justify-between p-2 rounded-lg hover:bg-surface-secondary hover:bg-surface-tertiary transition-colors"
                     >
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-gray-900 dark:text-text-dark-primary truncate">
+                        <p className="text-sm font-medium text-text-primary truncate">
                           {tx.recipientName || "EFT"}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-text-dark-muted truncate">
+                        <p className="text-xs text-text-muted truncate">
                           {tx.recipientBank || "Harici Hesap"}
                         </p>
                       </div>

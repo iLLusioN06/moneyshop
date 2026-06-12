@@ -4,6 +4,7 @@
    ============================================= */
 
 .landing-page {
+  --card-bg: var(--white);
   --primary: #0052FF;
   --primary-dark: #0041CC;
   --primary-light: #E8F0FE;
@@ -235,41 +236,6 @@
   display: flex;
   align-items: center;
   gap: 12px;
-}
-
-/* Theme Toggle */
-.landing-page .nav-theme-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  border: 1.5px solid rgba(0, 0, 0, 0.12);
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--dark-2);
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-.landing-page .nav-theme-toggle:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  transform: scale(1.05);
-}
-.dark .landing-page .nav-theme-toggle {
-  background: rgba(30, 36, 72, 0.8);
-  border-color: rgba(255, 255, 255, 0.15);
-  color: var(--warning);
-}
-.dark .landing-page .nav-theme-toggle:hover {
-  border-color: var(--warning);
-  color: var(--warning);
-}
-
-.landing-page .mobile-theme-toggle {
-  display: none;
 }
 
 .landing-page .nav-lang {
@@ -3135,6 +3101,136 @@
   to { opacity: 1; transform: translateX(0); }
 }
 
+/* ===== DARK MODE OVERRIDES FOR LANDING PAGES ===== */
+.dark .landing-page {
+  --card-bg: #131a2e;
+  --white: #131a2e;
+  --gray-1: #94a3b8;
+  --gray-2: #475569;
+  --gray-3: #334155;
+  --gray-4: #0a0e1a;
+  --gray-5: #94a3b8;
+  --dark: #f1f5f9;
+  --dark-2: #e2e8f0;
+  --dark-3: #cbd5e1;
+  background: #0d1225;
+  color: #f1f5f9;
+}
+
+/* Landing card containers that use var(--white) */
+.dark .landing-page .hero-wrapper {
+  background: var(--white);
+}
+
+.dark .landing-page .card-tier {
+  background: var(--white);
+}
+
+.dark .landing-page .service-card {
+  background: var(--white);
+}
+
+.dark .landing-page .roadmap-content {
+  background: var(--white);
+}
+
+.dark .landing-page .compliance-card {
+  background: var(--white);
+}
+
+.dark .landing-page .impact-card {
+  background: var(--white);
+}
+
+.dark .landing-page .tech-card {
+  background: var(--white);
+}
+
+.dark .landing-page .footer {
+  background: var(--white);
+  border-top-color: var(--gray-3);
+}
+
+.dark .landing-page .hero {
+  background: var(--white);
+}
+
+.dark .landing-page .hero-container h1 {
+  color: var(--dark);
+}
+
+.dark .landing-page .feature-item:hover {
+  background: var(--gray-4);
+  border-color: var(--gray-3);
+}
+
+.dark .landing-page .service-feature {
+  background: var(--white);
+  border-color: var(--gray-3);
+}
+
+.dark .landing-page .btn-cta-secondary {
+  color: var(--dark);
+  border-color: var(--gray-3);
+}
+
+.dark .landing-page .btn-cta-secondary:hover {
+  background: var(--gray-4);
+}
+
+.dark .landing-page .navbar.scrolled {
+  background: rgba(19, 26, 46, 0.95);
+}
+
+.dark .landing-page .mobile-menu {
+  background: rgba(19, 26, 46, 0.98);
+}
+
+.dark .landing-page .mobile-menu a {
+  color: var(--dark);
+}
+
+.dark .landing-page .btn-nav-login {
+  color: var(--dark);
+  border-color: var(--gray-3);
+}
+
+.dark .landing-page .btn-nav-login:hover {
+  background: var(--gray-4);
+}
+
+.dark .landing-page .nav-links a {
+  color: var(--dark);
+}
+
+.dark .landing-page .nav-links a:hover {
+  background: var(--gray-4);
+}
+
+.dark .landing-page .section-title {
+  color: var(--dark);
+}
+
+.dark .landing-page .trusted-section {
+  background: var(--gray-4);
+}
+
+.dark .landing-page .how-it-works {
+  background: var(--white);
+}
+
+.dark .landing-page .impact-section {
+  background: var(--gray-4);
+}
+
+.dark .landing-page .cta-section {
+  background: var(--gray-4);
+}
+
+.dark .landing-page .compliance-section {
+  background: var(--gray-4);
+}
+
 @keyframes lFloatCard {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
@@ -3212,13 +3308,6 @@
   .landing-page .nav-actions,
   .landing-page .nav-type-menu {
     display: none;
-  }
-
-  .landing-page .mobile-theme-toggle {
-    display: flex;
-    align-items: center;
-    margin-left: auto;
-    margin-right: 15px;
   }
 
   .landing-page .menu-toggle {

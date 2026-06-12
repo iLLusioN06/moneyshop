@@ -22,7 +22,7 @@ export default function IbanPage() {
       <div className="flex items-center gap-4">
         <Link
           href="/transfers"
-          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-surface-dark-secondary transition-colors"
+          className="p-2 rounded-lg hover:bg-surface-tertiary transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
@@ -31,7 +31,7 @@ export default function IbanPage() {
             <div className="w-8 h-8 bg-indigo-500/10 text-indigo-500 rounded-lg flex items-center justify-center">
               <QrCode className="w-4 h-4" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-text-dark-primary">
+            <h1 className="text-2xl font-bold text-text-primary">
               MoneyShop IBAN & Kolay Adres
             </h1>
           </div>
@@ -94,17 +94,17 @@ export default function IbanPage() {
             <CardTitle>Kolay Adres</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="bg-gray-50 dark:bg-surface-dark-secondary rounded-xl p-6 text-center">
+            <div className="bg-surface-secondary rounded-xl p-6 text-center">
               <div className="w-16 h-16 bg-indigo-500/10 text-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <QrCode className="w-8 h-8" />
               </div>
-              <p className="text-sm font-medium text-gray-900 dark:text-text-dark-primary mb-1">
+              <p className="text-sm font-medium text-text-primary mb-1">
                 Kolay Adresin
               </p>
               <p className="text-2xl font-bold text-indigo-500 font-mono mb-3">
                 @moneyshop.admin
               </p>
-              <p className="text-xs text-gray-500 dark:text-text-dark-muted mb-4">
+              <p className="text-xs text-text-muted mb-4">
                 Bu adresi paylaşarak IBAN girmeden para alabilirsiniz
               </p>
               <div className="flex gap-2">
@@ -125,7 +125,7 @@ export default function IbanPage() {
             </div>
 
             <div className="space-y-3">
-              <h4 className="text-sm font-semibold text-gray-900 dark:text-text-dark-primary">Nasıl Çalışır?</h4>
+              <h4 className="text-sm font-semibold text-text-primary">Nasıl Çalışır?</h4>
               {[
                 "Kolay adresini gönderecek kişiyle paylaş",
                 "Gönderen MoneyShop uygulamasından adresine gönderir",
@@ -135,7 +135,7 @@ export default function IbanPage() {
                   <div className="w-6 h-6 bg-indigo-500/10 text-indigo-500 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold">
                     {i + 1}
                   </div>
-                  <p className="text-sm text-gray-600 dark:text-text-dark-secondary">{step}</p>
+                  <p className="text-sm text-text-secondary">{step}</p>
                 </div>
               ))}
             </div>
@@ -150,14 +150,14 @@ export default function IbanPage() {
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-6">
-            <div className="w-32 h-32 bg-white rounded-xl border-2 border-gray-200 dark:border-border-dark flex items-center justify-center flex-shrink-0">
+            <div className="w-32 h-32 bg-white rounded-xl border-2 border-border flex items-center justify-center flex-shrink-0">
               <QrCode className="w-20 h-20 text-gray-900" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-900 dark:text-text-dark-primary mb-1">
+              <p className="text-sm font-medium text-text-primary mb-1">
                 QR Kodunu Paylaş
               </p>
-              <p className="text-sm text-gray-500 dark:text-text-dark-muted mb-3">
+              <p className="text-sm text-text-muted mb-3">
                 Gönderen kişi bu QR kodu okutarak anında para gönderebilir.
               </p>
               <div className="flex gap-2">

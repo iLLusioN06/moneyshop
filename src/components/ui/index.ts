@@ -5,3 +5,4 @@ export { Input } from "./input";
 export type { InputProps } from "./input";
 export { Badge } from "./badge";
 export { Skeleton, CardSkeleton, TableSkeleton } from "./skeleton";
+export { EmptyState } from "./empty-state";

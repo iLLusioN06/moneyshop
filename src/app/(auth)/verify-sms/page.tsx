@@ -207,7 +207,7 @@ function VerifySmsForm() {
 
           {/* Error Message */}
           {error && (
-            <div className="mb-4 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
+            <div className="shake-alert mb-4 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
               {error}
             </div>
           )}

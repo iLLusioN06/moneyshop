@@ -150,20 +150,23 @@ export default function SettingsPage() {
     await signOut({ callbackUrl: "/login" });
   };
 
+  const [passwordFieldErrors, setPasswordFieldErrors] = useState<Record<string, string>>({});
+
   const handlePasswordChange = async () => {
     setPasswordError("");
     setPasswordSuccess("");
+    setPasswordFieldErrors({});
 
     if (!currentPassword) {
-      setPasswordError("Mevcut şifrenizi girin.");
+      setPasswordFieldErrors({ currentPassword: "Mevcut şifrenizi girin" });
       return;
     }
     if (newPassword.length < 6) {
-      setPasswordError("Yeni şifre en az 6 karakter olmalıdır.");
+      setPasswordFieldErrors({ newPassword: "Yeni şifre en az 6 karakter olmalıdır" });
       return;
     }
     if (newPassword !== confirmPassword) {
-      setPasswordError("Yeni şifreler eşleşmiyor.");
+      setPasswordFieldErrors({ confirmPassword: "Yeni şifreler eşleşmiyor" });
       return;
     }
 
@@ -220,8 +223,8 @@ export default function SettingsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Theme */}
-        <Card>
-          <CardHeader>
+        <Card className="overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent">
             <CardTitle>
               <span className="flex items-center gap-2">
                 <Palette className="w-4 h-4" />
@@ -255,8 +258,8 @@ export default function SettingsPage() {
         </Card>
 
         {/* Currency */}
-        <Card>
-          <CardHeader>
+        <Card className="overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent">
             <CardTitle>
               <span className="flex items-center gap-2">
                 <DollarSign className="w-4 h-4" />
@@ -292,8 +295,8 @@ export default function SettingsPage() {
         </Card>
 
         {/* Notifications */}
-        <Card>
-          <CardHeader>
+        <Card className="overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent">
             <CardTitle>
               <span className="flex items-center gap-2">
                 <Bell className="w-4 h-4" />
@@ -338,8 +341,8 @@ export default function SettingsPage() {
         </Card>
 
         {/* Email Notifications */}
-        <Card>
-          <CardHeader>
+        <Card className="overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent">
             <CardTitle>
               <span className="flex items-center gap-2">
                 <Mail className="w-4 h-4" />
@@ -369,7 +372,7 @@ export default function SettingsPage() {
                   </div>
                 )}
                 {emailError && (
-                  <div className="flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
+                  <div className="shake-alert flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
                     <AlertCircle className="w-4 h-4" /> {emailError}
                   </div>
                 )}
@@ -470,8 +473,8 @@ export default function SettingsPage() {
         </Card>
 
         {/* Security */}
-        <Card>
-          <CardHeader>
+        <Card className="overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent">
             <CardTitle>
               <span className="flex items-center gap-2">
                 <Shield className="w-4 h-4" />
@@ -519,7 +522,7 @@ export default function SettingsPage() {
       {/* Password Change Modal */}
       {showPasswordModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-[fade-in_0.15s_ease-out]">
-          <div className="bg-white dark:bg-surface-dark rounded-2xl shadow-2xl border border-border max-w-md w-full mx-4 animate-[slide-up_0.2s_ease-out]">
+          <div className="bg-surface rounded-2xl shadow-2xl border border-border max-w-md w-full mx-4 animate-[slide-up_0.2s_ease-out]">
             <div className="flex items-center justify-between p-5 border-b border-border">
               <h3 className="text-lg font-semibold text-text-primary flex items-center gap-2">
                 <Key className="w-4 h-4" />
@@ -545,24 +548,27 @@ export default function SettingsPage() {
                     label="Mevcut Şifre"
                     type={showPasswords ? "text" : "password"}
                     value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    onChange={(e) => { setCurrentPassword(e.target.value); setPasswordFieldErrors({}); }}
                     placeholder="••••••••"
+                    error={passwordFieldErrors.currentPassword}
                   />
 
                   <Input
                     label="Yeni Şifre"
                     type={showPasswords ? "text" : "password"}
                     value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
+                    onChange={(e) => { setNewPassword(e.target.value); setPasswordFieldErrors({}); }}
                     placeholder="En az 6 karakter"
+                    error={passwordFieldErrors.newPassword}
                   />
 
                   <Input
                     label="Yeni Şifre (Tekrar)"
                     type={showPasswords ? "text" : "password"}
                     value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    onChange={(e) => { setConfirmPassword(e.target.value); setPasswordFieldErrors({}); }}
                     placeholder="Şifrenizi tekrar girin"
+                    error={passwordFieldErrors.confirmPassword}
                   />
 
                   <button
@@ -574,7 +580,7 @@ export default function SettingsPage() {
                   </button>
 
                   {passwordError && (
-                    <div className="flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
+                    <div className="shake-alert flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
                       <AlertCircle className="w-4 h-4 flex-shrink-0" />
                       {passwordError}
                     </div>

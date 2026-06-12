@@ -102,11 +102,11 @@ function TransferCard({
           <Icon className="w-6 h-6" />
         </div>
 
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-text-dark-primary mb-2">
+        <h3 className="text-lg font-semibold text-text-primary mb-2">
           {service.title}
         </h3>
 
-        <p className="text-sm text-gray-500 dark:text-text-dark-secondary mb-4">
+        <p className="text-sm text-text-muted mb-4">
           {service.desc}
         </p>
 
@@ -114,7 +114,7 @@ function TransferCard({
           {service.features.map((feat) => (
             <span
               key={feat}
-              className="inline-flex items-center gap-1 px-2.5 py-1 bg-gray-100 dark:bg-surface-dark-secondary rounded-md text-xs font-medium text-gray-600 dark:text-text-dark-muted"
+              className="inline-flex items-center gap-1 px-2.5 py-1 bg-surface-tertiary rounded-md text-xs font-medium text-text-secondary"
             >
               <Sparkles className="w-3 h-3 text-secondary" />
               {feat}
@@ -134,7 +134,7 @@ function TransferCard({
     return (
       <Link
         href={service.href}
-        className="group relative bg-white dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-border-dark p-6 hover:shadow-lg hover:border-secondary/30 transition-all duration-300 block"
+        className="group relative bg-surface rounded-xl border border-border p-6 hover:shadow-lg hover:border-secondary/30 transition-all duration-300 block"
       >
         {content}
       </Link>
@@ -142,7 +142,7 @@ function TransferCard({
   }
 
   return (
-    <div className="group relative bg-white dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-border-dark p-6 opacity-60 cursor-not-allowed">
+    <div className="group relative bg-surface rounded-xl border border-border p-6 opacity-60 cursor-not-allowed">
       {content}
     </div>
   );
@@ -154,10 +154,10 @@ function TransfersContent() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-text-dark-primary">
+          <h1 className="text-2xl font-bold text-text-primary">
             Para Transferi
           </h1>
-          <p className="text-sm text-gray-500 dark:text-text-dark-secondary mt-1">
+          <p className="text-sm text-text-muted mt-1">
             Hızlı ve güvenli para transferi işlemlerinizi yönetin
           </p>
         </div>
@@ -188,12 +188,12 @@ function TransfersContent() {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="flex flex-col items-center gap-2 p-4 rounded-xl bg-gray-50 dark:bg-surface-dark-secondary hover:bg-secondary/5 hover:border-secondary/30 border border-gray-200 dark:border-border-dark transition-all duration-200 group"
+                  className="flex flex-col items-center gap-2 p-4 rounded-xl bg-surface-secondary hover:bg-secondary/5 hover:border-secondary/30 border border-border transition-all duration-200 group"
                 >
                   <div className={`w-10 h-10 rounded-lg ${item.color} bg-current/10 flex items-center justify-center group-hover:scale-110 transition-transform`}>
                     <Icon className={`w-5 h-5 ${item.color}`} />
                   </div>
-                  <span className="text-xs font-medium text-gray-600 dark:text-text-dark-muted">
+                  <span className="text-xs font-medium text-text-secondary">
                     {item.label}
                   </span>
                 </Link>

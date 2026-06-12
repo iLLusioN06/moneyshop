@@ -201,7 +201,7 @@ export default function MyCardPage() {
 
         {/* Error */}
         {error && (
-          <div className="flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
+          <div className="shake-alert flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             {error}
             <button onClick={() => setError(null)} className="ml-auto">
@@ -263,54 +263,64 @@ export default function MyCardPage() {
                 {/* Card Limits */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Daily Limit */}
-                  <div className="rounded-xl bg-surface border border-border p-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm text-text-muted">{t("card.dailyLimit")}</span>
-                      <span className="text-xs text-text-muted">
-                        {t("card.remaining")}: {formatCurrency(card.dailyLimit - card.currentDailySpent)} IQD
-                      </span>
+                  <div className="rounded-xl bg-surface border border-border overflow-hidden">
+                    <div className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent px-4 py-2 border-b border-border">
+                      <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">{t("card.dailyLimit")}</span>
                     </div>
-                    <div className="flex items-end justify-between mb-2">
-                      <span className="text-lg font-bold text-text-primary">
-                        {formatCurrency(card.dailyLimit)} <span className="text-sm font-normal text-text-muted">IQD</span>
-                      </span>
-                      <span className="text-sm text-text-muted">
-                        {t("card.dailySpent")}: {formatCurrency(card.currentDailySpent)} IQD
-                      </span>
-                    </div>
-                    <div className="w-full h-2 bg-surface-tertiary rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-secondary rounded-full transition-all"
-                        style={{
-                          width: `${Math.min((card.currentDailySpent / card.dailyLimit) * 100, 100)}%`,
-                        }}
-                      />
+                    <div className="p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm text-text-muted">{t("card.dailyLimit")}</span>
+                        <span className="text-xs text-text-muted">
+                          {t("card.remaining")}: {formatCurrency(card.dailyLimit - card.currentDailySpent)} IQD
+                        </span>
+                      </div>
+                      <div className="flex items-end justify-between mb-2">
+                        <span className="text-lg font-bold text-text-primary">
+                          {formatCurrency(card.dailyLimit)} <span className="text-sm font-normal text-text-muted">IQD</span>
+                        </span>
+                        <span className="text-sm text-text-muted">
+                          {t("card.dailySpent")}: {formatCurrency(card.currentDailySpent)} IQD
+                        </span>
+                      </div>
+                      <div className="w-full h-2 bg-surface-tertiary rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-secondary rounded-full transition-all"
+                          style={{
+                            width: `${Math.min((card.currentDailySpent / card.dailyLimit) * 100, 100)}%`,
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
 
                   {/* Monthly Limit */}
-                  <div className="rounded-xl bg-surface border border-border p-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm text-text-muted">{t("card.monthlyLimit")}</span>
-                      <span className="text-xs text-text-muted">
-                        {t("card.remaining")}: {formatCurrency(card.monthlyLimit - card.currentMonthlySpent)} IQD
-                      </span>
+                  <div className="rounded-xl bg-surface border border-border overflow-hidden">
+                    <div className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent px-4 py-2 border-b border-border">
+                      <span className="text-xs font-semibold text-text-secondary uppercase tracking-wider">{t("card.monthlyLimit")}</span>
                     </div>
-                    <div className="flex items-end justify-between mb-2">
-                      <span className="text-lg font-bold text-text-primary">
-                        {formatCurrency(card.monthlyLimit)} <span className="text-sm font-normal text-text-muted">IQD</span>
-                      </span>
-                      <span className="text-sm text-text-muted">
-                        {t("card.monthlySpent")}: {formatCurrency(card.currentMonthlySpent)} IQD
-                      </span>
-                    </div>
-                    <div className="w-full h-2 bg-surface-tertiary rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-secondary rounded-full transition-all"
-                        style={{
-                          width: `${Math.min((card.currentMonthlySpent / card.monthlyLimit) * 100, 100)}%`,
-                        }}
-                      />
+                    <div className="p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm text-text-muted">{t("card.monthlyLimit")}</span>
+                        <span className="text-xs text-text-muted">
+                          {t("card.remaining")}: {formatCurrency(card.monthlyLimit - card.currentMonthlySpent)} IQD
+                        </span>
+                      </div>
+                      <div className="flex items-end justify-between mb-2">
+                        <span className="text-lg font-bold text-text-primary">
+                          {formatCurrency(card.monthlyLimit)} <span className="text-sm font-normal text-text-muted">IQD</span>
+                        </span>
+                        <span className="text-sm text-text-muted">
+                          {t("card.monthlySpent")}: {formatCurrency(card.currentMonthlySpent)} IQD
+                        </span>
+                      </div>
+                      <div className="w-full h-2 bg-surface-tertiary rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-secondary rounded-full transition-all"
+                          style={{
+                            width: `${Math.min((card.currentMonthlySpent / card.monthlyLimit) * 100, 100)}%`,
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -319,74 +329,99 @@ export default function MyCardPage() {
               {/* Sidebar - Card Info + Upgrade */}
               <div className="space-y-4">
                 {/* Status */}
-                <div className={`rounded-xl border p-4 ${card.status === "ACTIVE" ? "border-profit/20 bg-profit/5" : card.status === "BLOCKED" ? "border-loss/20 bg-loss/5" : "border-border bg-surface"}`}>
-                  <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${statusColor}`}>
-                      <StatusIcon className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-text-muted">{t("card.status")}</p>
-                      <p className="font-semibold text-text-primary">{getStatusLabel(card.status)}</p>
+                <div className={`rounded-xl border overflow-hidden ${card.status === "ACTIVE" ? "border-profit/20 bg-profit/5" : card.status === "BLOCKED" ? "border-loss/20 bg-loss/5" : "border-border bg-surface"}`}>
+                  <div className="bg-gradient-to-r from-current/5 via-current/5 to-transparent px-4 py-2 border-b border-current/10">
+                    <p className="text-xs font-semibold uppercase tracking-wider opacity-70">{t("card.status")}</p>
+                  </div>
+                  <div className="p-4">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${statusColor}`}>
+                        <StatusIcon className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-text-muted">{t("card.status")}</p>
+                        <p className="font-semibold text-text-primary">{getStatusLabel(card.status)}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Card Type */}
-                <div className="rounded-xl bg-surface border border-border p-4">
-                  <p className="text-sm text-text-muted mb-1">{t("card.cardType")}</p>
-                  <p className={`text-lg font-bold ${cardTypeColors[card.cardType] || "text-text-primary"}`}>
-                    {getCardTypeLabel(card.cardType)}
-                  </p>
+                <div className="rounded-xl bg-surface border border-border overflow-hidden">
+                  <div className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent px-4 py-2 border-b border-border">
+                    <p className="text-xs font-semibold text-text-secondary uppercase tracking-wider">{t("card.cardType")}</p>
+                  </div>
+                  <div className="p-4">
+                    <p className="text-sm text-text-muted mb-1">{t("card.cardType")}</p>
+                    <p className={`text-lg font-bold ${cardTypeColors[card.cardType] || "text-text-primary"}`}>
+                      {getCardTypeLabel(card.cardType)}
+                    </p>
+                  </div>
                 </div>
 
                 {/* Balance */}
-                <div className="rounded-xl bg-surface border border-border p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center">
-                      <Wallet className="w-5 h-5 text-secondary" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-text-muted">{t("card.balance")}</p>
-                      <p className="text-lg font-bold text-text-primary">
-                        {formatCurrency(card.balance)} <span className="text-sm font-normal text-text-muted">IQD</span>
-                      </p>
+                <div className="rounded-xl bg-surface border border-border overflow-hidden">
+                  <div className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent px-4 py-2 border-b border-border">
+                    <p className="text-xs font-semibold text-text-secondary uppercase tracking-wider">{t("card.balance")}</p>
+                  </div>
+                  <div className="p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center">
+                        <Wallet className="w-5 h-5 text-secondary" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-text-muted">{t("card.balance")}</p>
+                        <p className="text-lg font-bold text-text-primary">
+                          {formatCurrency(card.balance)} <span className="text-sm font-normal text-text-muted">IQD</span>
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Issue Date */}
-                <div className="rounded-xl bg-surface border border-border p-4">
-                  <p className="text-sm text-text-muted">{t("card.issueDate")}</p>
-                  <p className="font-semibold text-text-primary">{formatDate(card.issuedAt)}</p>
+                <div className="rounded-xl bg-surface border border-border overflow-hidden">
+                  <div className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent px-4 py-2 border-b border-border">
+                    <p className="text-xs font-semibold text-text-secondary uppercase tracking-wider">{t("card.issueDate")}</p>
+                  </div>
+                  <div className="p-4">
+                    <p className="text-sm text-text-muted">{t("card.issueDate")}</p>
+                    <p className="font-semibold text-text-primary">{formatDate(card.issuedAt)}</p>
+                  </div>
                 </div>
 
                 {/* Upgrade Option */}
                 {card.cardType !== "GOLD" && card.status === "ACTIVE" && (
-                  <div className="rounded-xl bg-surface border border-border p-4">
-                    <p className="text-sm font-semibold text-text-primary mb-1">{t("card.upgrade")}</p>
-                    <p className="text-xs text-text-muted mb-3">{t("card.upgradeDesc")}</p>
-                    <div className="space-y-2">
-                      {card.cardType === "STANDARD" && (
-                        <Button
-                          className="w-full"
-                          size="sm"
-                          onClick={() => handleUpgrade("SILVER")}
-                          disabled={actionLoading === "upgrade"}
-                        >
-                          {actionLoading === "upgrade" ? t("common.loading") : `${t("card.silver")} → 50,000 IQD/gün`}
-                        </Button>
-                      )}
-                      {(card.cardType === "STANDARD" || card.cardType === "SILVER") && (
-                        <Button
-                          className="w-full"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleUpgrade("GOLD")}
-                          disabled={actionLoading === "upgrade"}
-                        >
-                          {actionLoading === "upgrade" ? t("common.loading") : `${t("card.gold")} → 250,000 IQD/gün`}
-                        </Button>
-                      )}
+                  <div className="rounded-xl bg-surface border border-border overflow-hidden">
+                    <div className="bg-gradient-to-r from-warning/10 via-warning/5 to-transparent px-4 py-2 border-b border-border">
+                      <p className="text-xs font-semibold text-text-secondary uppercase tracking-wider">{t("card.upgrade")}</p>
+                    </div>
+                    <div className="p-4">
+                      <p className="text-sm font-semibold text-text-primary mb-1">{t("card.upgrade")}</p>
+                      <p className="text-xs text-text-muted mb-3">{t("card.upgradeDesc")}</p>
+                      <div className="space-y-2">
+                        {card.cardType === "STANDARD" && (
+                          <Button
+                            className="w-full"
+                            size="sm"
+                            onClick={() => handleUpgrade("SILVER")}
+                            disabled={actionLoading === "upgrade"}
+                          >
+                            {actionLoading === "upgrade" ? t("common.loading") : `${t("card.silver")} → 50,000 IQD/gün`}
+                          </Button>
+                        )}
+                        {(card.cardType === "STANDARD" || card.cardType === "SILVER") && (
+                          <Button
+                            className="w-full"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleUpgrade("GOLD")}
+                            disabled={actionLoading === "upgrade"}
+                          >
+                            {actionLoading === "upgrade" ? t("common.loading") : `${t("card.gold")} → 250,000 IQD/gün`}
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 )}

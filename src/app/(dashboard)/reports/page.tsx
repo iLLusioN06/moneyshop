@@ -154,8 +154,8 @@ function ReportsContent() {
         </p>
       </div>
 
-      <Card>
-        <CardHeader>
+      <Card className="overflow-hidden">
+        <CardHeader className="bg-gradient-to-r from-secondary/5 to-transparent border-b border-border">
           <CardTitle>
             <FileText className="w-5 h-5 inline mr-2" />
             Rapor Oluştur

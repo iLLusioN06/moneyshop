@@ -143,7 +143,7 @@ export default function AdminTransactionsPage() {
 
       {/* Error */}
       {error && (
-        <div className="flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
+        <div className="shake-alert flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           {error}
           <button onClick={fetchTransactions} className="ml-auto">
@@ -153,7 +153,13 @@ export default function AdminTransactionsPage() {
       )}
 
       {/* Filters */}
-      <Card>
+      <Card className="overflow-hidden">
+        <div className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent px-5 py-3 border-b border-border">
+          <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2">
+            <Search className="w-4 h-4 text-secondary" />
+            Filtrele
+          </h3>
+        </div>
         <CardContent className="p-4">
           <div className="flex flex-wrap items-center gap-3">
             <form onSubmit={handleSearch} className="flex-1 min-w-[200px] max-w-md">
@@ -193,7 +199,13 @@ export default function AdminTransactionsPage() {
       </Card>
 
       {/* Transactions Table */}
-      <Card>
+      <Card className="overflow-hidden">
+        <div className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent px-5 py-3 border-b border-border">
+          <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2">
+            <RefreshCw className="w-4 h-4 text-secondary" />
+            İşlem Geçmişi
+          </h3>
+        </div>
         <CardContent className="p-0">
           {loading && !data ? (
             <div className="p-6">

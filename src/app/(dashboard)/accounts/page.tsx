@@ -9,6 +9,7 @@ import {
   Button,
   Input,
   Badge,
+  EmptyState,
 } from "@/components/ui";
 import { formatCurrency, getAccountTypeColor, cn } from "@/lib/utils";
 import { ACCOUNT_TYPES, CURRENCIES } from "@/lib/constants";
@@ -205,7 +206,7 @@ export default function AccountsPage() {
 
       {/* Error */}
       {error && (
-        <div className="flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
+        <div className="shake-alert flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           {error}
           <button onClick={() => setError("")} className="ml-auto">
@@ -214,11 +215,10 @@ export default function AccountsPage() {
         </div>
       )}
 
-      {/* Loading */}
-      {isLoading ? (
+      {/* Loading */}            {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
-            <Card key={i}>
+            <Card key={i} className="overflow-hidden">
               <CardContent className="p-5">
                 <div className="animate-pulse space-y-3">
                   <div className="h-4 bg-surface-tertiary rounded w-1/3" />
@@ -231,20 +231,13 @@ export default function AccountsPage() {
         </div>
       ) : accounts.length === 0 ? (
         /* Empty */
-        <Card>
-          <CardContent className="p-12 text-center">
-            <Wallet className="w-12 h-12 text-text-muted mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-text-primary mb-1">
-              Henüz hesap eklenmemiş
-            </h3>
-            <p className="text-sm text-text-muted mb-4">
-              Finansal durumunuzu takip etmek için ilk hesabınızı ekleyin.
-            </p>
-            <Button onClick={openAddModal}>
-              <Plus className="w-4 h-4" />
-              Hesap Ekle
-            </Button>
-          </CardContent>
+        <Card className="overflow-hidden">
+          <EmptyState
+            icon={Wallet}
+            title="Henüz hesap eklenmemiş"
+            description="Finansal durumunuzu takip etmek için ilk hesabınızı ekleyin."
+            action={{ label: "Hesap Ekle", onClick: openAddModal, icon: Plus }}
+          />
         </Card>
       ) : (
         /* Account Grid */
@@ -258,7 +251,7 @@ export default function AccountsPage() {
               <Card
                 key={account.id}
                 className={cn(
-                  "hover:shadow-lg transition-all duration-200",
+                  "hover:shadow-lg transition-all duration-200 overflow-hidden",
                   !account.isActive && "opacity-60"
                 )}
               >
@@ -329,8 +322,8 @@ export default function AccountsPage() {
       {/* Add/Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <Card className="w-full max-w-md">
-            <CardHeader>
+          <Card className="w-full max-w-md overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent">
               <div className="flex items-center justify-between">
                 <CardTitle>
                   {editingId ? "Hesabı Düzenle" : "Yeni Hesap"}
@@ -346,7 +339,7 @@ export default function AccountsPage() {
             <CardContent>
               <div className="space-y-4">
                 {formError && (
-                  <div className="p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
+                  <div className="shake-alert p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
                     {formError}
                   </div>
                 )}
@@ -448,7 +441,7 @@ export default function AccountsPage() {
       {/* Delete Confirmation */}
       {deleteId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <Card className="w-full max-w-sm">
+          <Card className="w-full max-w-sm overflow-hidden">
             <CardContent className="p-6 text-center">
               <AlertCircle className="w-12 h-12 text-loss mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-text-primary mb-1">

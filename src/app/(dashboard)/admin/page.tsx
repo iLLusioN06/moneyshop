@@ -146,7 +146,7 @@ export default function AdminPage() {
 
       {/* Error */}
       {error && (
-        <div className="flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
+        <div className="shake-alert flex items-center gap-2 p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           {error}
           <button onClick={fetchStats} className="ml-auto">
@@ -231,7 +231,7 @@ export default function AdminPage() {
 
           {/* Quick Actions */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card className="cursor-pointer hover:shadow-md transition-all" onClick={() => router.push("/admin/users")}>
+            <Card className="cursor-pointer hover:shadow-md transition-all overflow-hidden" onClick={() => router.push("/admin/users")}>
               <CardContent className="p-5 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
@@ -246,7 +246,7 @@ export default function AdminPage() {
               </CardContent>
             </Card>
 
-            <Card className="cursor-pointer hover:shadow-md transition-all" onClick={() => router.push("/admin/transactions")}>
+            <Card className="cursor-pointer hover:shadow-md transition-all overflow-hidden" onClick={() => router.push("/admin/transactions")}>
               <CardContent className="p-5 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
@@ -261,7 +261,7 @@ export default function AdminPage() {
               </CardContent>
             </Card>
 
-            <Card className="cursor-pointer hover:shadow-md transition-all" onClick={() => router.push("/admin/audit-logs")}>
+            <Card className="cursor-pointer hover:shadow-md transition-all overflow-hidden" onClick={() => router.push("/admin/audit-logs")}>
               <CardContent className="p-5 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center">
@@ -278,8 +278,8 @@ export default function AdminPage() {
           </div>
 
           {/* Recent Transactions */}
-          <Card>
-            <CardHeader>
+          <Card className="overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent">
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle>Son İşlemler</CardTitle>

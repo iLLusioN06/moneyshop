@@ -11,6 +11,19 @@ export interface InputProps
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, label, error, icon, type, id, ...props }, ref) => {
     const inputId = id || React.useId();
+    const [shaking, setShaking] = React.useState(false);
+    const prevErrorRef = React.useRef(error);
+
+    // Error değiştiğinde shake tetikle
+    React.useEffect(() => {
+      if (error && error !== prevErrorRef.current) {
+        setShaking(true);
+        const timer = setTimeout(() => setShaking(false), 400);
+        prevErrorRef.current = error;
+        return () => clearTimeout(timer);
+      }
+      prevErrorRef.current = error;
+    }, [error]);
 
     return (
       <div className="w-full">
@@ -38,6 +51,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-surface-tertiary",
               "transition-all duration-200",
               error && "border-danger focus:ring-danger/30 focus:border-danger",
+              shaking && "shake",
               icon && "pl-10",
               className
             )}
@@ -46,7 +60,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           />
         </div>
         {error && (
-          <p className="mt-1 text-xs text-danger">{error}</p>
+          <p className="mt-1 text-xs text-danger animate-[fade-in_0.15s_ease-out]">{error}</p>
         )}
       </div>
     );
