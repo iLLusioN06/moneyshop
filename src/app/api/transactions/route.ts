@@ -8,6 +8,7 @@ import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 import { withRateLimit } from "@/lib/rate-limit";
 import { createAuditLog, getRequestMetadata } from "@/lib/audit";
+import { sendNotification, buildTransactionEmail, buildTransferEmail } from "@/lib/email";
 
 // GET /api/transactions - İşlemleri listele (filtreleme + sayfalama)
 export async function GET(req: Request) {
@@ -159,6 +160,36 @@ async function postHandler(req: Request) {
       ip: meta.ip,
       userAgent: meta.userAgent,
     });
+
+    // E-posta bildirimi (arka planda, hata yutulur)
+    const isLarge = type !== "TRANSFER" && amount >= 10000;
+    const event = type === "TRANSFER" ? "TRANSFER" : isLarge ? "LARGE_TRANSACTION" : "TRANSACTION";
+    const userName = session.user?.name || "Kullanıcı";
+    const userEmail = session.user?.email || "";
+    sendNotification(userId, event as any, () => {
+      if (type === "TRANSFER") {
+        return buildTransferEmail({
+          to: userEmail,
+          userName,
+          amount,
+          currency: currency || account.currency,
+          recipientName: body.recipientName,
+          recipientIban: body.recipientIban,
+          fee: body.transferFee || 0,
+          date: transaction.createdAt,
+        });
+      }
+      return buildTransactionEmail({
+        to: userEmail,
+        userName,
+        type,
+        amount,
+        currency: currency || account.currency,
+        description,
+        accountName: account.name,
+        date: transaction.createdAt,
+      });
+    }).catch(() => {}); // fire-and-forget, hata yut
 
     return NextResponse.json(
       { success: true, data: transaction },

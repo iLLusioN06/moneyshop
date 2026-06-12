@@ -8,6 +8,7 @@ import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 import { withRateLimit } from "@/lib/rate-limit";
 import { createAuditLog, getRequestMetadata } from "@/lib/audit";
+import { sendNotification, buildTransactionEmail } from "@/lib/email";
 
 function calculateNextDate(frequency: string, intervalCount: number, from: Date): Date {
   const next = new Date(from);
@@ -158,6 +159,22 @@ async function postHandler(req: Request) {
       ip: meta.ip,
       userAgent: meta.userAgent,
     });
+
+    // E-posta bildirimi (arka planda, hata yutulur)
+    const userName = session.user?.name || "Kullanıcı";
+    const userEmail = session.user?.email || "";
+    sendNotification(userId, "TRANSACTION", () =>
+      buildTransactionEmail({
+        to: userEmail,
+        userName,
+        type,
+        amount,
+        currency: currency || account.currency,
+        description: description || "Tekrarlanan işlem oluşturuldu",
+        accountName: account.name,
+        date: recurringTx.createdAt,
+      })
+    ).catch(() => {});
 
     return NextResponse.json(
       { success: true, data: recurringTx },

@@ -7,6 +7,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 import { withRateLimit } from "@/lib/rate-limit";
+import { sendNotification, buildTransferEmail } from "@/lib/email";
 
 // GET /api/transfers - Kullanıcının son transfer işlemlerini listele
 export async function GET(req: Request) {
@@ -212,6 +213,22 @@ async function postHandler(req: Request) {
         return outTx;
       });
 
+      // E-posta bildirimi (gönderene)
+      const userName = session.user?.name || "Kullanıcı";
+      const userEmail = session.user?.email || "";
+      sendNotification(userId, "TRANSFER", () =>
+        buildTransferEmail({
+          to: userEmail,
+          userName,
+          amount,
+          currency: currency || senderAccount.currency,
+          recipientName: recipient.name || recipient.email,
+          recipientIban: undefined,
+          fee: 0,
+          date: transferResult.createdAt,
+        })
+      ).catch(() => {});
+
       return NextResponse.json(
         {
           success: true,
@@ -249,6 +266,22 @@ async function postHandler(req: Request) {
 
         return txRecord;
       });
+
+      // E-posta bildirimi (gönderene)
+      const userName = session.user?.name || "Kullanıcı";
+      const userEmail = session.user?.email || "";
+      sendNotification(userId, "TRANSFER", () =>
+        buildTransferEmail({
+          to: userEmail,
+          userName,
+          amount,
+          currency: currency || senderAccount.currency,
+          recipientName,
+          recipientIban,
+          fee: 0,
+          date: transferResult.createdAt,
+        })
+      ).catch(() => {});
 
       return NextResponse.json(
         {
