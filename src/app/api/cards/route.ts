@@ -28,15 +28,38 @@ export async function GET() {
       return NextResponse.json({ error: "Yetkilendirme gerekli." }, { status: 401 });
     }
 
-    const card = await prisma.card.findFirst({
+    let card = await prisma.card.findFirst({
       where: { userId: session.user.id },
     });
 
+    // Kart yoksa (eski kayıtlar için) otomatik oluştur
     if (!card) {
-      return NextResponse.json(
-        { error: "Kart bulunamadı. Lütfen kayıt işleminizi tamamlayın." },
-        { status: 404 }
-      );
+      try {
+        const cardNumber = generateCardNumber();
+        const cvv = generateCvv();
+        const now = new Date();
+
+        card = await prisma.card.create({
+          data: {
+            userId: session.user.id,
+            cardType: "STANDARD",
+            cardNumber,
+            cardHolderName: session.user.name || "Kullanıcı",
+            expiryMonth: now.getMonth() + 1,
+            expiryYear: now.getFullYear() + 5,
+            cvv,
+            status: "ACTIVE",
+            dailyLimit: 5000,
+            monthlyLimit: 50000,
+            currency: "IQD",
+          },
+        });
+      } catch {
+        return NextResponse.json(
+          { error: "Kart oluşturulamadı. Lütfen çıkış yapıp tekrar giriş yapın." },
+          { status: 400 }
+        );
+      }
     }
 
     // Transactions'ları ayrı çek
