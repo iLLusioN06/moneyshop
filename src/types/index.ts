@@ -78,6 +78,7 @@ export interface Transaction {
   recipientBank?: string | null;
   transferFee?: number;
   recipientUserId?: string | null;
+  cardId?: string | null;
   // İlişkiler
   category?: Category;
   account?: FinancialAccount;
@@ -194,4 +195,42 @@ export interface RegisterInput {
 export interface AuthResponse {
   user: Omit<User, "password">;
   token: string;
+}
+
+// Kart Türü
+export type CardType = "STANDARD" | "SILVER" | "GOLD";
+
+// Kart Durumu
+export type CardStatus = "ACTIVE" | "BLOCKED" | "CANCELLED" | "PENDING";
+
+// MoneyShop Card
+export interface Card {
+  id: string;
+  userId: string;
+  cardType: CardType;
+  cardNumber: string;
+  cardHolderName: string;
+  expiryMonth: number;
+  expiryYear: number;
+  cvv: string;
+  status: CardStatus;
+  dailyLimit: number;
+  monthlyLimit: number;
+  currentDailySpent: number;
+  currentMonthlySpent: number;
+  balance: number;
+  currency: Currency;
+  issuedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  transactions?: Transaction[];
+}
+
+export interface CardTransaction {
+  id: string;
+  amount: number;
+  description: string | null;
+  date: Date;
+  type: TransactionType;
+  status: TransactionStatus;
 }

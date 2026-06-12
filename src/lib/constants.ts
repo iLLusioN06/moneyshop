@@ -22,7 +22,7 @@ export const ROUTES = {
   DEPOSIT: "/deposit",
   WITHDRAW: "/withdraw",
   PAYMENTS: "/payments",
-  CARD: "/card",
+  CARD: "/my-card",
   ADMIN: "/admin",
   RECURRING: "/recurring",
   REPORTS: "/reports",

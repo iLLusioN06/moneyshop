@@ -639,14 +639,14 @@ export default function PricingPage() {
       <nav className={`navbar${scrolled ? " scrolled" : ""}`} id="navbar">
         <div className="nav-container">
           <div className="nav-row-top">
-            <Link href="/" className="logo">
+            <a href="/" className="logo" onClick={(e) => { e.preventDefault(); window.location.reload(); }}>
               <div className="logo-icon">
                 <i className="fas fa-wallet" />
               </div>
               <span className="logo-text">
                 Money<span>Shop</span>
               </span>
-            </Link>
+            </a>
 
             <div className="nav-type-menu">
               <button

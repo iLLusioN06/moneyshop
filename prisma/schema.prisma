@@ -39,6 +39,7 @@ model User {
   accounts_             AuthAccount[]
   emailSettings         EmailNotificationSetting[]
   emailLogs             EmailLog[]
+  cards                 Card[]
 }
 
 model AuthAccount {
@@ -211,6 +212,10 @@ model Transaction {
   transferFee    Float    @default(0)
   // Para transferlerinde karşı tarafın kullanıcı ID'si (MoneyShop içi transferlerde)
   recipientUserId String?
+  // MoneyShop Card işlemlerinde kart ID'si
+  cardId String?
+
+  card Card? @relation(fields: [cardId], references: [id], onDelete: SetNull)
 
   account  FinancialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
   user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -283,6 +288,38 @@ model RecurringTransaction {
   @@index([status])
   @@index([nextDate])
   @@map("recurring_transactions")
+}
+
+// =============================================
+// MoneyShop Card
+// =============================================
+
+model Card {
+  id            String   @id @default(cuid())
+  userId        String
+  cardType      String   @default("STANDARD")     // STANDARD | SILVER | GOLD
+  cardNumber    String   @unique                   // Şifrelenmiş kart numarası
+  cardHolderName String
+  expiryMonth   Int
+  expiryYear    Int
+  cvv           String                             // Şifrelenmiş CVV
+  status        String   @default("ACTIVE")        // ACTIVE | BLOCKED | CANCELLED | PENDING
+  dailyLimit    Float    @default(5000)
+  monthlyLimit  Float    @default(50000)
+  currentDailySpent  Float @default(0)
+  currentMonthlySpent Float @default(0)
+  balance       Float    @default(0)
+  currency      String   @default("IQD")
+  issuedAt      DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@index([userId])
+  @@index([status])
+  @@map("cards")
 }
 
 // =============================================

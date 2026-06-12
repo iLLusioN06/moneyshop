@@ -75,7 +75,7 @@ export function Navbar({
       <div className="nav-container">
         {/* TOP ROW: Logo + Type Menu + Actions + Hamburger */}
         <div className="nav-row-top">
-          <a href="/" className="logo" onClick={(e) => { e.preventDefault(); scrollToTop(); setActiveType("default"); setActiveSection(null); setActiveSubmenu(null); setActiveService(null); }}>
+          <a href="/" className="logo" onClick={() => window.location.reload()}>
             <div className="logo-icon">
               <i className="fas fa-wallet" />
             </div>

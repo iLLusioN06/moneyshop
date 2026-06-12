@@ -22,6 +22,7 @@ const pageTitleKeys: Record<string, string> = {
   "/recurring": "header.recurring",
   "/portfolio": "header.portfolio",
   "/reports": "header.reports",
+  "/my-card": "header.card",
 };
 
 export function Header() {
