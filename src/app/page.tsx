@@ -682,8 +682,8 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
 
                       {session?.user ? (
                         selectedCard === "standart" ? (
-                          <div style={{padding:"10px 24px", borderRadius:12, background:"rgba(34,197,94,0.1)", color:"#16a34a", fontWeight:600, fontSize:14, fontFamily:"inherit"}}>
-                            <i className="fas fa-check-circle" style={{marginRight:8, color:"#16a34a"}} />Bu karta sahipsin
+                          <div style={{padding:"10px 24px", borderRadius:12, background:"rgba(16,185,129,0.1)", color:"var(--success)", fontWeight:600, fontSize:14, fontFamily:"inherit"}}>
+                            <i className="fas fa-check-circle" style={{marginRight:8, color:"var(--success)"}} />Bu karta sahipsin
                           </div>
                         ) : (
                           <Link href="/card" className="btn-primary" style={{padding:"12px 28px", fontSize:14}}>
