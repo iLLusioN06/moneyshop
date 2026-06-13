@@ -5,6 +5,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { updateProfileSchema, validateRequest } from "@/lib/validations";
 
 // Profil bilgilerini getir
 export async function GET() {
@@ -58,19 +59,16 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: "Oturum bulunamadı." }, { status: 401 });
     }
 
-    const { name, image } = await req.json();
+    const body = await req.json();
+    const parsed = validateRequest(updateProfileSchema, body);
+    if (!parsed.success) return parsed.response;
 
-    if (!name || typeof name !== "string" || name.trim().length < 2) {
-      return NextResponse.json(
-        { error: "Ad Soyad en az 2 karakter olmalıdır." },
-        { status: 400 }
-      );
-    }
+    const { name, image } = parsed.data;
 
     const updated = await prisma.user.update({
       where: { id: session.user.id },
       data: {
-        name: name.trim(),
+        name,
         ...(image !== undefined ? { image: image || null } : {}),
       },
       select: {

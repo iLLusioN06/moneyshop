@@ -24,6 +24,8 @@ import {
   User,
   X,
   Shield,
+  Tags,
+  Home,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { t } from "@/lib/dashboard-i18n";
@@ -37,6 +39,7 @@ const allNavItems: { href: string; labelKey: string; icon: React.ElementType }[]
   { href: ROUTES.PORTFOLIO, labelKey: "nav.portfolio", icon: BarChart3 },
   { href: ROUTES.DEPOSIT, labelKey: "nav.deposit", icon: HandCoins },
   { href: ROUTES.WITHDRAW, labelKey: "nav.withdraw", icon: Banknote },
+  { href: ROUTES.CATEGORIES, labelKey: "nav.categories", icon: Tags },
   { href: ROUTES.BUDGETS, labelKey: "nav.budgets", icon: PiggyBank },
   { href: ROUTES.PAYMENTS, labelKey: "nav.payments", icon: Receipt },
   { href: ROUTES.CARD, labelKey: "nav.card", icon: CreditCard },
@@ -65,28 +68,37 @@ export function Sidebar() {
 
       <aside
         className={cn(
-          "flex flex-col bg-surface-dark border-r border-border-dark transition-all duration-300",
+          "flex flex-col bg-surface-secondary border-r border-border transition-all duration-300",
           "fixed md:static inset-y-0 left-0 z-50",
           sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
           "w-64"
         )}
       >
         {/* Logo & Close */}
-        <div className="flex items-center justify-between h-16 px-4 border-b border-border-dark">
-          <Link href={ROUTES.HOME} className="flex items-center gap-3 min-w-0">
+        <div className="flex items-center justify-between h-16 px-4 border-b border-border">
+          <Link href={ROUTES.DASHBOARD} className="flex items-center gap-3 min-w-0">
             <div className="flex-shrink-0 w-8 h-8 bg-secondary rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">M</span>
             </div>
-            <span className="font-semibold text-text-dark-primary truncate">
+            <span className="font-semibold text-text-primary truncate">
               {APP_NAME}
             </span>
           </Link>
-          <button
-            onClick={() => setSidebarOpen(false)}
-            className="md:hidden p-1 rounded-lg hover:bg-surface-dark-secondary text-text-dark-muted"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-1">
+            <Link
+              href={ROUTES.HOME}
+              className="flex-shrink-0 p-1.5 rounded-lg border border-border text-text-muted hover:bg-loss/5 hover:text-loss hover:border-loss/20 transition-all duration-200"
+              title="Web Sitesi"
+            >
+              <Home className="w-4 h-4" />
+            </Link>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="md:hidden p-1 rounded-lg hover:bg-surface-tertiary text-text-muted"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Navigation */}
@@ -101,13 +113,17 @@ export function Sidebar() {
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group relative overflow-hidden",
                   isActive
-                    ? "bg-secondary/10 text-secondary"
-                    : "text-text-dark-secondary hover:bg-surface-dark-secondary hover:text-text-dark-primary"
+                    ? "bg-secondary/10 text-secondary font-semibold"
+                    : "text-text-secondary hover:bg-secondary/5 hover:text-secondary"
                 )}
               >
-                <Icon className="w-5 h-5 flex-shrink-0" />
+                {/* Active indicator bar */}
+                {isActive && (
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-secondary rounded-r" />
+                )}
+                <Icon className="w-5 h-5 flex-shrink-0 transition-colors duration-200 group-hover:text-secondary" />
                 <span className="truncate">{t(item.labelKey)}</span>
               </Link>
             );
@@ -115,16 +131,16 @@ export function Sidebar() {
         </nav>
 
         {/* User Info + Logout */}
-        <div className="p-3 border-t border-border-dark space-y-2">
+        <div className="p-3 border-t border-border space-y-2">
           <div className="flex items-center gap-2 px-1">
             <div className="w-7 h-7 bg-secondary/20 rounded-full flex items-center justify-center text-xs font-medium text-secondary">
               {(session?.user?.name || "K")[0]}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-text-dark-primary truncate">
+              <p className="text-sm font-medium text-text-primary truncate">
                 {session?.user?.name || t("nav.user")}
               </p>
-              <p className="text-xs text-text-dark-muted">
+              <p className="text-xs text-text-muted">
                 {role === "ADMIN" ? t("nav.admin") : t("nav.user")}
               </p>
             </div>
@@ -132,9 +148,9 @@ export function Sidebar() {
 
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
-            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-text-dark-muted hover:bg-surface-dark-secondary hover:text-loss transition-all duration-200"
+            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-text-muted hover:bg-loss/5 hover:text-loss transition-all duration-200 group"
           >
-            <LogOut className="w-5 h-5 flex-shrink-0" />
+            <LogOut className="w-5 h-5 flex-shrink-0 transition-colors duration-200 group-hover:text-loss" />
             <span className="truncate">{t("nav.logout")}</span>
           </button>
         </div>

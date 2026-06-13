@@ -13,6 +13,7 @@ import {
 } from "@/components/ui";
 import { formatCurrency, cn } from "@/lib/utils";
 import { BUDGET_PERIODS } from "@/lib/constants";
+import Link from "next/link";
 import {
   PiggyBank,
   Plus,
@@ -22,6 +23,7 @@ import {
   Check,
   AlertCircle,
   RefreshCw,
+  Tags,
 } from "lucide-react";
 import type { Budget, Category } from "@/types";
 
@@ -215,8 +217,15 @@ export default function BudgetsPage() {
       </div>
 
       {!expenseCategories.length && !isLoading && (
-        <div className="p-3 rounded-lg bg-pending/10 border border-pending/20 text-sm text-pending">
-          Bütçe oluşturmak için önce gider kategorisi eklemelisiniz.
+        <div className="flex items-center justify-between p-3 rounded-lg bg-pending/10 border border-pending/20 text-sm text-pending">
+          <span>Bütçe oluşturmak için önce gider kategorisi eklemelisiniz.</span>
+          <Link
+            href="/categories"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-pending/20 hover:bg-pending/30 text-pending font-medium transition-colors"
+          >
+            <Tags className="w-3.5 h-3.5" />
+            Kategori Ekle
+          </Link>
         </div>
       )}
 

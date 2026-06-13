@@ -60,3 +60,6 @@ nul
 
 # playwright
 .playwright-mcp/
+playwright-report/
+test-results/
+.auth/

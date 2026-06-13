@@ -5,8 +5,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import type { Prisma } from "@prisma/client";
-import type { UserRole } from "@/types";
+import type { Prisma, UserRole } from "@prisma/client";
 
 // Admin rolü kontrolü
 async function checkAdmin() {
@@ -29,7 +28,7 @@ export async function GET(req: Request) {
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "20");
     const search = searchParams.get("search");
-    const role = searchParams.get("role");
+    const role = searchParams.get("role") as UserRole | null;
     const status = searchParams.get("status");
 
     const skip = (page - 1) * limit;

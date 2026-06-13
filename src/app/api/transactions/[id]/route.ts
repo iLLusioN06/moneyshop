@@ -5,6 +5,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { updateTransactionSchema, validateRequest } from "@/lib/validations";
 
 // GET /api/transactions/[id] - İşlem detayı
 export async function GET(
@@ -67,7 +68,10 @@ export async function PUT(
     }
 
     const body = await req.json();
-    const { categoryId, description, date, status } = body;
+    const parsed = validateRequest(updateTransactionSchema, body);
+    if (!parsed.success) return parsed.response;
+
+    const { categoryId, description, date, status } = parsed.data;
 
     // İşlem güncellemesi (bakiye etkilemez - sadece metadata)
     const transaction = await prisma.transaction.update({

@@ -1,34 +1,18 @@
 import { NextResponse } from "next/server";
 import { hash } from "bcryptjs";
+import crypto from "crypto";
 import { prisma } from "@/lib/prisma";
 import { generateSmsCode, hashSmsCode, sendSms } from "@/lib/sms";
 import { withRateLimit } from "@/lib/rate-limit";
+import { registerSchema, validateRequest } from "@/lib/validations";
 
 async function handler(req: Request) {
   try {
-    const { name, email, phone, password } = await req.json();
+    const body = await req.json();
+    const parsed = validateRequest(registerSchema, body);
+    if (!parsed.success) return parsed.response;
 
-    // Validasyon
-    if (!name || !email || !phone || !password) {
-      return NextResponse.json(
-        { error: "Tüm alanlar zorunludur." },
-        { status: 400 }
-      );
-    }
-
-    if (phone.length < 10) {
-      return NextResponse.json(
-        { error: "Geçerli bir cep telefonu numarası giriniz." },
-        { status: 400 }
-      );
-    }
-
-    if (password.length < 6) {
-      return NextResponse.json(
-        { error: "Parola en az 6 karakter olmalıdır." },
-        { status: 400 }
-      );
-    }
+    const { name, email, phone, password } = parsed.data;
 
     // E-posta kontrolü
     const existingUser = await prisma.user.findUnique({
@@ -67,6 +51,9 @@ async function handler(req: Request) {
     const hashedSmsCode = hashSmsCode(smsCode);
     const hashedPassword = await hash(password, 12);
 
+    // Geçici token oluştur (sessionStorage'da şifre yerine bu saklanacak)
+    const pendingToken = crypto.randomUUID();
+
     // Bekleyen kaydı oluştur
     await prisma.pendingRegistration.create({
       data: {
@@ -75,6 +62,7 @@ async function handler(req: Request) {
         phone,
         password: hashedPassword,
         code: hashedSmsCode,
+        pendingToken,
         expiresAt: new Date(Date.now() + 5 * 60 * 1000), // 5 dakika
       },
     });
@@ -87,6 +75,7 @@ async function handler(req: Request) {
         success: true,
         message: "SMS kodunuz gönderildi.",
         phone: phone.slice(-4), // son 4 hane
+        pendingToken, // şifre yerine geçici token
       },
       { status: 200 }
     );

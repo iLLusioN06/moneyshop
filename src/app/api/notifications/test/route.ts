@@ -33,12 +33,15 @@ export async function POST() {
       subject: emailContent.subject,
       body: emailContent.text,
       event: "TEST",
-      status: result ? "SENT" : "FAILED",
-      error: result ? undefined : "Send failed",
+      status: result?.success ? "SENT" : "FAILED",
+      error: result?.success ? undefined : (result?.error ?? "E-posta gönderilemedi"),
     });
 
-    if (!result) {
-      return NextResponse.json({ success: false, error: "E-posta gönderilemedi. RESEND_API_KEY tanımlı mı?" }, { status: 500 });
+    if (!result?.success) {
+      return NextResponse.json({
+        success: false,
+        error: `E-posta gönderilemedi: ${result?.error ?? "RESEND_API_KEY tanımlı değil"}`,
+      }, { status: 500 });
     }
 
     return NextResponse.json({ success: true, message: "Test e-postası gönderildi." });

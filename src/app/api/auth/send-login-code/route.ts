@@ -4,17 +4,15 @@ import { prisma } from "@/lib/prisma";
 import { generateSmsCode, hashSmsCode, sendSms } from "@/lib/sms";
 import { withRateLimit } from "@/lib/rate-limit";
 import { createAuditLog, getRequestMetadata } from "@/lib/audit";
+import { sendLoginCodeSchema, validateRequest } from "@/lib/validations";
 
 async function handler(req: Request) {
   try {
-    const { email, password } = await req.json();
+    const body = await req.json();
+    const parsed = validateRequest(sendLoginCodeSchema, body);
+    if (!parsed.success) return parsed.response;
 
-    if (!email || !password) {
-      return NextResponse.json(
-        { error: "E-posta ve parola zorunludur." },
-        { status: 400 }
-      );
-    }
+    const { email, password } = parsed.data;
 
     // Kullanıcıyı bul
     const user = await prisma.user.findUnique({ where: { email } });

@@ -12,6 +12,34 @@ datasource db {
 }
 
 // =============================================
+// Enum Tanımları
+// =============================================
+
+enum UserRole {
+  USER
+  ADMIN
+  MODERATOR
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+  TRANSFER
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum CategoryType {
+  INCOME
+  EXPENSE
+}
+
+// =============================================
 // Auth Modelleri (NextAuth v5 uyumlu)
 // =============================================
 
@@ -23,7 +51,7 @@ model User {
   emailVerified DateTime?
   image         String?
   password      String?
-  role          String    @default("USER")
+  role          UserRole  @default(USER)
   isActive      Boolean   @default(true)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -133,16 +161,18 @@ model Investment {
 // =============================================
 
 model PendingRegistration {
-  id        String   @id @default(cuid())
-  name      String
-  email     String
-  phone     String
-  password  String
-  code      String
-  expiresAt DateTime
-  createdAt DateTime @default(now())
+  id           String   @id @default(cuid())
+  name         String
+  email        String
+  phone        String
+  password     String
+  code         String
+  pendingToken String?  @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
 
   @@index([phone])
+  @@index([pendingToken])
   @@map("pending_registrations")
 }
 
@@ -173,13 +203,13 @@ model FinancialAccount {
 }
 
 model Category {
-  id        String   @id @default(cuid())
+  id        String       @id @default(cuid())
   userId    String
   name      String
-  icon      String   @default("circle")
-  color     String   @default("#94a3b8")
-  type      String   @default("EXPENSE")
-  isDefault Boolean  @default(false)
+  icon      String       @default("circle")
+  color     String       @default("#94a3b8")
+  type      CategoryType @default(EXPENSE)
+  isDefault Boolean      @default(false)
   createdAt DateTime @default(now())
 
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -192,15 +222,15 @@ model Category {
 }
 
 model Transaction {
-  id          String   @id @default(cuid())
+  id          String            @id @default(cuid())
   accountId   String
   userId      String
   categoryId  String?
-  type        String   @default("EXPENSE")
+  type        TransactionType   @default(EXPENSE)
   amount      Float
-  currency    String   @default("TRY")
+  currency    String            @default("TRY")
   description String?
-  status      String   @default("COMPLETED")
+  status      TransactionStatus @default(COMPLETED)
   date        DateTime @default(now())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -253,11 +283,11 @@ model Budget {
 // =============================================
 
 model RecurringTransaction {
-  id            String   @id @default(cuid())
+  id            String          @id @default(cuid())
   userId        String
   accountId     String
   categoryId    String?
-  type          String   @default("EXPENSE")   // INCOME | EXPENSE | TRANSFER
+  type          TransactionType @default(EXPENSE)
   amount        Float
   currency      String   @default("TRY")
   description   String?

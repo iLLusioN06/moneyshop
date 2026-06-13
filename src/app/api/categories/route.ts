@@ -29,16 +29,12 @@ export async function GET() {
   }
 }
 
-// POST /api/categories - Yeni kategori oluştur (sadece admin)
+// POST /api/categories - Yeni kategori oluştur
 export async function POST(req: Request) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Yetkilendirme gerekli." }, { status: 401 });
-    }
-
-    if (session.user.role !== "ADMIN") {
-      return NextResponse.json({ error: "Bu işlem için yetkiniz yok." }, { status: 403 });
     }
 
     const body = await req.json();

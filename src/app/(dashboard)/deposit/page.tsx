@@ -11,6 +11,7 @@ import {
 import { t } from "@/lib/dashboard-i18n";
 import { formatCurrency } from "@/lib/utils";
 import type { FinancialAccount } from "@/types";
+import DekontActions from "@/components/dekont-actions";
 
 // ─── Seçenek Konfigürasyonu ────────────────────────────────────────────────
 const depositOptions = [
@@ -50,11 +51,12 @@ const depositOptions = [
 ];
 
 // ─── Başarılı İşlem Bileşeni ───────────────────────────────────────────────
-function SuccessView({ onBack, title, message, onNew }: {
+function SuccessView({ onBack, title, message, onNew, transactionId }: {
   onBack: () => void;
   title: string;
   message: string;
   onNew: () => void;
+  transactionId?: string;
 }) {
   return (
     <div className="space-y-6 animate-[fade-in_0.3s_ease-out]">
@@ -82,6 +84,11 @@ function SuccessView({ onBack, title, message, onNew }: {
           {message}
         </p>
 
+        {transactionId && (
+          <div className="flex justify-center animate-[slide-up_0.3s_ease-out]" style={{ animationDelay: '0.15s' }}>
+            <DekontActions transactionId={transactionId} />
+          </div>
+        )}
         <div className="flex gap-3 justify-center animate-[slide-up_0.3s_ease-out]" style={{ animationDelay: '0.2s' }}>
           <Button onClick={onNew} className="group">
             <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" />
@@ -107,6 +114,7 @@ function IbanDeposit({ onBack }: { onBack: () => void }) {
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [success, setSuccess] = useState(false);
+  const [successTxId, setSuccessTxId] = useState("");
 
   const fetchAccounts = useCallback(async () => {
     try {
@@ -142,6 +150,7 @@ function IbanDeposit({ onBack }: { onBack: () => void }) {
       });
       const data = await res.json();
       if (!data.success) { setError(data.error || "İşlem başarısız."); setIsSubmitting(false); return; }
+      setSuccessTxId(data.data?.id || "");
       setSuccess(true);
       setAmount("");
       fetchAccounts();
@@ -151,10 +160,11 @@ function IbanDeposit({ onBack }: { onBack: () => void }) {
   if (success) {
     return (
       <SuccessView
+        transactionId={successTxId}
         onBack={onBack}
         title="Para Yatırma Başarılı!"
         message="IBAN havalesi hesabınıza tanımlandı."
-        onNew={() => { setSuccess(false); setAmount(""); }}
+        onNew={() => { setSuccess(false); setAmount(""); setSuccessTxId(""); }}
       />
     );
   }
@@ -301,6 +311,7 @@ function CardDeposit({ onBack }: { onBack: () => void }) {
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [success, setSuccess] = useState(false);
+  const [successTxId, setSuccessTxId] = useState("");
 
   const fetchAccounts = useCallback(async () => {
     try {
@@ -330,6 +341,7 @@ function CardDeposit({ onBack }: { onBack: () => void }) {
       });
       const data = await res.json();
       if (!data.success) { setError(data.error || "İşlem başarısız."); setIsSubmitting(false); return; }
+      setSuccessTxId(data.data?.id || "");
       setSuccess(true);
       setAmount("");
       fetchAccounts();
@@ -339,6 +351,7 @@ function CardDeposit({ onBack }: { onBack: () => void }) {
   if (success) {
     return (
       <SuccessView
+        transactionId={successTxId}
         onBack={onBack}
         title="Kart ile Yatırma Başarılı!"
         message="Tutar hesabınıza tanımlandı."
@@ -422,6 +435,7 @@ function AtmDeposit({ onBack }: { onBack: () => void }) {
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [success, setSuccess] = useState(false);
+  const [successTxId, setSuccessTxId] = useState("");
 
   const fetchAccounts = useCallback(async () => {
     try {
@@ -451,6 +465,7 @@ function AtmDeposit({ onBack }: { onBack: () => void }) {
       });
       const data = await res.json();
       if (!data.success) { setError(data.error || "İşlem başarısız."); setIsSubmitting(false); return; }
+      setSuccessTxId(data.data?.id || "");
       setSuccess(true);
       setAmount("");
       fetchAccounts();
@@ -460,10 +475,11 @@ function AtmDeposit({ onBack }: { onBack: () => void }) {
   if (success) {
     return (
       <SuccessView
+        transactionId={successTxId}
         onBack={onBack}
         title="ATM ile Yatırma Başarılı!"
         message="Tutar hesabınıza tanımlandı."
-        onNew={() => { setSuccess(false); setAmount(""); }}
+        onNew={() => { setSuccess(false); setAmount(""); setSuccessTxId(""); }}
       />
     );
   }

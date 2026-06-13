@@ -38,9 +38,18 @@ interface SendEmailParams {
   html?: string;
 }
 
-export async function sendEmail({ to, subject, text, html }: SendEmailParams) {
+export interface SendEmailResult {
+  success: boolean;
+  id?: string;
+  error?: string;
+}
+
+export async function sendEmail({ to, subject, text, html }: SendEmailParams): Promise<SendEmailResult | null> {
   const client = getResend();
-  if (!client) return null;
+  if (!client) {
+    console.warn("[email] RESEND_API_KEY tanımlı değil, e-posta gönderilemedi.");
+    return { success: false, error: "RESEND_API_KEY not configured" };
+  }
 
   try {
     const result = await client.emails.send({
@@ -50,10 +59,11 @@ export async function sendEmail({ to, subject, text, html }: SendEmailParams) {
       text,
       html: html || text.replace(/\n/g, "<br>"),
     });
-    return result;
-  } catch (err) {
-    console.error("[email] Send failed:", err);
-    return null;
+    return { success: true, id: result.data?.id };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("[email] Send failed:", message);
+    return { success: false, error: message };
   }
 }
 
@@ -307,9 +317,9 @@ export async function sendNotification(
     subject: emailContent.subject,
     body: emailContent.text,
     event,
-    status: result ? "SENT" : "FAILED",
-    error: result ? undefined : "Send returned null",
+    status: result?.success ? "SENT" : "FAILED",
+    error: result?.success ? undefined : (result?.error ?? "E-posta gönderilemedi (null)"),
   });
 
-  return !!result;
+  return result?.success ?? false;
 }

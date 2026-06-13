@@ -131,51 +131,64 @@ export async function GET() {
   }
 }
 
-// Aylık gelir/gider verilerini getir
+// Aylık gelir/gider verilerini getir (tek GROUP BY sorgusu)
 async function getMonthlyData(userId: string, months: number) {
-  const data = [];
-  for (let i = months - 1; i >= 0; i--) {
-    const start = new Date();
-    start.setMonth(start.getMonth() - i);
-    start.setDate(1);
-    start.setHours(0, 0, 0, 0);
+  const monthNames = [
+    "Oca", "Şub", "Mar", "Nis", "May", "Haz",
+    "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara",
+  ];
 
-    const end = new Date(start);
-    end.setMonth(end.getMonth() + 1);
+  const startDate = new Date();
+  startDate.setMonth(startDate.getMonth() - months + 1);
+  startDate.setDate(1);
+  startDate.setHours(0, 0, 0, 0);
 
-    const monthNames = [
-      "Oca", "Şub", "Mar", "Nis", "May", "Haz",
-      "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara",
-    ];
+  // Tek sorgu: DATE_TRUNC + GROUP BY ile aylık gelir/gider
+  const rows = await prisma.$queryRaw<
+    Array<{ month: Date; type: string; total: number | null }>
+  >`
+    SELECT
+      DATE_TRUNC('month', date)  AS month,
+      type,
+      COALESCE(SUM(amount), 0)   AS total
+    FROM transactions
+    WHERE
+      "userId"    = ${userId}
+      AND status  = 'COMPLETED'
+      AND date    >= ${startDate}
+      AND type    IN ('INCOME', 'EXPENSE')
+    GROUP BY DATE_TRUNC('month', date), type
+    ORDER BY month ASC
+  `;
 
-    const [income, expense] = await Promise.all([
-      prisma.transaction.aggregate({
-        where: {
-          userId,
-          type: "INCOME",
-          date: { gte: start, lt: end },
-          status: "COMPLETED",
-        },
-        _sum: { amount: true },
-      }),
-      prisma.transaction.aggregate({
-        where: {
-          userId,
-          type: "EXPENSE",
-          date: { gte: start, lt: end },
-          status: "COMPLETED",
-        },
-        _sum: { amount: true },
-      }),
-    ]);
+  // rows → Map { monthKey → { income, expense } }
+  const monthMap = new Map<string, { income: number; expense: number }>();
 
-    data.push({
-      month: monthNames[start.getMonth()],
-      income: income._sum.amount || 0,
-      expense: expense._sum.amount || 0,
-    });
+  for (let i = 0; i < months; i++) {
+    const d = new Date(startDate);
+    d.setMonth(d.getMonth() + i);
+    const key = d.toISOString().slice(0, 7); // "2025-01"
+    monthMap.set(key, { income: 0, expense: 0 });
   }
-  return data;
+
+  for (const row of rows) {
+    const d = new Date(row.month);
+    const key = d.toISOString().slice(0, 7);
+    const entry = monthMap.get(key);
+    if (entry) {
+      if (row.type === "INCOME") entry.income = Number(row.total ?? 0);
+      if (row.type === "EXPENSE") entry.expense = Number(row.total ?? 0);
+    }
+  }
+
+  // Map'i sıralı diziye çevir
+  return Array.from(monthMap.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([key, val]) => ({
+      month: monthNames[new Date(key + "-01").getMonth()],
+      income: val.income,
+      expense: val.expense,
+    }));
 }
 
 // Kategori bazında harcama dağılımı

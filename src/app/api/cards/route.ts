@@ -1,26 +1,28 @@
 // =============================================
 // MoneyShop - Cards API
 // =============================================
+// Card numbers and CVVs are encrypted at rest using AES-256-GCM.
+// Card numbers use deterministic encryption to preserve @unique constraint.
+// CVVs use random IV encryption (no search needed).
+// Generated card numbers pass the Luhn checksum algorithm.
+// =============================================
 
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import {
+  generateCardNumber,
+  generateCvv,
+  encryptCardNumber,
+  decryptCardNumber,
+  encryptCvv,
+  maskCardNumber,
+  tryDecryptCardNumber,
+  isEncrypted,
+} from "@/lib/card-utils";
 
-function maskCardNumber(num: string): string {
-  return `**** **** **** ${num.slice(-4)}`;
-}
+// ─── GET /api/cards ─────────────────────────────────────
 
-function generateCardNumber(): string {
-  const prefix = "5200";
-  const rest = Array.from({ length: 12 }, () => Math.floor(Math.random() * 10)).join("");
-  return `${prefix}${rest}`;
-}
-
-function generateCvv(): string {
-  return String(Math.floor(100 + Math.random() * 899));
-}
-
-// GET /api/cards - Kullanıcının kartını getir (yoksa otomatik oluştur)
 export async function GET() {
   try {
     const session = await auth();
@@ -32,22 +34,21 @@ export async function GET() {
       where: { userId: session.user.id },
     });
 
-    // Kart yoksa (eski kayıtlar için) otomatik oluştur
+    // Kart yoksa otomatik oluştur
     if (!card) {
       try {
-        const cardNumber = generateCardNumber();
-        const cvv = generateCvv();
-        const now = new Date();
+        const plainCardNumber = generateCardNumber();
+        const plainCvv = generateCvv();
 
         card = await prisma.card.create({
           data: {
             userId: session.user.id,
             cardType: "STANDARD",
-            cardNumber,
+            cardNumber: encryptCardNumber(plainCardNumber),
             cardHolderName: session.user.name || "Kullanıcı",
-            expiryMonth: now.getMonth() + 1,
-            expiryYear: now.getFullYear() + 5,
-            cvv,
+            expiryMonth: new Date().getMonth() + 1,
+            expiryYear: new Date().getFullYear() + 5,
+            cvv: encryptCvv(plainCvv),
             status: "ACTIVE",
             dailyLimit: 5000,
             monthlyLimit: 50000,
@@ -69,10 +70,13 @@ export async function GET() {
       orderBy: { date: "desc" },
     });
 
+    // Kart numarasını deşifre et (maskeleneceği için)
+    const rawCardNumber = tryDecryptCardNumber(card.cardNumber) ?? card.cardNumber;
+
     // Hassas bilgileri maskele
     const safeCard = {
       ...card,
-      cardNumber: maskCardNumber(card.cardNumber),
+      cardNumber: maskCardNumber(rawCardNumber),
       cvv: "***",
       transactions,
     };
@@ -80,8 +84,6 @@ export async function GET() {
     return NextResponse.json({ success: true, data: safeCard });
   } catch (error) {
     console.error("Cards GET error:", error);
-    const errMsg = error instanceof Error ? error.message : "Bilinmeyen hata";
-    console.error("Cards GET error:", errMsg);
     return NextResponse.json(
       { error: "Kart bilgileri alınırken bir hata oluştu." },
       { status: 500 }
@@ -89,7 +91,8 @@ export async function GET() {
   }
 }
 
-// POST /api/cards - Kart başvurusu / kart tipi değiştirme
+// ─── POST /api/cards (kart tipi değiştirme / yeni kart) ─
+
 export async function POST(req: Request) {
   try {
     const session = await auth();
@@ -118,9 +121,12 @@ export async function POST(req: Request) {
         data: { cardType },
       });
 
+      // Kart numarasını maskeli göster
+      const rawCardNumber = tryDecryptCardNumber(updated.cardNumber) ?? updated.cardNumber;
+
       const safeCard = {
         ...updated,
-        cardNumber: maskCardNumber(updated.cardNumber),
+        cardNumber: maskCardNumber(rawCardNumber),
         cvv: "***",
       };
 
@@ -128,19 +134,18 @@ export async function POST(req: Request) {
     }
 
     // Yeni kart oluştur
-    const cardNumber = generateCardNumber();
-    const cvv = generateCvv();
-    const now = new Date();
+    const plainCardNumber = generateCardNumber();
+    const plainCvv = generateCvv();
 
     const card = await prisma.card.create({
       data: {
         userId: session.user.id,
         cardType,
-        cardNumber,
+        cardNumber: encryptCardNumber(plainCardNumber),
         cardHolderName: session.user.name || "Kullanıcı",
-        expiryMonth: now.getMonth() + 1,
-        expiryYear: now.getFullYear() + 5,
-        cvv,
+        expiryMonth: new Date().getMonth() + 1,
+        expiryYear: new Date().getFullYear() + 5,
+        cvv: encryptCvv(plainCvv),
         status: "ACTIVE",
         dailyLimit: cardType === "GOLD" ? 250000 : cardType === "SILVER" ? 50000 : 5000,
         monthlyLimit: cardType === "GOLD" ? 1000000 : cardType === "SILVER" ? 250000 : 50000,
@@ -150,7 +155,7 @@ export async function POST(req: Request) {
 
     const safeCard = {
       ...card,
-      cardNumber: maskCardNumber(card.cardNumber),
+      cardNumber: maskCardNumber(plainCardNumber),
       cvv: "***",
     };
 
@@ -164,7 +169,8 @@ export async function POST(req: Request) {
   }
 }
 
-// PATCH /api/cards - Kart durumu güncelle (bloke/kaldır)
+// ─── PATCH /api/cards (bloke/kaldır/iptal) ──────────────
+
 export async function PATCH(req: Request) {
   try {
     const session = await auth();
@@ -188,7 +194,10 @@ export async function PATCH(req: Request) {
     else if (action === "unblock") newStatus = "ACTIVE";
     else if (action === "cancel") newStatus = "CANCELLED";
     else {
-      return NextResponse.json({ error: "Geçersiz işlem. block, unblock veya cancel kullanın." }, { status: 400 });
+      return NextResponse.json(
+        { error: "Geçersiz işlem. block, unblock veya cancel kullanın." },
+        { status: 400 }
+      );
     }
 
     const updated = await prisma.card.update({
@@ -196,9 +205,11 @@ export async function PATCH(req: Request) {
       data: { status: newStatus },
     });
 
+    const rawCardNumber = tryDecryptCardNumber(updated.cardNumber) ?? updated.cardNumber;
+
     const safeCard = {
       ...updated,
-      cardNumber: maskCardNumber(updated.cardNumber),
+      cardNumber: maskCardNumber(rawCardNumber),
       cvv: "***",
     };
 

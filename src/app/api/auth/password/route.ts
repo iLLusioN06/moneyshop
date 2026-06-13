@@ -7,6 +7,7 @@ import { hash, compare } from "bcryptjs";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { withRateLimit } from "@/lib/rate-limit";
+import { changePasswordSchema, validateRequest } from "@/lib/validations";
 
 async function handler(req: Request) {
   try {
@@ -15,29 +16,11 @@ async function handler(req: Request) {
       return NextResponse.json({ error: "Oturum bulunamadı." }, { status: 401 });
     }
 
-    const { currentPassword, newPassword } = await req.json();
+    const body = await req.json();
+    const parsed = validateRequest(changePasswordSchema, body);
+    if (!parsed.success) return parsed.response;
 
-    // Validasyon
-    if (!currentPassword || !newPassword) {
-      return NextResponse.json(
-        { error: "Mevcut parola ve yeni parola zorunludur." },
-        { status: 400 }
-      );
-    }
-
-    if (newPassword.length < 6) {
-      return NextResponse.json(
-        { error: "Yeni parola en az 6 karakter olmalıdır." },
-        { status: 400 }
-      );
-    }
-
-    if (currentPassword === newPassword) {
-      return NextResponse.json(
-        { error: "Yeni parola, mevcut paroladan farklı olmalıdır." },
-        { status: 400 }
-      );
-    }
+    const { currentPassword, newPassword } = parsed.data;
 
     // Kullanıcıyı getir (password hash'ini almak için)
     const user = await prisma.user.findUnique({

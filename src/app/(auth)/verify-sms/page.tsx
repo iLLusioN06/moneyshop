@@ -3,7 +3,6 @@
 import { Suspense, useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
 import { Button, Card, CardContent } from "@/components/ui";
 import { APP_NAME, ROUTES } from "@/lib/constants";
 import { Smartphone, Check, ArrowLeft, RefreshCw } from "lucide-react";
@@ -13,6 +12,9 @@ function VerifySmsForm() {
   const searchParams = useSearchParams();
   const phone = searchParams.get("phone") || "";
   const mode = searchParams.get("mode") || "register";
+
+  const pendingTokenParam = searchParams.get("pendingToken") || "";
+  const [pendingToken, setPendingToken] = useState(pendingTokenParam || "");
 
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
@@ -84,10 +86,11 @@ function VerifySmsForm() {
           ? "/api/auth/verify-login-code"
           : "/api/auth/verify-sms";
 
+      const token = pendingToken || sessionStorage.getItem("pending_token") || "";
       const res = await fetch(verifyEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone, code: fullCode }),
+        body: JSON.stringify({ phone, code: fullCode, pendingToken: token || undefined }),
       });
 
       const data = await res.json();
@@ -100,21 +103,10 @@ function VerifySmsForm() {
 
       setSuccess(true);
 
-      // Otomatik giriş yap (hem register hem login için)
-      const email = sessionStorage.getItem("pending_email") || "";
-      const password = sessionStorage.getItem("pending_password") || "";
-      sessionStorage.removeItem("pending_email");
-      sessionStorage.removeItem("pending_password");
+      // sessionStorage'dan geçici verileri temizle
+      sessionStorage.removeItem("pending_token");
 
-      if (email && password) {
-        await signIn("credentials", {
-          email,
-          password,
-          redirect: false,
-        });
-      }
-
-      // Dashboard'a yönlendir
+      // Dashboard'a yönlendir (session cookie API tarafından set edildi)
       setTimeout(() => {
         router.push(ROUTES.DASHBOARD);
         router.refresh();
@@ -144,7 +136,7 @@ function VerifySmsForm() {
               email: sessionStorage.getItem("pending_email") || "",
               password: sessionStorage.getItem("pending_password") || "",
             }
-          : { phone };
+          : { phone, pendingToken: pendingToken || sessionStorage.getItem("pending_token") || undefined };
 
       const res = await fetch(resendEndpoint, {
         method: "POST",

@@ -27,6 +27,7 @@ const dict: TranslationDict = {
   "nav.portfolio":          { tr: "Yatırım Portföyü", en: "Portfolio", ar: "محفظة الاستثمار", ku: "Portfoliyoya Veberhênanê", fr: "Portefeuille d'investissement", ru: "Инвестиционный портфель" },
 "nav.reports":             { tr: "Raporlar", en: "Reports", ar: "التقارير", ku: "Rapor", fr: "Rapports", ru: "Отчеты" },
   "nav.budgets":             { tr: "Bütçeler", en: "Budgets", ar: "الميزانيات", ku: "Budce", fr: "Budgets", ru: "Бюджеты" },
+  "nav.categories":          { tr: "Kategoriler", en: "Categories", ar: "الفئات", ku: "Kategorî", fr: "Catégories", ru: "Категории" },
   "nav.payments":            { tr: "Ödemeler", en: "Payments", ar: "المدفوعات", ku: "Dedan", fr: "Paiements", ru: "Платежи" },
   "nav.card":                { tr: "MoneyShop Card", en: "MoneyShop Card", ar: "بطاقة MoneyShop", ku: "Karta MoneyShop", fr: "Carte MoneyShop", ru: "Карта MoneyShop" },
   "nav.profile":             { tr: "Profil", en: "Profile", ar: "الملف الشخصي", ku: "Profîl", fr: "Profil", ru: "Профиль" },

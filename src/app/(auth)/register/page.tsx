@@ -75,12 +75,11 @@ export default function RegisterPage() {
         return;
       }
 
-      // SMS doğrulama için bilgileri sessionStorage'da sakla
-      sessionStorage.setItem("pending_email", formData.email);
-      sessionStorage.setItem("pending_password", formData.password);
+      // SMS doğrulama için geçici token'ı sessionStorage'da sakla (şifre ASLA saklanmaz)
+      sessionStorage.setItem("pending_token", data.pendingToken);
 
       // SMS doğrulama sayfasına yönlendir
-      router.push(`/verify-sms?phone=${encodeURIComponent(formData.phone)}`);
+      router.push(`/verify-sms?phone=${encodeURIComponent(formData.phone)}&pendingToken=${encodeURIComponent(data.pendingToken)}`);
       router.refresh();
     } catch {
       setError("Bir hata oluştu. Lütfen tekrar deneyin.");

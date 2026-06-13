@@ -14,7 +14,6 @@ export interface NavItem {
 
 // Admin yetkisi gerektiren route'lar
 export const ADMIN_ROUTES = [
-  "/categories",
   "/settings",
   "/admin",
 ];

@@ -1,61 +1,143 @@
 // =============================================
-// MoneyShop - Rate Limiter
+// MoneyShop - Rate Limiter (Redis + In-Memory Fallback)
 // =============================================
-// In-memory sliding window rate limiter.
-// Production'da Redis tabanlı çözüm (Upstash) ile değiştirilmelidir.
-// Edge Runtime'da çalışmaz — sadece Node.js API route'larında kullanılabilir.
+// Production: Redis (sorted set + Lua — atomic sliding window)
+// Fallback:   In-memory Map (local dev, tests, Redis yoksa)
+//
+// Her iki backend de aynı RateLimitResult arayüzünü döndürür,
+// böylece arayan kod (withRateLimit) hiçbir değişiklik gerektirmez.
+// =============================================
 
-interface RateLimitEntry {
-  timestamps: number[];
-}
+import { redis } from "@/lib/redis";
 
-interface RateLimitConfig {
+// ─── Public Types ────────────────────────────────────────
+
+export interface RateLimitConfig {
   /** Maksimum istek sayısı */
   maxRequests: number;
   /** Zaman penceresi (milisaniye) */
   windowMs: number;
 }
 
-interface RateLimitResult {
+export interface RateLimitResult {
   success: boolean;
   remaining: number;
   resetAt: number;
   limit: number;
 }
 
-const store = new Map<string, RateLimitEntry>();
+// ─── Lua Script (Redis Atomic Sliding Window) ────────────
 
-// Temizlik aralığı (dakikada bir temizle)
-setInterval(
-  () => {
-    const now = Date.now();
-    for (const [key, entry] of store.entries()) {
-      // 1 dakikadan eski entry'leri temizle
-      const oldestValid = entry.timestamps[0] ?? 0;
-      if (now - oldestValid > 120_000) {
-        store.delete(key);
-      }
-    }
-  },
-  60_000,
-).unref();
+const RATE_LIMIT_SCRIPT = `
+local key = KEYS[1]
+local now = tonumber(ARGV[1])
+local window = tonumber(ARGV[2])
+local maxReq = tonumber(ARGV[3])
+local memberId = ARGV[4]
+local cutoff = now - window
 
-/**
- * Rate limit kontrolü yapar.
- * @param key Benzersiz anahtar (ör: "api:user:{userId}:{route}")
- * @param config Rate limit yapılandırması
- */
-export function rateLimit(key: string, config: RateLimitConfig = { maxRequests: 30, windowMs: 60_000 }): RateLimitResult {
+-- Eski kayıtları temizle
+redis.call('ZREMRANGEBYSCORE', key, 0, cutoff)
+
+-- Mevcut sayıyı al
+local count = redis.call('ZCARD', key)
+
+if count >= maxReq then
+  -- Red — en eski kaydın süresini döndür (retry-after hesaplaması için)
+  local oldest = redis.call('ZRANGE', key, 0, 0, 'WITHSCORES')
+  local oldestTimestamp = tonumber(oldest[2])
+  return {0, oldestTimestamp + window, maxReq}
+end
+
+-- İzin ver — yeni kaydı ekle
+redis.call('ZADD', key, now, memberId)
+redis.call('EXPIRE', key, math.ceil(window / 1000))
+return {1, maxReq - count - 1, maxReq, now + window}
+`;
+
+// ─── Redis Store ─────────────────────────────────────────
+
+async function redisRateLimit(
+  key: string,
+  config: RateLimitConfig
+): Promise<RateLimitResult> {
+  if (!redis) return fallbackRateLimit(key, config);
+
   const now = Date.now();
-  let entry = store.get(key);
+  const memberId = `${now}-${crypto.randomUUID()}`;
+
+  try {
+    const result = await redis.eval(
+      RATE_LIMIT_SCRIPT,
+      1, // number of keys
+      key,
+      now,
+      config.windowMs,
+      config.maxRequests,
+      memberId
+    ) as number[];
+
+    // Lua dönüşü: [success(0/1), remaining/resetAt, limit, resetAt]
+    if (result[0] === 0) {
+      return {
+        success: false,
+        remaining: 0,
+        resetAt: result[1],
+        limit: config.maxRequests,
+      };
+    }
+
+    return {
+      success: true,
+      remaining: result[1],
+      limit: config.maxRequests,
+      resetAt: result[3],
+    };
+  } catch (err) {
+    console.error("Redis rate-limit hatası, in-memory fallback:", err);
+    return fallbackRateLimit(key, config);
+  }
+}
+
+// ─── In-Memory Store (Fallback) ─────────────────────────
+
+interface MemoryEntry {
+  timestamps: number[];
+}
+
+const memoryStore = new Map<string, MemoryEntry>();
+
+// Periyodik temizlik (dakikada bir, thread bloke etmez)
+const CLEANUP_INTERVAL = setInterval(() => {
+  const now = Date.now();
+  for (const [key, entry] of memoryStore.entries()) {
+    const oldestValid = entry.timestamps[0] ?? 0;
+    if (now - oldestValid > 120_000) {
+      memoryStore.delete(key);
+    }
+  }
+}, 60_000);
+
+if (CLEANUP_INTERVAL.unref) CLEANUP_INTERVAL.unref();
+
+async function fallbackRateLimit(
+  key: string,
+  config: RateLimitConfig
+): Promise<RateLimitResult> {
+  const now = Date.now();
+  let entry = memoryStore.get(key);
 
   if (!entry) {
     entry = { timestamps: [now] };
-    store.set(key, entry);
-    return { success: true, remaining: config.maxRequests - 1, resetAt: now + config.windowMs, limit: config.maxRequests };
+    memoryStore.set(key, entry);
+    return {
+      success: true,
+      remaining: config.maxRequests - 1,
+      resetAt: now + config.windowMs,
+      limit: config.maxRequests,
+    };
   }
 
-  // Zaman penceresi dışındaki timestamp'leri temizle
   const cutoff = now - config.windowMs;
   entry.timestamps = entry.timestamps.filter((ts) => ts > cutoff);
 
@@ -78,34 +160,49 @@ export function rateLimit(key: string, config: RateLimitConfig = { maxRequests: 
   };
 }
 
+// ─── Public API (async — eski senkron API'den farklı) ───
+
+/**
+ * Rate limit kontrolü yapar.
+ * Redis varsa Redis üzerinden atomic Lua script ile,
+ * yoksa in-memory Map ile.
+ *
+ * @param key Benzersiz anahtar (ör: "rl:user:{userId}:{route}")
+ * @param config Rate limit yapılandırması
+ */
+export async function rateLimit(
+  key: string,
+  config: RateLimitConfig = { maxRequests: 30, windowMs: 60_000 }
+): Promise<RateLimitResult> {
+  if (redis) {
+    return redisRateLimit(key, config);
+  }
+  return fallbackRateLimit(key, config);
+}
+
+// ─── withRateLimit Wrapper ───────────────────────────────
+
 /**
  * API route handler'ları için rate limit wrapper.
- * Başarısız olursa 429 Too Many Requests döner.
+ * Artık async rateLimit kullanır — aynı arayüz, aynı kullanım.
  *
  * @example
  * ```ts
- * import { withRateLimit } from "@/lib/rate-limit";
- *
- * export const GET = withRateLimit({ maxRequests: 20, windowMs: 60_000 }, async (req) => {
- *   // handler code
- * });
+ * export const POST = withRateLimit({ maxRequests: 20, windowMs: 60_000 }, handler);
  * ```
  */
 export function withRateLimit(
   config: RateLimitConfig,
   handler: (req: Request) => Promise<Response>,
-  keyFn?: (req: Request) => string | null,
+  keyFn?: (req: Request) => string | null
 ): (req: Request) => Promise<Response> {
   return async (req: Request) => {
-    // Rate limit anahtarını oluştur
     let key: string | null = null;
 
-    // Önce custom keyFn dene
     if (keyFn) {
       key = keyFn(req);
     }
 
-    // Yoksa IP + path bazlı key oluştur
     if (!key) {
       const forwarded = req.headers.get("x-forwarded-for");
       const ip = forwarded?.split(",")[0]?.trim() || "anonymous";
@@ -113,7 +210,7 @@ export function withRateLimit(
       key = `rl:${ip}:${url.pathname}`;
     }
 
-    const result = rateLimit(key, config);
+    const result = await rateLimit(key, config);
 
     if (!result.success) {
       const retryAfter = Math.ceil((result.resetAt - Date.now()) / 1000);
@@ -131,14 +228,11 @@ export function withRateLimit(
             "X-RateLimit-Remaining": "0",
             "X-RateLimit-Reset": String(Math.ceil(result.resetAt / 1000)),
           },
-        },
+        }
       );
     }
 
-    // Handler'ı çağır ve header'larını ekle
     const response = await handler(req);
-
-    // Response immutable olabilir, clone'la
     const cloned = new Response(response.body, response);
     cloned.headers.set("X-RateLimit-Limit", String(result.limit));
     cloned.headers.set("X-RateLimit-Remaining", String(result.remaining));
@@ -149,8 +243,9 @@ export function withRateLimit(
 }
 
 /**
- * Test amacıyla store'u sıfırlama
+ * Test amaçlı: in-memory store'u sıfırla.
+ * (Redis store testlerde ayrı ele alınmalıdır.)
  */
 export function resetRateLimitStore(): void {
-  store.clear();
+  memoryStore.clear();
 }

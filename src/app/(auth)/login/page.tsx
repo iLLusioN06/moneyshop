@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { signIn } from "next-auth/react"; // ✅ BUNU EKLEYİN
+import { signIn, getSession } from "next-auth/react";
 import { Button, Input, Card, CardContent } from "@/components/ui";
 import { APP_NAME, ROUTES } from "@/lib/constants";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
@@ -39,8 +39,13 @@ export default function LoginPage() {
           return;
         }
 
-      // ✅ BAŞARILI GİRİŞ - DASHBOARD'A YÖNLENDİR
-      router.push("/dashboard");
+      // Role kontrolü yap - admin ise admin paneline yönlendir
+      const session = await getSession();
+      if (session?.user?.role === "ADMIN") {
+        router.push("/admin");
+      } else {
+        router.push("/dashboard");
+      }
       router.refresh();
     } catch {
       setError("Bir hata oluştu. Lütfen tekrar deneyin.");

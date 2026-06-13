@@ -38,6 +38,10 @@ export const authConfig = {
       // Auth sayfalarına giriş yapmış kullanıcılar erişemez
       if (isAuthRoute) {
         if (isLoggedIn) {
+          // Admin kullanıcıyı admin paneline yönlendir
+          if (auth?.user?.role === "ADMIN") {
+            return Response.redirect(new URL("/admin", nextUrl));
+          }
           return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
         }
         return true;

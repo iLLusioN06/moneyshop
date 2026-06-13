@@ -11,6 +11,7 @@ import {
 import { t } from "@/lib/dashboard-i18n";
 import { formatCurrency } from "@/lib/utils";
 import type { FinancialAccount } from "@/types";
+import DekontActions from "@/components/dekont-actions";
 
 // ─── Seçenek Konfigürasyonu ────────────────────────────────────────────────
 const withdrawOptions = [
@@ -50,11 +51,12 @@ const withdrawOptions = [
 ];
 
 // ─── Başarılı İşlem ─────────────────────────────────────────────────────────
-function SuccessView({ onBack, title, message, onNew }: {
+function SuccessView({ onBack, title, message, onNew, transactionId }: {
   onBack: () => void;
   title: string;
   message: string;
   onNew: () => void;
+  transactionId?: string;
 }) {
   return (
     <div className="space-y-6 animate-[fade-in_0.3s_ease-out]">
@@ -76,6 +78,12 @@ function SuccessView({ onBack, title, message, onNew }: {
 
         <h2 className="text-2xl font-bold text-text-primary mb-2 animate-[slide-up_0.3s_ease-out]">{title}</h2>
         <p className="text-sm text-text-muted mb-8 animate-[slide-up_0.3s_ease-out]" style={{ animationDelay: '0.1s' }}>{message}</p>
+
+        {transactionId && (
+          <div className="flex justify-center mb-6 animate-[slide-up_0.3s_ease-out]" style={{ animationDelay: '0.15s' }}>
+            <DekontActions transactionId={transactionId} />
+          </div>
+        )}
 
         <div className="flex gap-3 justify-center animate-[slide-up_0.3s_ease-out]" style={{ animationDelay: '0.2s' }}>
           <Button onClick={onNew} className="group">
@@ -101,6 +109,7 @@ function IbanWithdraw({ onBack }: { onBack: () => void }) {
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [success, setSuccess] = useState(false);
+  const [successTxId, setSuccessTxId] = useState("");
 
   const fetchAccounts = useCallback(async () => {
     try {
@@ -140,6 +149,7 @@ function IbanWithdraw({ onBack }: { onBack: () => void }) {
       });
       const data = await res.json();
       if (!data.success) { setError(data.error || "İşlem başarısız."); setIsSubmitting(false); return; }
+      setSuccessTxId(data.data?.id || "");
       setSuccess(true);
       setAmount(""); setRecipientIban(""); setRecipientName(""); setDescription("");
       fetchAccounts();
@@ -149,10 +159,11 @@ function IbanWithdraw({ onBack }: { onBack: () => void }) {
   if (success) {
     return (
       <SuccessView
+        transactionId={successTxId}
         onBack={onBack}
         title="Para Çekme Başarılı!"
         message="IBAN havalesi gerçekleştirildi."
-        onNew={() => { setSuccess(false); setAmount(""); setRecipientIban(""); setRecipientName(""); setDescription(""); }}
+        onNew={() => { setSuccess(false); setSuccessTxId(""); setAmount(""); setRecipientIban(""); setRecipientName(""); setDescription(""); }}
       />
     );
   }

@@ -13,6 +13,7 @@ import {
 } from "@/components/ui";
 import { formatCurrency, formatDate, cn } from "@/lib/utils";
 import { TRANSACTION_TYPES, TRANSACTION_STATUS } from "@/lib/constants";
+import DekontActions from "@/components/dekont-actions";
 import {
   ArrowUpDown,
   Plus,
@@ -27,6 +28,9 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Receipt,
+  Download,
+  FileSpreadsheet,
+  FileText,
 } from "lucide-react";
 import type { Transaction, FinancialAccount, Category } from "@/types";
 
@@ -88,6 +92,25 @@ export default function TransactionsPage() {
   // Delete
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Export
+  const [showExportMenu, setShowExportMenu] = useState(false);
+
+  const buildExportUrl = (format: string) => {
+    const params = new URLSearchParams();
+    params.set("format", format);
+    if (filterType) params.set("type", filterType);
+    if (filterAccount) params.set("accountId", filterAccount);
+    if (filterStart) params.set("startDate", filterStart);
+    if (filterEnd) params.set("endDate", filterEnd);
+    return `/api/reports/transactions?${params}`;
+  };
+
+  const handleExport = (format: string) => {
+    setShowExportMenu(false);
+    const url = buildExportUrl(format);
+    window.open(url, "_blank");
+  };
 
   const limit = 15;
 
@@ -222,10 +245,41 @@ export default function TransactionsPage() {
             Toplam {total} işlem
           </p>
         </div>
-        <Button onClick={openAddModal}>
-          <Plus className="w-4 h-4" />
-          Yeni İşlem
-        </Button>
+        <div className="flex items-center gap-2">
+          {/* Export Dropdown */}
+          <div className="relative">
+            <Button
+              variant="outline"
+              onClick={() => setShowExportMenu(!showExportMenu)}
+              onBlur={() => setTimeout(() => setShowExportMenu(false), 200)}
+            >
+              <Download className="w-4 h-4" />
+              Dışa Aktar
+            </Button>
+            {showExportMenu && (
+              <div className="absolute right-0 top-full mt-1 w-48 bg-surface border border-border rounded-lg shadow-lg z-50 overflow-hidden">
+                <button
+                  className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-text-primary hover:bg-surface-tertiary transition-colors"
+                  onMouseDown={() => handleExport("csv")}
+                >
+                  <FileText className="w-4 h-4 text-secondary" />
+                  CSV olarak indir
+                </button>
+                <button
+                  className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-text-primary hover:bg-surface-tertiary transition-colors"
+                  onMouseDown={() => handleExport("xlsx")}
+                >
+                  <FileSpreadsheet className="w-4 h-4 text-profit" />
+                  Excel olarak indir
+                </button>
+              </div>
+            )}
+          </div>
+          <Button onClick={openAddModal}>
+            <Plus className="w-4 h-4" />
+            Yeni İşlem
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -427,7 +481,7 @@ export default function TransactionsPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 flex-shrink-0 ml-3">
+                  <div className="flex items-center gap-2 flex-shrink-0 ml-3">
                     <p
                       className={cn(
                         "text-sm font-semibold whitespace-nowrap",
@@ -437,6 +491,10 @@ export default function TransactionsPage() {
                       {t.type === "INCOME" ? "+" : "-"}
                       {formatCurrency(t.amount, t.currency)}
                     </p>
+                    {/* Dekont Actions - compact, shows on hover */}
+                    <div className="opacity-0 group-hover:opacity-100 transition-all">
+                      <DekontActions transactionId={t.id} compact />
+                    </div>
                     <button
                       onClick={() => setDeleteId(t.id)}
                       className="p-1.5 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-loss/10 text-text-muted hover:text-loss transition-all"

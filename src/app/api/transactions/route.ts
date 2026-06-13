@@ -9,6 +9,11 @@ import type { Prisma } from "@prisma/client";
 import { withRateLimit } from "@/lib/rate-limit";
 import { createAuditLog, getRequestMetadata } from "@/lib/audit";
 import { sendNotification, buildTransactionEmail, buildTransferEmail } from "@/lib/email";
+import {
+  createTransactionSchema,
+  listTransactionsSchema,
+  validateRequest,
+} from "@/lib/validations";
 
 // GET /api/transactions - İşlemleri listele (filtreleme + sayfalama)
 export async function GET(req: Request) {
@@ -20,34 +25,33 @@ export async function GET(req: Request) {
 
     const userId = session.user.id;
     const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "20");
-    const type = searchParams.get("type"); // INCOME | EXPENSE | TRANSFER
-    const accountId = searchParams.get("accountId");
-    const categoryId = searchParams.get("categoryId");
-    const status = searchParams.get("status");
-    const startDate = searchParams.get("startDate");
-    const endDate = searchParams.get("endDate");
-    const search = searchParams.get("search");
 
-    const skip = (page - 1) * limit;
+    // Query parametrelerini doğrula
+    const queryResult = validateRequest(
+      listTransactionsSchema,
+      Object.fromEntries(searchParams.entries())
+    );
+    if (!queryResult.success) return queryResult.response;
+
+    const filters = queryResult.data;
+    const skip = (filters.page - 1) * filters.limit;
 
     // Filtreleri oluştur
     const where: Prisma.TransactionWhereInput = {
       userId,
     };
 
-    if (type) where.type = type;
-    if (accountId) where.accountId = accountId;
-    if (categoryId) where.categoryId = categoryId;
-    if (status) where.status = status;
-    if (startDate || endDate) {
+    if (filters.type) where.type = filters.type;
+    if (filters.accountId) where.accountId = filters.accountId;
+    if (filters.categoryId) where.categoryId = filters.categoryId;
+    if (filters.status) where.status = filters.status;
+    if (filters.startDate || filters.endDate) {
       where.date = {};
-      if (startDate) (where.date as { gte?: Date; lte?: Date }).gte = new Date(startDate);
-      if (endDate) (where.date as { gte?: Date; lte?: Date }).lte = new Date(endDate);
+      if (filters.startDate) (where.date as { gte?: Date; lte?: Date }).gte = new Date(filters.startDate);
+      if (filters.endDate) (where.date as { gte?: Date; lte?: Date }).lte = new Date(filters.endDate);
     }
-    if (search) {
-      where.description = { contains: search, mode: "insensitive" };
+    if (filters.search) {
+      where.description = { contains: filters.search, mode: "insensitive" };
     }
 
     const [transactions, total] = await Promise.all([
@@ -59,7 +63,7 @@ export async function GET(req: Request) {
         },
         orderBy: { date: "desc" },
         skip,
-        take: limit,
+        take: filters.limit,
       }),
       prisma.transaction.count({ where }),
     ]);
@@ -68,9 +72,9 @@ export async function GET(req: Request) {
       success: true,
       data: transactions,
       total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
+      page: filters.page,
+      limit: filters.limit,
+      totalPages: Math.ceil(total / filters.limit),
     });
   } catch (error) {
     console.error("Transactions GET error:", error);
@@ -91,21 +95,10 @@ async function postHandler(req: Request) {
 
     const userId = session.user.id;
     const body = await req.json();
-    const { accountId, categoryId, type, amount, currency, description, date } = body;
+    const parsed = validateRequest(createTransactionSchema, body);
+    if (!parsed.success) return parsed.response;
 
-    if (!accountId || !type || amount === undefined) {
-      return NextResponse.json(
-        { error: "Hesap, işlem türü ve tutar zorunludur." },
-        { status: 400 }
-      );
-    }
-
-    if (amount <= 0) {
-      return NextResponse.json(
-        { error: "Tutar 0'dan büyük olmalıdır." },
-        { status: 400 }
-      );
-    }
+    const { accountId, categoryId, type, amount, currency, description, date } = parsed.data;
 
     // Hesabın kullanıcıya ait olduğunu kontrol et
     const account = await prisma.financialAccount.findFirst({

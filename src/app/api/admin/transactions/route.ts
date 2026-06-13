@@ -5,7 +5,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import type { Prisma } from "@prisma/client";
+import type { Prisma, TransactionType, TransactionStatus } from "@prisma/client";
 
 // GET /api/admin/transactions - Tüm kullanıcıların işlemlerini listele
 export async function GET(req: Request) {
@@ -29,8 +29,8 @@ export async function GET(req: Request) {
 
     const where: Prisma.TransactionWhereInput = {};
 
-    if (type) where.type = type;
-    if (status) where.status = status;
+    if (type) where.type = type as TransactionType;
+    if (status) where.status = status as TransactionStatus;
     if (userId) where.userId = userId;
     if (startDate || endDate) {
       where.date = {};

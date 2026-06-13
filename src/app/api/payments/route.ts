@@ -5,30 +5,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-
-export const BILL_TYPES = [
-  { id: "electric", label: "Elektrik", icon: "Zap" },
-  { id: "water", label: "Su", icon: "Droplets" },
-  { id: "gas", label: "Doğalgaz", icon: "Flame" },
-  { id: "internet", label: "İnternet", icon: "Wifi" },
-  { id: "phone", label: "Telefon", icon: "Phone" },
-  { id: "insurance", label: "Sigorta", icon: "Shield" },
-  { id: "subscription", label: "Abonelik", icon: "Repeat" },
-  { id: "other", label: "Diğer", icon: "Receipt" },
-] as const;
-
-export type BillType = (typeof BILL_TYPES)[number]["id"];
-
-const billTypeLabels: Record<BillType, string> = {
-  electric: "Elektrik Faturası",
-  water: "Su Faturası",
-  gas: "Doğalgaz Faturası",
-  internet: "İnternet Faturası",
-  phone: "Telefon Faturası",
-  insurance: "Sigorta Ödemesi",
-  subscription: "Abonelik Ödemesi",
-  other: "Fatura Ödemesi",
-};
+import { BILL_TYPE_LABELS, BillType } from "@/lib/bill-types";
 
 // POST /api/payments - Fatura ödemesi yap
 export async function POST(req: Request) {
@@ -57,7 +34,7 @@ export async function POST(req: Request) {
       );
     }
 
-    if (!billTypeLabels[billType as BillType]) {
+    if (!BILL_TYPE_LABELS[billType as BillType]) {
       return NextResponse.json(
         { error: "Geçersiz fatura türü." },
         { status: 400 }
@@ -93,7 +70,7 @@ export async function POST(req: Request) {
       });
 
       // 2. İşlem kaydı oluştur
-      const billLabel = billTypeLabels[billType as BillType];
+      const billLabel = BILL_TYPE_LABELS[billType as BillType];
       const desc = referenceNumber
         ? `${billLabel} - ${referenceNumber}`
         : billLabel;
@@ -116,7 +93,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         success: true,
-        message: `${billTypeLabels[billType as BillType]} ödemesi başarıyla gerçekleştirildi.`,
+        message: `${BILL_TYPE_LABELS[billType as BillType]} ödemesi başarıyla gerçekleştirildi.`,
         data: paymentResult,
       },
       { status: 201 }

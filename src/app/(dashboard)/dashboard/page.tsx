@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from "react";
 import {
-  Card,
-  CardContent,
   Button,
 } from "@/components/ui";
 import { ErrorBoundary } from "@/components/error-boundary";
@@ -11,10 +9,9 @@ import {
   StatCard,
   MonthlyChart,
   RecentTransactions,
-  AccountsOverview,
+  CurrencyMarquee,
 } from "@/components/dashboard";
 import { useDashboard } from "@/hooks";
-import { useAccounts } from "@/hooks";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import {
@@ -28,14 +25,12 @@ import {
   XCircle,
   CheckCircle2,
 } from "lucide-react";
-import type { FinancialAccount } from "@/types";
 import { t } from "@/lib/dashboard-i18n";
 
 export default function DashboardPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const { data: dashData, isLoading, error, refetch } = useDashboard();
-  const { data: accounts } = useAccounts();
 
   const [isVerified, setIsVerified] = useState(false);
   const [isCheckingVerification, setIsCheckingVerification] = useState(true);
@@ -50,7 +45,7 @@ export default function DashboardPage() {
       })
       .catch(() => {})
       .finally(() => setIsCheckingVerification(false));
-  }, [session?.user?.id]);
+  }, [session?.user?.id, session?.user?.role, router]);
 
   const stats = dashData
     ? [
@@ -95,7 +90,6 @@ export default function DashboardPage() {
 
   const monthlyData = dashData?.monthlyData || [];
   const recentTransactions = dashData?.recentTransactions || [];
-  const safeAccounts = (accounts || []) as FinancialAccount[];
 
   return (
     <ErrorBoundary>
@@ -171,13 +165,6 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Accounts Overview */}
-            {safeAccounts.length > 0 && (
-              <div className="animate-[slide-up_0.4s_ease-out] opacity-0 [animation-fill-mode:forwards]" style={{ animationDelay: '0.55s' }}>
-                <AccountsOverview accounts={safeAccounts} />
-              </div>
-            )}
-
             {/* Verification Status */}
             {!isCheckingVerification && (
               <div className="flex justify-center animate-[slide-up_0.4s_ease-out] opacity-0 [animation-fill-mode:forwards]" style={{ animationDelay: '0.65s' }}>
@@ -217,6 +204,11 @@ export default function DashboardPage() {
                 </div>
               </div>
             )}
+
+            {/* Currency Ticker */}
+            <div className="animate-[slide-up_0.4s_ease-out] opacity-0 [animation-fill-mode:forwards]" style={{ animationDelay: '0.75s' }}>
+              <CurrencyMarquee />
+            </div>
           </>
         ) : null}
       </div>

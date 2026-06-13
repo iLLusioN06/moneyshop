@@ -8,74 +8,74 @@ beforeEach(() => {
 });
 
 describe("rateLimit", () => {
-  it("returns success=true on first call", () => {
-    const result = rateLimit("test-key", { maxRequests: 3, windowMs: 60_000 });
+  it("returns success=true on first call", async () => {
+    const result = await rateLimit("test-key", { maxRequests: 3, windowMs: 60_000 });
     expect(result.success).toBe(true);
   });
 
-  it("returns remaining count on first call", () => {
-    const result = rateLimit("test-key", { maxRequests: 5, windowMs: 60_000 });
+  it("returns remaining count on first call", async () => {
+    const result = await rateLimit("test-key", { maxRequests: 5, windowMs: 60_000 });
     expect(result.remaining).toBe(4);
     expect(result.limit).toBe(5);
   });
 
-  it("blocks after maxRequests exceeded", () => {
+  it("blocks after maxRequests exceeded", async () => {
     const config = { maxRequests: 2, windowMs: 60_000 };
 
-    const first = rateLimit("test-key", config);
+    const first = await rateLimit("test-key", config);
     expect(first.success).toBe(true);
 
-    const second = rateLimit("test-key", config);
+    const second = await rateLimit("test-key", config);
     expect(second.success).toBe(true);
 
-    const third = rateLimit("test-key", config);
+    const third = await rateLimit("test-key", config);
     expect(third.success).toBe(false);
     expect(third.remaining).toBe(0);
   });
 
-  it("resets after windowMs passes", () => {
+  it("resets after windowMs passes", async () => {
     jest.useFakeTimers();
 
     const config = { maxRequests: 1, windowMs: 60_000 };
 
-    const first = rateLimit("test-key", config);
+    const first = await rateLimit("test-key", config);
     expect(first.success).toBe(true);
 
     // Advance time past the window
     jest.advanceTimersByTime(61_000);
 
-    const second = rateLimit("test-key", config);
+    const second = await rateLimit("test-key", config);
     expect(second.success).toBe(true);
 
     jest.useRealTimers();
   });
 
-  it("resetRateLimitStore clears all entries", () => {
-    rateLimit("key-a", { maxRequests: 1, windowMs: 60_000 });
-    rateLimit("key-b", { maxRequests: 1, windowMs: 60_000 });
+  it("resetRateLimitStore clears all entries", async () => {
+    await rateLimit("key-a", { maxRequests: 1, windowMs: 60_000 });
+    await rateLimit("key-b", { maxRequests: 1, windowMs: 60_000 });
 
     resetRateLimitStore();
 
     // Should succeed again
-    const result = rateLimit("key-a", { maxRequests: 1, windowMs: 60_000 });
+    const result = await rateLimit("key-a", { maxRequests: 1, windowMs: 60_000 });
     expect(result.success).toBe(true);
   });
 
-  it("uses default config when not provided", () => {
-    const result = rateLimit("test-key");
+  it("uses default config when not provided", async () => {
+    const result = await rateLimit("test-key");
     expect(result.limit).toBe(30);
   });
 
-  it("returns remaining decreasing with each call", () => {
+  it("returns remaining decreasing with each call", async () => {
     const config = { maxRequests: 5, windowMs: 60_000 };
 
-    const r1 = rateLimit("test-key", config);
+    const r1 = await rateLimit("test-key", config);
     expect(r1.remaining).toBe(4);
 
-    const r2 = rateLimit("test-key", config);
+    const r2 = await rateLimit("test-key", config);
     expect(r2.remaining).toBe(3);
 
-    const r3 = rateLimit("test-key", config);
+    const r3 = await rateLimit("test-key", config);
     expect(r3.remaining).toBe(2);
   });
 });

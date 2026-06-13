@@ -2,17 +2,15 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hashSmsCode } from "@/lib/sms";
 import { withRateLimit } from "@/lib/rate-limit";
+import { verifyLoginCodeSchema, validateRequest } from "@/lib/validations";
 
 async function handler(req: Request) {
   try {
-    const { phone, code } = await req.json();
+    const body = await req.json();
+    const parsed = validateRequest(verifyLoginCodeSchema, body);
+    if (!parsed.success) return parsed.response;
 
-    if (!phone || !code) {
-      return NextResponse.json(
-        { error: "Telefon ve SMS kodu zorunludur." },
-        { status: 400 }
-      );
-    }
+    const { phone, code } = parsed.data;
 
     // Login kodunu bul (name="LOGIN" ile işaretli)
     const pending = await prisma.pendingRegistration.findFirst({
