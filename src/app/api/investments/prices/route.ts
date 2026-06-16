@@ -8,7 +8,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { lookupPrice, lookupPrices, validateSymbol } from "@/lib/market-data";
+import { lookupPrice, lookupPrices, validateSymbol, type AssetType } from "@/lib/market-data";
 
 // GET /api/investments/prices?symbol=AAPL&type=STOCK
 // GET /api/investments/prices?symbol=BTC&type=CRYPTO
@@ -84,7 +84,7 @@ export async function POST(req: Request) {
       });
       items = investments.map((inv) => ({
         symbol: inv.symbol,
-        type: (inv.type as any) || "STOCK",
+        type: inv.type as AssetType,
       }));
     }
 

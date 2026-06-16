@@ -23,6 +23,9 @@ export function formatCurrency(
     EUR: { locale: "de-DE", currency: "EUR" },
     GBP: { locale: "en-GB", currency: "GBP" },
     CHF: { locale: "de-CH", currency: "CHF" },
+    AED: { locale: "ar-AE", currency: "AED" },
+    IQD: { locale: "ar-IQ", currency: "IQD" },
+    XAU: { locale: "en-US", currency: "XAU" },
   };
 
   const config = currencyMap[currency] || { locale: "tr-TR", currency: "TRY" };

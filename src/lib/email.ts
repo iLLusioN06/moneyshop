@@ -31,11 +31,17 @@ export type EmailEvent =
 
 // ─── Send Email ────────────────────────────────────────
 
+export interface Attachment {
+  filename: string;
+  content: string; // Base64-encoded
+}
+
 interface SendEmailParams {
   to: string;
   subject: string;
   text: string;
   html?: string;
+  attachments?: Attachment[];
 }
 
 export interface SendEmailResult {
@@ -44,7 +50,7 @@ export interface SendEmailResult {
   error?: string;
 }
 
-export async function sendEmail({ to, subject, text, html }: SendEmailParams): Promise<SendEmailResult | null> {
+export async function sendEmail({ to, subject, text, html, attachments }: SendEmailParams): Promise<SendEmailResult | null> {
   const client = getResend();
   if (!client) {
     console.warn("[email] RESEND_API_KEY tanımlı değil, e-posta gönderilemedi.");
@@ -58,6 +64,7 @@ export async function sendEmail({ to, subject, text, html }: SendEmailParams): P
       subject,
       text,
       html: html || text.replace(/\n/g, "<br>"),
+      attachments,
     });
     return { success: true, id: result.data?.id };
   } catch (err: unknown) {
@@ -212,6 +219,52 @@ export function buildMonthlyReportEmail(params: MonthlyReportNotification) {
       `Detaylı rapor için MoneyShop uygulamasını ziyaret edin.`,
       ``,
       `İyi günler dileriz,\n${APP_NAME}`,
+    ].join("\n"),
+  };
+}
+
+interface PasswordResetNotification {
+  to: string;
+  userName: string;
+  resetLink: string;
+}
+
+export function buildPasswordResetEmail(params: PasswordResetNotification) {
+  return {
+    subject: `[${APP_NAME}] Parola Sıfırlama Talebi`,
+    text: [
+      `Merhaba ${params.userName},`,
+      ``,
+      `Hesabınız için parola sıfırlama talebi aldık.`,
+      ``,
+      `Parolanızı sıfırlamak için aşağıdaki bağlantıya tıklayın:`,
+      ``,
+      `${params.resetLink}`,
+      ``,
+      `Bu bağlantı 1 saat süreyle geçerlidir.`,
+      ``,
+      `Eğer bu talebi siz yapmadıysanız, bu e-postayı dikkate almayın.`,
+      ``,
+      `İyi günler dileriz,\n${APP_NAME}`,
+    ].join("\n"),
+    html: [
+      `<!DOCTYPE html>`,
+      `<html><body style="font-family:Arial,sans-serif;padding:20px;background:#f4f4f4;">`,
+      `<div style="max-width:480px;margin:0 auto;background:#fff;border-radius:12px;padding:32px;">`,
+      `<div style="background:linear-gradient(135deg,#6366f1,#8b5cf6);margin:-32px -32px 24px;padding:24px;border-radius:12px 12px 0 0;text-align:center;">`,
+      `<h1 style="color:#fff;margin:0;font-size:20px;">${APP_NAME}</h1>`,
+      `</div>`,
+      `<h2 style="color:#1e293b;font-size:18px;">Parola Sıfırlama</h2>`,
+      `<p style="color:#64748b;line-height:1.6;">Merhaba <strong>${params.userName}</strong>,</p>`,
+      `<p style="color:#64748b;line-height:1.6;">Hesabınız için parola sıfırlama talebi aldık.</p>`,
+      `<p style="color:#64748b;line-height:1.6;">Parolanızı sıfırlamak için aşağıdaki butona tıklayın:</p>`,
+      `<div style="text-align:center;margin:28px 0;">`,
+      `<a href="${params.resetLink}" style="display:inline-block;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;text-decoration:none;padding:14px 32px;border-radius:8px;font-weight:bold;font-size:15px;">Parolamı Sıfırla</a>`,
+      `</div>`,
+      `<p style="color:#94a3b8;font-size:13px;line-height:1.5;">Bu bağlantı <strong>1 saat</strong> süreyle geçerlidir. Eğer bu talebi siz yapmadıysanız, bu e-postayı dikkate almayın.</p>`,
+      `<hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0;" />`,
+      `<p style="color:#94a3b8;font-size:12px;text-align:center;">${APP_NAME} — Modern Finansal Yönetim Paneli</p>`,
+      `</div></body></html>`,
     ].join("\n"),
   };
 }

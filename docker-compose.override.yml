@@ -1,0 +1,36 @@
+# ============================================
+# MoneyShop — Docker Compose Override (Local Dev)
+# ============================================
+# Adds a local PostgreSQL for development.
+# Used automatically when you run:
+#   docker compose up
+#
+# For production (Neon), this file is ignored.
+# ============================================
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: moneyshop-db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: moneyshop
+      POSTGRES_PASSWORD: moneyshop_secret
+      POSTGRES_DB: moneyshop
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U moneyshop"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

@@ -26,7 +26,22 @@ import {
   UserCheck,
   UserX,
   History,
+  BarChart3,
+  Activity,
+  Mail,
 } from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+  LineChart,
+  Line,
+} from "recharts";
 
 interface AdminStats {
   totalUsers: number;
@@ -38,6 +53,10 @@ interface AdminStats {
   monthlyIncome: number;
   monthlyExpense: number;
   totalVolume: number;
+  incomeGrowth: number;
+  weeklyVolume: number;
+  weeklyTransactionCount: number;
+  failedTransactions: number;
   recentTransactions: Array<{
     id: string;
     type: string;
@@ -48,6 +67,8 @@ interface AdminStats {
     user: { id: string; name: string | null; email: string };
     account: { name: string };
   }>;
+  monthlyRevenue: Array<{ month: string; income: number; expense: number }>;
+  userGrowth: Array<{ month: string; count: number }>;
 }
 
 function StatCard({
@@ -125,6 +146,22 @@ export default function AdminPage() {
       case "TRANSFER": return "Transfer";
       default: return type;
     }
+  };
+
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-surface border border-border rounded-lg shadow-lg p-3 text-sm">
+          <p className="font-medium text-text-primary mb-2">{label}</p>
+          {payload.map((entry: any) => (
+            <p key={entry.name} style={{ color: entry.color }} className="font-medium">
+              {entry.name}: {formatCurrency(entry.value)}
+            </p>
+          ))}
+        </div>
+      );
+    }
+    return null;
   };
 
   return (
@@ -208,6 +245,7 @@ export default function AdminPage() {
             <StatCard
               title="Bu Ay Gelir"
               value={formatCurrency(stats.monthlyIncome)}
+              subtitle={stats.incomeGrowth !== 0 ? `Geçen aya göre %${stats.incomeGrowth > 0 ? '+' : ''}${stats.incomeGrowth}` : undefined}
               icon={TrendingUp}
               color="text-profit"
               bgColor="bg-profit/10"
@@ -222,15 +260,84 @@ export default function AdminPage() {
             <StatCard
               title="Toplam Hacim"
               value={formatCurrency(stats.totalVolume)}
-              subtitle="Tüm tamamlanmış işlemler"
+              subtitle={`Son 7 gün: ${formatCurrency(stats.weeklyVolume)} (${stats.weeklyTransactionCount} işlem)`}
               icon={Wallet}
               color="text-secondary"
               bgColor="bg-secondary/10"
             />
           </div>
 
+          {/* Charts Row */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Monthly Revenue Chart */}
+            <Card className="overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent border-b border-border">
+                <div className="flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-secondary" />
+                  <CardTitle className="text-sm">Aylık Gelir/Gider Trendi</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="p-5">
+                {stats.monthlyRevenue.length === 0 ? (
+                  <div className="h-64 flex items-center justify-center text-sm text-text-muted">
+                    Grafik için veri bulunamadı
+                  </div>
+                ) : (
+                  <ResponsiveContainer width="100%" height={280}>
+                    <BarChart data={stats.monthlyRevenue} barGap={4}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border, #e2e8f0)" opacity={0.5} />
+                      <XAxis dataKey="month" tick={{ fontSize: 12, fill: 'var(--color-text-muted, #94a3b8)' }} />
+                      <YAxis tick={{ fontSize: 12, fill: 'var(--color-text-muted, #94a3b8)' }} />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      <Bar dataKey="income" name="Gelir" fill="#10b981" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="expense" name="Gider" fill="#ef4444" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* User Growth Chart */}
+            <Card className="overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-accent/10 via-accent/5 to-transparent border-b border-border">
+                <div className="flex items-center gap-2">
+                  <Activity className="w-5 h-5 text-accent" />
+                  <CardTitle className="text-sm">Kullanıcı Büyümesi</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="p-5">
+                {stats.userGrowth.length === 0 ? (
+                  <div className="h-64 flex items-center justify-center text-sm text-text-muted">
+                    Grafik için veri bulunamadı
+                  </div>
+                ) : (
+                  <ResponsiveContainer width="100%" height={280}>
+                    <LineChart data={stats.userGrowth}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border, #e2e8f0)" opacity={0.5} />
+                      <XAxis dataKey="month" tick={{ fontSize: 12, fill: 'var(--color-text-muted, #94a3b8)' }} />
+                      <YAxis tick={{ fontSize: 12, fill: 'var(--color-text-muted, #94a3b8)' }} allowDecimals={false} />
+                      <Tooltip content={({ active, payload, label }) => {
+                        if (active && payload && payload.length) {
+                          return (
+                            <div className="bg-surface border border-border rounded-lg shadow-lg p-3 text-sm">
+                              <p className="font-medium text-text-primary">{label}</p>
+                              <p className="font-medium text-accent">{payload[0].value} yeni kullanıcı</p>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }} />
+                      <Line type="monotone" dataKey="count" name="Yeni Kullanıcı" stroke="#8b5cf6" strokeWidth={2} dot={{ fill: '#8b5cf6', r: 4 }} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Quick Actions */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card className="cursor-pointer hover:shadow-md transition-all overflow-hidden" onClick={() => router.push("/admin/users")}>
               <CardContent className="p-5 flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -239,7 +346,7 @@ export default function AdminPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-text-primary">Kullanıcı Yönetimi</h3>
-                    <p className="text-sm text-text-muted">Kullanıcıları listele, rol değiştir, yönet</p>
+                    <p className="text-sm text-text-muted">Listele, rol değiştir, yönet</p>
                   </div>
                 </div>
                 <ArrowRight className="w-5 h-5 text-text-muted" />
@@ -254,7 +361,22 @@ export default function AdminPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-text-primary">İşlem İzleme</h3>
-                    <p className="text-sm text-text-muted">Tüm işlemleri görüntüle ve filtrele</p>
+                    <p className="text-sm text-text-muted">Görüntüle ve filtrele</p>
+                  </div>
+                </div>
+                <ArrowRight className="w-5 h-5 text-text-muted" />
+              </CardContent>
+            </Card>
+
+            <Card className="cursor-pointer hover:shadow-md transition-all overflow-hidden" onClick={() => router.push("/admin/email-logs")}>
+              <CardContent className="p-5 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-profit/10 flex items-center justify-center">
+                    <Mail className="w-6 h-6 text-profit" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-text-primary">E-posta Günlükleri</h3>
+                    <p className="text-sm text-text-muted">Gönderim durumları</p>
                   </div>
                 </div>
                 <ArrowRight className="w-5 h-5 text-text-muted" />
@@ -269,7 +391,7 @@ export default function AdminPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-text-primary">Denetim Günlükleri</h3>
-                    <p className="text-sm text-text-muted">Tüm kullanıcı hareketlerini görüntüle</p>
+                    <p className="text-sm text-text-muted">Kullanıcı hareketleri</p>
                   </div>
                 </div>
                 <ArrowRight className="w-5 h-5 text-text-muted" />

@@ -25,7 +25,33 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      // ✅ DOĞRUDAN NextAuth İLE GİRİŞ YAP - SMS ATLA
+      // ─── 1. Adım: 2FA gerekli mi kontrol et ───
+      const initRes = await fetch("/api/auth/2fa/init-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const initData = await initRes.json();
+
+      if (!initRes.ok) {
+        setError(initData.error || "Kullanıcı adı veya şifre hatalı.");
+        setIsLoading(false);
+        return;
+      }
+
+      // ─── 2FA gerekli → verify-2fa sayfasına yönlendir ───
+      if (initData.twoFactorRequired) {
+        router.push(
+          `/verify-2fa?token=${initData.pendingToken}&method=${initData.method}`
+        );
+        return;
+      }
+
+      // ─── 2FA gerekli değil → doğrudan giriş ───
       const result = await signIn("credentials", {
         email: formData.email,
         password: formData.password,
@@ -131,7 +157,7 @@ export default function LoginPage() {
                 Beni hatırla
               </label>
               <Link
-                href="#"
+                href="/forgot-password"
                 className="text-sm text-secondary hover:text-secondary-dark transition-colors"
               >
                 Parolamı unuttum

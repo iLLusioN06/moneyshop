@@ -149,10 +149,41 @@ export const verifyIdentitySchema = z
       .regex(/^\d{11}$/, "TC Kimlik numarası 11 haneli olmalıdır.")
       .optional()
       .or(z.literal("")),
+    address: z
+      .string()
+      .min(10, "Adres en az 10 karakter olmalıdır.")
+      .max(500, "Adres en fazla 500 karakter olabilir."),
+    identityNumber: z
+      .string()
+      .min(5, "Kimlik numarası en az 5 karakter olmalıdır.")
+      .max(20, "Kimlik numarası en fazla 20 karakter olabilir."),
   })
   .strict();
 
 export type VerifyIdentityInput = z.infer<typeof verifyIdentitySchema>;
+
+// ───
+
+// ───
+
+export const forgotPasswordSchema = z
+  .object({
+    email: emailSchema,
+  })
+  .strict();
+
+export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
+
+// ───
+
+export const resetPasswordSchema = z
+  .object({
+    token: z.string().min(1, "Token zorunludur."),
+    password: passwordSchema,
+  })
+  .strict();
+
+export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 
 // ───
 
@@ -249,3 +280,61 @@ export const listTransactionsSchema = z.object({
 });
 
 export type ListTransactionsInput = z.infer<typeof listTransactionsSchema>;
+
+// ─── 2FA Şemaları ─────────────────────────────────────────
+
+export const twoFactorInitLoginSchema = z
+  .object({
+    email: z.string().min(1, "E-posta veya kullanıcı adı zorunludur."),
+    password: z.string().min(1, "Parola zorunludur."),
+  })
+  .strict();
+
+export type TwoFactorInitLoginInput = z.infer<typeof twoFactorInitLoginSchema>;
+
+export const twoFactorSetupSchema = z
+  .object({
+    method: z.enum(["AUTHENTICATOR", "SMS"], {
+      message: "Geçersiz 2FA yöntemi. AUTHENTICATOR veya SMS olmalıdır.",
+    }),
+  })
+  .strict();
+
+export type TwoFactorSetupInput = z.infer<typeof twoFactorSetupSchema>;
+
+export const twoFactorVerifySetupSchema = z
+  .object({
+    method: z.enum(["AUTHENTICATOR", "SMS"]),
+    secret: z.string().optional(), // AUTHENTICATOR için ham secret (doğrulama sonrası şifrelenecek)
+    code: z.string().min(1, "Doğrulama kodu zorunludur."),
+  })
+  .strict();
+
+export type TwoFactorVerifySetupInput = z.infer<typeof twoFactorVerifySetupSchema>;
+
+export const twoFactorToggleSchema = z
+  .object({
+    enabled: z.boolean(),
+    method: z.enum(["AUTHENTICATOR", "SMS"]).optional(),
+  })
+  .strict();
+
+export type TwoFactorToggleInput = z.infer<typeof twoFactorToggleSchema>;
+
+export const twoFactorVerifyLoginSchema = z
+  .object({
+    pendingToken: z.string().min(1, "Oturum token'ı zorunludur."),
+    code: z.string().min(1, "Doğrulama kodu zorunludur."),
+    isBackupCode: z.boolean().optional().default(false),
+  })
+  .strict();
+
+export type TwoFactorVerifyLoginInput = z.infer<typeof twoFactorVerifyLoginSchema>;
+
+export const twoFactorSendSmsSchema = z
+  .object({
+    userId: z.string().min(1, "Kullanıcı ID zorunludur."),
+  })
+  .strict();
+
+export type TwoFactorSendSmsInput = z.infer<typeof twoFactorSendSmsSchema>;

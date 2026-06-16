@@ -34,12 +34,9 @@ import {
   RefreshCw,
   Fingerprint,
   Smartphone,
-  Scan,
-  Check,
-  ExternalLink,
-  QrCode,
   ChevronDown,
   ChevronUp,
+  IdCard,
   Activity,
   Target,
   TrendingUp,
@@ -57,6 +54,10 @@ interface ProfileData {
   createdAt: string;
   updatedAt: string;
   emailVerified: string | null;
+  dateOfBirth: string | null;
+  tcKimlik: string | null;
+  address: string | null;
+  identityNumber: string | null;
   _count: {
     accounts: number;
     transactions: number;
@@ -108,10 +109,10 @@ function ProfileHeader({
 
   return (
     <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800 shadow-xl">
-      {/* Decorative Elements */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-secondary/10 to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-      <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-accent/10 to-transparent rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
+      {/* Decorative Elements — pointer-events-none lets clicks pass through to tabs */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-secondary/10 to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-accent/10 to-transparent rounded-full blur-3xl translate-y-1/3 -translate-x-1/4 pointer-events-none" />
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-50 pointer-events-none" />
 
       <div className="relative p-6 md:p-8">
         {/* Top Row — Avatar + Name + Role */}
@@ -963,9 +964,12 @@ function ProfileContent() {
         onTabChange={setActiveTab}
       />
 
-      {/* Verification Banner */}
+      {/* KYC Doğrulama Formu */}
       {!profile?.emailVerified && (
-        <VerificationBanner />
+        <VerificationBanner
+          profile={profile}
+          onVerified={(data) => setProfile(data)}
+        />
       )}
 
       {/* Tab Content */}
@@ -981,17 +985,99 @@ function ProfileContent() {
 }
 
 // ============================================================================
-// VERIFICATION BANNER (simplified version)
+// KYC DOĞRULAMA FORMU
 // ============================================================================
-function VerificationBanner() {
+function VerificationBanner({
+  profile,
+  onVerified,
+}: {
+  profile: ProfileData | null;
+  onVerified: (data: ProfileData) => void;
+}) {
+  const { data: session, update: updateSession } = useSession();
   const [isOpen, setIsOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [form, setForm] = useState({
+    dateOfBirth: "",
+    tcKimlik: "",
+    address: "",
+    identityNumber: "",
+  });
 
-  const steps = [
-    { icon: Scan, title: "Uygulamayı İndir", desc: "App Store veya Google Play'den indirin" },
-    { icon: Check, title: "Hesaba Bağlan", desc: "Uygulama içinden QR kodunu okutun" },
-    { icon: Smartphone, title: "Doğrulama", desc: "Telefonunuza gelen kodu onaylayın" },
-    { icon: CheckCircle2, title: "Onay", desc: "E-posta adresiniz doğrulanmış olacak" },
-  ];
+  const handleChange =
+    (field: string) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setForm((prev) => ({ ...prev, [field]: e.target.value }));
+      setFieldErrors({});
+      setError("");
+    };
+
+  // dateOfBirth'i YYYY-MM-DD formatına çevir (input[type=date] için)
+  const toDateInputValue = (date: string | null | undefined): string => {
+    if (!date) return "";
+    // "2024-01-15T00:00:00.000Z" → "2024-01-15"
+    return date.slice(0, 10);
+  };
+
+  // Profile yüklendiğinde, eğer KYC verileri varsa formu doldur (manuel düzeltme için)
+  useEffect(() => {
+    if (profile) {
+      setForm((prev) => ({
+        ...prev,
+        dateOfBirth: prev.dateOfBirth || toDateInputValue(profile.dateOfBirth),
+        tcKimlik: prev.tcKimlik || profile.tcKimlik || "",
+        address: prev.address || profile.address || "",
+        identityNumber: prev.identityNumber || profile.identityNumber || "",
+      }));
+    }
+  }, [profile]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError("");
+    setFieldErrors({});
+
+    try {
+      const res = await fetch("/api/auth/verify", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        if (data.details && Array.isArray(data.details)) {
+          const fieldErrMap: Record<string, string> = {};
+          data.details.forEach((d: { field: string; message: string }) => {
+            fieldErrMap[d.field] = d.message;
+          });
+          setFieldErrors(fieldErrMap);
+        } else {
+          setError(data.error || "Doğrulama başarısız.");
+        }
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Session ve profile'ı güncelle
+      await updateSession();
+
+      // Profili tekrar fetch et
+      const profileRes = await fetch("/api/auth/profile");
+      const profileData = await profileRes.json();
+      if (profileData.success && profileData.data) {
+        onVerified(profileData.data as unknown as ProfileData);
+      }
+    } catch {
+      setError("Bağlantı hatası oluştu.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="rounded-xl border border-pending/20 bg-gradient-to-r from-pending/5 to-transparent overflow-hidden">
@@ -1004,9 +1090,9 @@ function VerificationBanner() {
             <Fingerprint className="w-5 h-5 text-pending" />
           </div>
           <div className="text-left">
-            <p className="text-sm font-semibold text-text-primary">E-posta Doğrulaması Gerekli</p>
+            <p className="text-sm font-semibold text-text-primary">Kimlik Doğrulaması (KYC) Gerekli</p>
             <p className="text-xs text-text-muted mt-0.5">
-              Hesabınızın tam özelliklerini kullanmak için e-posta adresinizi doğrulayın
+              Hesabınızın tam özelliklerini kullanmak için kimlik bilgilerinizi doğrulayın
             </p>
           </div>
         </div>
@@ -1025,53 +1111,96 @@ function VerificationBanner() {
       {isOpen && (
         <div className="px-4 pb-6 border-t border-pending/10 animate-[fade-in_0.2s_ease-out]">
           <p className="text-sm text-text-secondary pt-4 mb-5 leading-relaxed">
-            E-posta doğrulaması, hesabınızın güvenliğini artırır ve tüm özelliklere erişmenizi sağlar.
-            Aşağıdaki adımları takip ederek doğrulama işlemini tamamlayabilirsiniz.
+            Hesabınızı aktifleştirmek için aşağıdaki kimlik bilgilerini eksiksiz doldurun.
+            Bilgileriniz gizli tutulur ve yalnızca doğrulama amacıyla kullanılır.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
-            {steps.map((step, i) => {
-              const Icon = step.icon;
-              return (
-                <div
-                  key={i}
-                  className="flex gap-3 p-3 rounded-xl bg-surface border border-border hover:shadow-sm transition-all"
-                >
-                  <div className="w-9 h-9 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <Icon className="w-[18px] h-[18px] text-secondary" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-text-primary">
-                      {i + 1}. {step.title}
-                    </p>
-                    <p className="text-xs text-text-muted mt-0.5">{step.desc}</p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-xl bg-surface border border-border">
-            <div className="w-24 h-24 bg-white rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
-              <QrCode className="w-16 h-16 text-gray-900" />
-            </div>
-            <div className="text-center sm:text-left">
-              <p className="text-sm font-semibold text-text-primary mb-1">QR Kod ile Doğrulama</p>
-              <p className="text-xs text-text-muted">
-                Mobil uygulamamızı indirip QR kodu okutarak hızlıca doğrulama yapabilirsiniz.
-              </p>
-              <div className="flex items-center justify-center sm:justify-start gap-4 mt-3">
-                <span className="flex items-center gap-1.5 text-xs text-text-muted">
-                  <ExternalLink className="w-3 h-3" />
-                  App Store
-                </span>
-                <span className="flex items-center gap-1.5 text-xs text-text-muted">
-                  <ExternalLink className="w-3 h-3" />
-                  Google Play
-                </span>
+          <form onSubmit={handleSubmit} className="space-y-4 max-w-xl">
+            {error && (
+              <div className="p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                {error}
               </div>
+            )}
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Input
+                label="Doğum Tarihi"
+                type="date"
+                value={form.dateOfBirth}
+                onChange={handleChange("dateOfBirth")}
+                icon={<Calendar className="w-4 h-4" />}
+                required
+                error={fieldErrors.dateOfBirth}
+              />
+
+              <Input
+                label="TC Kimlik No"
+                value={form.tcKimlik}
+                onChange={handleChange("tcKimlik")}
+                icon={<IdCard className="w-4 h-4" />}
+                placeholder="11 haneli TC Kimlik numarası"
+                maxLength={11}
+                error={fieldErrors.tcKimlik}
+              />
             </div>
-          </div>
+
+            <Input
+              label="Kimlik / Pasaport Numarası"
+              value={form.identityNumber}
+              onChange={handleChange("identityNumber")}
+              icon={<IdCard className="w-4 h-4" />}
+              placeholder="Pasaport veya kimlik numaranız"
+              required
+              error={fieldErrors.identityNumber}
+            />
+
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-text-secondary mb-1.5">
+                Adres
+              </label>
+              <textarea
+                value={form.address}
+                onChange={handleChange("address")}
+                placeholder="Tam adresinizi girin (en az 10 karakter)"
+                required
+                rows={3}
+                className={`flex w-full rounded-lg border bg-surface px-3 py-2 text-sm placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary transition-all duration-200 ${
+                  fieldErrors.address
+                    ? "border-danger focus:ring-danger/30 focus:border-danger"
+                    : "border-border"
+                }`}
+              />
+              {fieldErrors.address && (
+                <p className="mt-1 text-xs text-danger animate-[fade-in_0.15s_ease-out]">
+                  {fieldErrors.address}
+                </p>
+              )}
+            </div>
+
+            <div className="flex items-center gap-3 pt-2">
+              <Button type="submit" isLoading={isSubmitting}>
+                <Fingerprint className="w-4 h-4" />
+                Kimliği Doğrula
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => {
+                  setForm({
+                    dateOfBirth: "",
+                    tcKimlik: "",
+                    address: "",
+                    identityNumber: "",
+                  });
+                  setError("");
+                  setFieldErrors({});
+                }}
+              >
+                Temizle
+              </Button>
+            </div>
+          </form>
         </div>
       )}
     </div>

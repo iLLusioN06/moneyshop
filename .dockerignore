@@ -1,0 +1,75 @@
+# ============================================
+# MoneyShop - Docker Build Context Ignore
+# ============================================
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Dependencies (will be installed in Docker)
+node_modules
+
+# Next.js build output
+.next
+out
+
+# Environment files (use --env-file or docker-compose env vars)
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Debug & logs
+*.log
+dev.log
+nul
+dev-error*.txt
+dev-output*.txt
+next-dev.log
+.server-output.log
+
+# Test & coverage
+coverage
+test-results
+playwright-report
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Screenshots & snapshots
+screenshots
+*.png
+*.snap
+
+# Temp
+tmp
+temp
+
+# Playwright
+.playwright-mcp
+.auth
+
+# TypeScript
+*.tsbuildinfo
+
+# Vercel
+.vercel
+
+# Docker
+Dockerfile
+docker-compose*.yml
+
+# Dev scripts
+scripts/ws-dev.mjs
+
+# Generated
+.data

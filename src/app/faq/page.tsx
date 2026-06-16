@@ -3,8 +3,9 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { LANGUAGES, type Language, t } from "@/lib/landing-i18n";
+import { LANGUAGES, type Language, t, tArray } from "@/lib/landing-i18n";
 import { getLangDir } from "@/lib/landing-i18n";
+import { FooterSection } from "@/components/landing/footer-section";
 import "../landing.css";
 
 const copy = {
@@ -586,6 +587,8 @@ export default function FaqPage() {
           </div>
         </div>
       </main>
+
+      <FooterSection lang={lang} t={t} tArray={tArray} />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardHeader,
@@ -24,6 +25,7 @@ import {
   AlertCircle,
   RefreshCw,
   Tags,
+  ArrowLeft,
 } from "lucide-react";
 import type { Budget, Category } from "@/types";
 
@@ -54,6 +56,7 @@ const periodLabels: Record<string, string> = {
 };
 
 export default function BudgetsPage() {
+  const router = useRouter();
   const [budgets, setBudgets] = useState<BudgetWithCategory[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -204,8 +207,12 @@ export default function BudgetsPage() {
     <div className="space-y-6 animate-[fade-in_0.3s_ease-out]">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-text-primary">Bütçeler</h2>
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard")} className="border border-border hover:text-profit hover:bg-profit/10 hover:border-profit/30">
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+          <div>
+            <h2 className="text-2xl font-bold text-text-primary">Bütçeler</h2>
           <p className="text-sm text-text-muted mt-1">
             {budgets.length} aktif bütçe
           </p>
@@ -214,6 +221,7 @@ export default function BudgetsPage() {
           <Plus className="w-4 h-4" />
           Yeni Bütçe
         </Button>
+      </div>
       </div>
 
       {!expenseCategories.length && !isLoading && (

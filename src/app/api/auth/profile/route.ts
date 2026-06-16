@@ -27,6 +27,10 @@ export async function GET() {
         createdAt: true,
         updatedAt: true,
         emailVerified: true,
+        dateOfBirth: true,
+        tcKimlik: true,
+        address: true,
+        identityNumber: true,
         _count: {
           select: {
             accounts: true,

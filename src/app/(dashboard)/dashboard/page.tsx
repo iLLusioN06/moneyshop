@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Button,
 } from "@/components/ui";
@@ -11,9 +11,11 @@ import {
   RecentTransactions,
   CurrencyMarquee,
 } from "@/components/dashboard";
+import { CURRENCIES } from "@/lib/constants";
 import { useDashboard } from "@/hooks";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useWebSocketContext } from "@/components/websocket-provider";
 import {
   Wallet,
   TrendingUp,
@@ -24,16 +26,31 @@ import {
   RefreshCw,
   XCircle,
   CheckCircle2,
+  Globe,
+  ChevronDown,
+  Wifi,
+  WifiOff,
 } from "lucide-react";
 import { t } from "@/lib/dashboard-i18n";
+
+const BASE_CURRENCIES = CURRENCIES.map((c) => c.value);
 
 export default function DashboardPage() {
   const router = useRouter();
   const { data: session } = useSession();
-  const { data: dashData, isLoading, error, refetch } = useDashboard();
+  const [baseCurrency, setBaseCurrency] = useState("TRY");
+  const { data: dashData, isLoading, error, refetch } = useDashboard(baseCurrency);
+  const { connected: wsConnected, eventVersion } = useWebSocketContext();
 
   const [isVerified, setIsVerified] = useState(false);
   const [isCheckingVerification, setIsCheckingVerification] = useState(true);
+
+  // WebSocket olayı geldiğinde dashboard verilerini tazele
+  useEffect(() => {
+    if (eventVersion > 0) {
+      refetch();
+    }
+  }, [eventVersion, refetch]);
 
   useEffect(() => {
     if (!session?.user?.id) return;
@@ -46,6 +63,13 @@ export default function DashboardPage() {
       .catch(() => {})
       .finally(() => setIsCheckingVerification(false));
   }, [session?.user?.id, session?.user?.role, router]);
+
+  const handleBaseCurrencyChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      setBaseCurrency(e.target.value);
+    },
+    []
+  );
 
   const stats = dashData
     ? [
@@ -104,10 +128,43 @@ export default function DashboardPage() {
               {t("dash.subtitle")}
             </p>
           </div>
-          <Button onClick={() => router.push("/transactions")} className="group">
-            <Plus className="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
-            {t("dash.newTransaction")}
-          </Button>
+          <div className="flex items-center gap-3">
+            {/* WebSocket Bağlantı Göstergesi */}
+            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border bg-surface/50"
+              title={wsConnected ? "Gerçek zamanlı bağlantı aktif" : "Bağlantı kurulamadı"}>
+              {wsConnected ? (
+                <Wifi className="w-3 h-3 text-profit" />
+              ) : (
+                <WifiOff className="w-3 h-3 text-text-muted" />
+              )}
+              <span className={wsConnected ? "text-profit" : "text-text-muted"}>
+                {wsConnected ? "CANLI" : "BAĞLI DEĞİL"}
+              </span>
+            </div>
+            {/* Base Currency Selector */}
+            <div className="relative">
+              <select
+                value={baseCurrency}
+                onChange={handleBaseCurrencyChange}
+                className="appearance-none flex items-center gap-2 h-10 pl-9 pr-8 rounded-lg border border-border bg-surface text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary transition-all duration-200 cursor-pointer"
+              >
+                {BASE_CURRENCIES.map((cur) => {
+                  const c = CURRENCIES.find((c) => c.value === cur);
+                  return (
+                    <option key={cur} value={cur}>
+                      {c?.symbol || cur} {cur}
+                    </option>
+                  );
+                })}
+              </select>
+              <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted pointer-events-none" />
+            </div>
+            <Button onClick={() => router.push("/transactions")} className="group">
+              <Plus className="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
+              {t("dash.newTransaction")}
+            </Button>
+          </div>
         </div>
 
         {/* Error */}
@@ -134,7 +191,6 @@ export default function DashboardPage() {
                   <div className="h-3 w-24 bg-surface-tertiary rounded" />
                   <div className="h-8 w-32 bg-surface-tertiary rounded mt-3" />
                   <div className="h-3 w-20 bg-surface-tertiary rounded mt-2" />
-                  {/* Shimmer overlay - on top of content with pointer-events-none */}
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-surface/50 to-transparent bg-[length:200%_100%] animate-[shimmer_2s_infinite_linear] pointer-events-none" />
                 </div>
               </div>

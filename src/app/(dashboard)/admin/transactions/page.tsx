@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardHeader,
@@ -18,6 +19,7 @@ import {
   RefreshCw,
   ChevronLeft,
   ChevronRight,
+  ArrowLeft,
 } from "lucide-react";
 
 interface AdminTransaction {
@@ -58,6 +60,7 @@ const STATUS_OPTIONS = [
 ];
 
 export default function AdminTransactionsPage() {
+  const router = useRouter();
   const [data, setData] = useState<PaginatedResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -129,11 +132,16 @@ export default function AdminTransactionsPage() {
     <div className="space-y-6 animate-[fade-in_0.3s_ease-out]">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-text-primary">İşlem İzleme</h2>
-          <p className="text-sm text-text-muted mt-1">
-            {data ? `Toplam ${data.total} işlem` : "Tüm kullanıcıların işlem geçmişi"}
-          </p>
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="sm" onClick={() => router.push("/admin")} className="border border-border hover:text-profit hover:bg-profit/10 hover:border-profit/30">
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+          <div>
+            <h2 className="text-2xl font-bold text-text-primary">İşlem İzleme</h2>
+            <p className="text-sm text-text-muted mt-1">
+              {data ? `Toplam ${data.total} işlem` : "Tüm kullanıcıların işlem geçmişi"}
+            </p>
+          </div>
         </div>
         <Button variant="outline" size="sm" onClick={fetchTransactions} isLoading={loading}>
           <RefreshCw className="w-4 h-4" />

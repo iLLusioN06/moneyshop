@@ -48,8 +48,12 @@ model User {
   name          String?
   email         String    @unique
   phone         String    @default("")
-  emailVerified DateTime?
-  image         String?
+  emailVerified  DateTime?
+  dateOfBirth    DateTime?
+  tcKimlik       String?
+  address        String?
+  identityNumber String?
+  image          String?
   password      String?
   role          UserRole  @default(USER)
   isActive      Boolean   @default(true)
@@ -67,7 +71,16 @@ model User {
   accounts_             AuthAccount[]
   emailSettings         EmailNotificationSetting[]
   emailLogs             EmailLog[]
+  smsLogs               SmsLog[]
   cards                 Card[]
+  pushSubscriptions     PushSubscription[]
+  pushNotificationSetting PushNotificationSetting?
+
+  // ─── İki Faktörlü Kimlik Doğrulama (2FA) ──────────────
+  twoFactorEnabled   Boolean @default(false)
+  twoFactorMethod    String?   // "AUTHENTICATOR" | "SMS"
+  twoFactorSecret    String?   // Şifrelenmiş TOTP secret (AUTHENTICATOR için)
+  twoFactorBackupCodes String? // Virgülle ayrılmış hash'lenmiş yedek kodlar (10 adet)
 }
 
 model AuthAccount {
@@ -103,6 +116,18 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([token])
+  @@map("password_reset_tokens")
 }
 
 // =============================================
@@ -321,6 +346,43 @@ model RecurringTransaction {
 }
 
 // =============================================
+// Web Push Bildirimleri
+// =============================================
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String                        // Public key (push message encryption)
+  auth      String                        // Auth secret (push message encryption)
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("push_subscriptions")
+}
+
+model PushNotificationSetting {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  enabled   Boolean  @default(false)      // Master toggle
+  // Event toggles
+  onTransaction  Boolean @default(true)   // Yeni işlem eklendiğinde
+  onTransfer     Boolean @default(true)   // Para transferi gerçekleştiğinde
+  onBudgetAlert  Boolean @default(true)   // Bütçe limiti aşıldığında
+  onMonthlyReport Boolean @default(false) // Aylık özet rapor
+  onLargeTransaction Boolean @default(true) // Yüksek tutarlı işlem (>10000)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("push_notification_settings")
+}
+
+// =============================================
 // MoneyShop Card
 // =============================================
 
@@ -391,4 +453,22 @@ model EmailLog {
   @@index([userId])
   @@index([createdAt])
   @@map("email_logs")
+}
+
+model SmsLog {
+  id        String   @id @default(cuid())
+  userId    String
+  phone     String                        // Alıcı telefon numarası
+  message   String   @db.Text             // SMS içeriği
+  event     String                        // VERIFICATION | TRANSACTION | TRANSFER | ALERT | TEST
+  status    String   @default("SENT")     // SENT | FAILED
+  sid       String?                       // Twilio Message SID (varsa)
+  error     String?                       // Hata mesajı (varsa)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("sms_logs")
 }

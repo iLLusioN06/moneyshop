@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardHeader,
@@ -31,6 +32,7 @@ import {
   Download,
   FileSpreadsheet,
   FileText,
+  ArrowLeft,
 } from "lucide-react";
 import type { Transaction, FinancialAccount, Category } from "@/types";
 
@@ -65,6 +67,7 @@ const emptyForm: TransactionForm = {
 };
 
 export default function TransactionsPage() {
+  const router = useRouter();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -239,8 +242,12 @@ export default function TransactionsPage() {
     <div className="space-y-6 animate-[fade-in_0.3s_ease-out]">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-text-primary">İşlemler</h2>
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard")} className="border border-border hover:text-profit hover:bg-profit/10 hover:border-profit/30">
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+          <div>
+            <h2 className="text-2xl font-bold text-text-primary">İşlemler</h2>
           <p className="text-sm text-text-muted mt-1">
             Toplam {total} işlem
           </p>
@@ -280,6 +287,7 @@ export default function TransactionsPage() {
             Yeni İşlem
           </Button>
         </div>
+      </div>
       </div>
 
       {/* Filters */}

@@ -16,6 +16,8 @@ export async function GET() {
 
     const now = new Date();
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
     const [
       totalUsers,
@@ -27,6 +29,10 @@ export async function GET() {
       monthlyExpense,
       totalVolume,
       recentTransactions,
+      monthlyRevenue,
+      userGrowth,
+      weeklyTransactions,
+      failedTransactions,
     ] = await Promise.all([
       prisma.user.count(),
       prisma.user.count({ where: { isActive: true } }),
@@ -55,7 +61,75 @@ export async function GET() {
         orderBy: { date: "desc" },
         take: 10,
       }),
+      // Aylık gelir/gider trendi (son 6 ay)
+      prisma.$queryRaw<Array<{ month: Date; type: string; total: number | null }>>`
+        SELECT DATE_TRUNC('month', date) AS month, type, COALESCE(SUM(amount), 0) AS total
+        FROM transactions
+        WHERE status = 'COMPLETED' AND date >= ${sixMonthsAgo} AND type IN ('INCOME', 'EXPENSE')
+        GROUP BY DATE_TRUNC('month', date), type
+        ORDER BY month ASC
+      `,
+      // Haftalık kullanıcı kayıtları (son 6 ay)
+      prisma.$queryRaw<Array<{ month: Date; total: number | null }>>`
+        SELECT DATE_TRUNC('month', "createdAt") AS month, COUNT(*) AS total
+        FROM "User"
+        WHERE "createdAt" >= ${sixMonthsAgo}
+        GROUP BY DATE_TRUNC('month', "createdAt")
+        ORDER BY month ASC
+      `,
+      // Son 7 günlük işlem hacmi
+      prisma.transaction.aggregate({
+        where: { date: { gte: weekAgo }, status: "COMPLETED" },
+        _sum: { amount: true },
+        _count: { id: true },
+      }),
+      // Başarısız işlem sayısı (bu ay)
+      prisma.transaction.count({
+        where: { status: "FAILED", date: { gte: monthStart } },
+      }),
     ]);
+
+    // Aylık gelir/gider trendini formatla
+    const monthNames = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"];
+    const monthlyMap = new Map<string, { month: string; income: number; expense: number }>();
+    for (let i = 0; i < 6; i++) {
+      const d = new Date(sixMonthsAgo);
+      d.setMonth(d.getMonth() + i);
+      const key = d.toISOString().slice(0, 7);
+      monthlyMap.set(key, { month: monthNames[d.getMonth()], income: 0, expense: 0 });
+    }
+    for (const row of monthlyRevenue as Array<{ month: Date; type: string; total: number | null }>) {
+      const key = new Date(row.month).toISOString().slice(0, 7);
+      const entry = monthlyMap.get(key);
+      if (entry) {
+        if (row.type === "INCOME") entry.income = Number(row.total ?? 0);
+        if (row.type === "EXPENSE") entry.expense = Number(row.total ?? 0);
+      }
+    }
+
+    // Kullanıcı büyümesini formatla
+    const growthMap = new Map<string, { month: string; count: number }>();
+    for (let i = 0; i < 6; i++) {
+      const d = new Date(sixMonthsAgo);
+      d.setMonth(d.getMonth() + i);
+      const key = d.toISOString().slice(0, 7);
+      growthMap.set(key, { month: monthNames[d.getMonth()], count: 0 });
+    }
+    for (const row of userGrowth as Array<{ month: Date; total: number | null }>) {
+      const key = new Date(row.month).toISOString().slice(0, 7);
+      const entry = growthMap.get(key);
+      if (entry) entry.count = Number(row.total ?? 0);
+    }
+
+    const prevMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const prevMonthIncome = await prisma.transaction.aggregate({
+      where: { type: "INCOME", date: { gte: prevMonthStart, lt: monthStart }, status: "COMPLETED" },
+      _sum: { amount: true },
+    });
+
+    const incomeGrowth = prevMonthIncome._sum.amount && prevMonthIncome._sum.amount > 0
+      ? (((monthlyIncome._sum.amount || 0) - prevMonthIncome._sum.amount) / prevMonthIncome._sum.amount) * 100
+      : 0;
 
     return NextResponse.json({
       success: true,
@@ -69,7 +143,13 @@ export async function GET() {
         monthlyIncome: monthlyIncome._sum.amount || 0,
         monthlyExpense: monthlyExpense._sum.amount || 0,
         totalVolume: totalVolume._sum.amount || 0,
+        incomeGrowth: Math.round(incomeGrowth * 10) / 10,
+        weeklyVolume: weeklyTransactions._sum.amount || 0,
+        weeklyTransactionCount: weeklyTransactions._count.id || 0,
+        failedTransactions,
         recentTransactions,
+        monthlyRevenue: Array.from(monthlyMap.values()),
+        userGrowth: Array.from(growthMap.values()),
       },
     });
   } catch (error) {

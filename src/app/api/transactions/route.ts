@@ -8,7 +8,17 @@ import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 import { withRateLimit } from "@/lib/rate-limit";
 import { createAuditLog, getRequestMetadata } from "@/lib/audit";
-import { sendNotification, buildTransactionEmail, buildTransferEmail } from "@/lib/email";
+import { sendNotification, buildTransactionEmail, buildTransferEmail, type EmailEvent } from "@/lib/email";
+import {
+  emitTransactionEvent,
+  emitBalanceEvent,
+  emitNotification,
+} from "@/lib/ws";
+import {
+  sendPushNotification,
+  buildTransactionPushPayload,
+  buildTransferPushPayload,
+} from "@/lib/push-notifications";
 import {
   createTransactionSchema,
   listTransactionsSchema,
@@ -156,10 +166,10 @@ async function postHandler(req: Request) {
 
     // E-posta bildirimi (arka planda, hata yutulur)
     const isLarge = type !== "TRANSFER" && amount >= 10000;
-    const event = type === "TRANSFER" ? "TRANSFER" : isLarge ? "LARGE_TRANSACTION" : "TRANSACTION";
+    const event: EmailEvent = type === "TRANSFER" ? "TRANSFER" : isLarge ? "LARGE_TRANSACTION" : "TRANSACTION";
     const userName = session.user?.name || "Kullanıcı";
     const userEmail = session.user?.email || "";
-    sendNotification(userId, event as any, () => {
+    sendNotification(userId, event, () => {
       if (type === "TRANSFER") {
         return buildTransferEmail({
           to: userEmail,
@@ -183,6 +193,64 @@ async function postHandler(req: Request) {
         date: transaction.createdAt,
       });
     }).catch(() => {}); // fire-and-forget, hata yut
+
+    // ─── WebSocket ile gerçek zamanlı bildirim ─────────────
+    // (fire-and-forget, hata yut)
+    try {
+      const balanceChange =
+        type === "INCOME" ? amount : type === "EXPENSE" ? -amount : 0;
+
+      emitTransactionEvent(userId, {
+        id: transaction.id,
+        type,
+        amount,
+        currency: currency || account.currency,
+        description: description || null,
+        accountName: account.name,
+        date: transaction.createdAt.toISOString(),
+        status: "COMPLETED",
+      });
+
+      if (balanceChange !== 0) {
+        emitBalanceEvent(userId, {
+          accountId,
+          accountName: account.name,
+          newBalance: account.balance + balanceChange,
+          currency: currency || account.currency,
+          change: balanceChange,
+        });
+      }
+
+      emitNotification(userId, {
+        id: `notif-${transaction.id}`,
+        title: type === "INCOME" ? "Yeni Gelir" : type === "EXPENSE" ? "Yeni Gider" : "Transfer",
+        body: `${type === "INCOME" ? "+" : ""}${amount} ${currency || account.currency} — ${account.name}${description ? ` (${description})` : ""}`,
+        variant: type === "INCOME" ? "success" : type === "EXPENSE" ? "error" : "info",
+        url: "/dashboard/transactions",
+        timestamp: Date.now(),
+      });
+    } catch {
+      // WS hatası işlem akışını etkilemez
+    }
+
+    // ─── Push Notification (arka plan, hata yutulur) ──────
+    if (type === "TRANSFER") {
+      sendPushNotification(userId, "TRANSFER", buildTransferPushPayload({
+        userName: session.user?.name || "Kullanıcı",
+        amount,
+        currency: currency || account.currency,
+        recipientName: body.recipientName,
+      })).catch(() => {});
+    } else {
+      sendPushNotification(userId, amount >= 10000 ? "LARGE_TRANSACTION" : "TRANSACTION", buildTransactionPushPayload({
+        userName: session.user?.name || "Kullanıcı",
+        type,
+        amount,
+        currency: currency || account.currency,
+        description,
+        accountName: account.name,
+      })).catch(() => {});
+    }
 
     return NextResponse.json(
       { success: true, data: transaction },

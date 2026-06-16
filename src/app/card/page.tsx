@@ -3,7 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { LANGUAGES, type Language, t, getLangDir } from "@/lib/landing-i18n";
+import { LANGUAGES, type Language, t, tArray, getLangDir } from "@/lib/landing-i18n";
+import { FooterSection } from "@/components/landing/footer-section";
 import "../landing.css";
 
 type CardTier = "standart" | "silver" | "gold";
@@ -598,6 +599,8 @@ export default function CardApplicationPage() {
           </div>
         </div>
       </main>
+
+      <FooterSection lang={lang} t={t} tArray={tArray} />
     </div>
   );
 }

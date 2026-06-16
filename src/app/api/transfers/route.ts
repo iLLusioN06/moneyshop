@@ -8,6 +8,16 @@ import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 import { withRateLimit } from "@/lib/rate-limit";
 import { sendNotification, buildTransferEmail } from "@/lib/email";
+import {
+  emitTransactionEvent,
+  emitBalanceEvent,
+  emitNotification,
+} from "@/lib/ws";
+import {
+  sendPushNotification,
+  buildTransferPushPayload,
+  buildTransactionPushPayload,
+} from "@/lib/push-notifications";
 
 // GET /api/transfers - Kullanıcının son transfer işlemlerini listele
 export async function GET(req: Request) {
@@ -229,6 +239,81 @@ async function postHandler(req: Request) {
         })
       ).catch(() => {});
 
+      // ─── WebSocket bildirimleri (gönderen) ────────────────
+      try {
+        emitTransactionEvent(userId, {
+          id: transferResult.id,
+          type: "TRANSFER",
+          amount,
+          currency: currency || senderAccount.currency,
+          description: description || `${recipientDisplayName} adlı kullanıcıya FAST transfer`,
+          accountName: senderAccount.name,
+          date: transferResult.createdAt.toISOString(),
+          status: "COMPLETED",
+        });
+
+        emitBalanceEvent(userId, {
+          accountId: senderAccount.id,
+          accountName: senderAccount.name,
+          newBalance: senderAccount.balance - amount,
+          currency: currency || senderAccount.currency,
+          change: -amount,
+        });
+
+        emitNotification(userId, {
+          id: `transfer-out-${transferResult.id}`,
+          title: "Para Transferi",
+          body: `${amount} ${currency || senderAccount.currency} → ${recipientDisplayName}`,
+          variant: "info",
+          url: "/dashboard/transfers",
+          timestamp: Date.now(),
+        });
+      } catch {
+        // WS hatası işlem akışını etkilemez
+      }
+
+      // ─── WebSocket bildirimleri (alıcı) ──────────────────
+      try {
+        const inAmount = amount;
+        emitTransactionEvent(recipient.id, {
+          id: `in-${transferResult.id}`,
+          type: "TRANSFER",
+          amount: inAmount,
+          currency: currency || senderAccount.currency,
+          description: `${senderName} adlı kullanıcıdan FAST transfer`,
+          accountName: recipientAccount.name,
+          date: transferResult.createdAt.toISOString(),
+          status: "COMPLETED",
+        });
+
+        emitBalanceEvent(recipient.id, {
+          accountId: recipientAccount.id,
+          accountName: recipientAccount.name,
+          newBalance: recipientAccount.balance + inAmount,
+          currency: currency || senderAccount.currency,
+          change: inAmount,
+        });
+
+        emitNotification(recipient.id, {
+          id: `transfer-in-${transferResult.id}`,
+          title: "Para Aldınız",
+          body: `${senderName} adlı kullanıcıdan ${inAmount} ${currency || senderAccount.currency} aldınız.`,
+          variant: "success",
+          url: "/dashboard/transfers",
+          timestamp: Date.now(),
+        });
+      } catch {
+        // WS hatası işlem akışını etkilemez
+      }
+
+      // ─── Push Notification (gönderen) ────────────────────
+      sendPushNotification(userId, "TRANSFER", buildTransferPushPayload({
+        userName: session.user?.name || "Kullanıcı",
+        amount,
+        currency: currency || senderAccount.currency,
+        recipientName: recipientDisplayName,
+      })).catch(() => {});
+
       return NextResponse.json(
         {
           success: true,
@@ -282,6 +367,47 @@ async function postHandler(req: Request) {
           date: transferResult.createdAt,
         })
       ).catch(() => {});
+
+      // ─── WebSocket bildirimleri ─────────────────────────
+      try {
+        emitTransactionEvent(userId, {
+          id: transferResult.id,
+          type: "TRANSFER",
+          amount,
+          currency: currency || senderAccount.currency,
+          description: description || `${recipientName} adlı alıcıya EFT`,
+          accountName: senderAccount.name,
+          date: transferResult.createdAt.toISOString(),
+          status: "COMPLETED",
+        });
+
+        emitBalanceEvent(userId, {
+          accountId: senderAccount.id,
+          accountName: senderAccount.name,
+          newBalance: senderAccount.balance - amount,
+          currency: currency || senderAccount.currency,
+          change: -amount,
+        });
+
+        emitNotification(userId, {
+          id: `eft-${transferResult.id}`,
+          title: "EFT Gönderildi",
+          body: `${amount} ${currency || senderAccount.currency} → ${recipientName}`,
+          variant: "info",
+          url: "/dashboard/transfers",
+          timestamp: Date.now(),
+        });
+      } catch {
+        // WS hatası işlem akışını etkilemez
+      }
+
+      // ─── Push Notification (gönderen) ────────────────────
+      sendPushNotification(userId, "TRANSFER", buildTransferPushPayload({
+        userName: session.user?.name || "Kullanıcı",
+        amount,
+        currency: currency || senderAccount.currency,
+        recipientName,
+      })).catch(() => {});
 
       return NextResponse.json(
         {

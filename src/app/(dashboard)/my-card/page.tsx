@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { CreditCard, Shield, AlertCircle, RefreshCw, Lock, Unlock, XCircle, ArrowUpDown, Wallet } from "lucide-react";
+import { CreditCard, Shield, AlertCircle, RefreshCw, Lock, Unlock, XCircle, ArrowUpDown, Wallet, BarChart3, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui";
 import { ErrorBoundary } from "@/components/error-boundary";
+import { CardSpendingAnalytics } from "@/components/card/card-spending-analytics";
 import { t } from "@/lib/dashboard-i18n";
 import type { Card, CardTransaction } from "@/types";
 
@@ -159,9 +160,14 @@ export default function MyCardPage() {
       <div className="space-y-6 animate-[fade-in_0.3s_ease-out]">
         {/* Header */}
         <div className="flex items-center justify-between flex-wrap gap-4">
-          <div>
-            <h2 className="text-2xl font-bold text-text-primary">{t("card.title")}</h2>
-            <p className="text-sm text-text-muted mt-1">{t("card.subtitle")}</p>
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard")} className="border border-border hover:text-profit hover:bg-profit/10 hover:border-profit/30">
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+            <div>
+              <h2 className="text-2xl font-bold text-text-primary">{t("card.title")}</h2>
+              <p className="text-sm text-text-muted mt-1">{t("card.subtitle")}</p>
+            </div>
           </div>
           {card?.status === "ACTIVE" && (
             <div className="flex gap-2">
@@ -471,6 +477,9 @@ export default function MyCardPage() {
                 </div>
               )}
             </div>
+
+            {/* Card Spending Analytics */}
+            <CardSpendingAnalytics />
           </>
         ) : (
           <div className="rounded-xl bg-surface border border-border p-8 text-center">

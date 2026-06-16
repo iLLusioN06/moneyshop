@@ -24,18 +24,18 @@ export function ServicesSection({ lang, t }: Props) {
 
         <div className="services-grid">
           {[
-            { icon: "fas fa-cash-register", color: "blue", title: "posTitle", desc: "posDesc" },
-            { icon: "fas fa-globe", color: "green", title: "gatewayTitle", desc: "gatewayDesc" },
-            { icon: "fas fa-store", color: "orange", title: "merchantTitle", desc: "merchantDesc" },
-            { icon: "fas fa-sync-alt", color: "purple", title: "settlementTitle", desc: "settlementDesc" },
-            { icon: "fas fa-university", color: "red", title: "bankTitle", desc: "bankDesc" },
-            { icon: "fas fa-link", color: "yellow", title: "linksTitle", desc: "linksDesc" },
+            { icon: "fas fa-cash-register", color: "blue", title: "posTitle", desc: "posDesc", href: "/pricing" },
+            { icon: "fas fa-globe", color: "green", title: "gatewayTitle", desc: "gatewayDesc", href: "/pricing" },
+            { icon: "fas fa-store", color: "orange", title: "merchantTitle", desc: "merchantDesc", href: "/register" },
+            { icon: "fas fa-sync-alt", color: "purple", title: "settlementTitle", desc: "settlementDesc", href: "/pricing" },
+            { icon: "fas fa-university", color: "red", title: "bankTitle", desc: "bankDesc", href: "/pricing" },
+            { icon: "fas fa-link", color: "yellow", title: "linksTitle", desc: "linksDesc", href: "/pricing" },
           ].map((svc, i) => (
             <div key={i} className="service-card animate-on-scroll">
               <div className={`service-icon ${svc.color}`}><i className={svc.icon} /></div>
               <h3>{t(lang, `services.${svc.title}`)}</h3>
               <p>{t(lang, `services.${svc.desc}`)}</p>
-              <a href="#" className="service-link"><i className="fas fa-arrow-right" /></a>
+              <a href={svc.href} className="service-link"><i className="fas fa-arrow-right" /></a>
             </div>
           ))}
         </div>
@@ -49,18 +49,18 @@ export function ServicesSection({ lang, t }: Props) {
 
         <div className="services-grid">
           {[
-            { icon: "fas fa-bolt", color: "teal", title: "fastTitle", desc: "fastDesc" },
-            { icon: "fas fa-right-left", color: "cyan", title: "eftTitle", desc: "eftDesc" },
-            { icon: "fas fa-globe", color: "sky", title: "internationalTitle", desc: "internationalDesc" },
-            { icon: "fas fa-qrcode", color: "indigo", title: "ibanTitle", desc: "ibanDesc" },
-            { icon: "fas fa-hand-holding-dollar", color: "emerald", title: "requestTitle", desc: "requestDesc" },
-            { icon: "fas fa-shield-alt", color: "pink", title: "secureTitle", desc: "secureDesc" },
+            { icon: "fas fa-bolt", color: "teal", title: "fastTitle", desc: "fastDesc", href: "/transfers/fast" },
+            { icon: "fas fa-right-left", color: "cyan", title: "eftTitle", desc: "eftDesc", href: "/transfers/eft" },
+            { icon: "fas fa-globe", color: "sky", title: "internationalTitle", desc: "internationalDesc", href: "/transfers/international" },
+            { icon: "fas fa-qrcode", color: "indigo", title: "ibanTitle", desc: "ibanDesc", href: "/transfers/iban" },
+            { icon: "fas fa-hand-holding-dollar", color: "emerald", title: "requestTitle", desc: "requestDesc", href: "/transfers/request" },
+            { icon: "fas fa-shield-alt", color: "pink", title: "secureTitle", desc: "secureDesc", href: "#" },
           ].map((svc, i) => (
             <div key={i} className="service-card animate-on-scroll">
               <div className={`service-icon ${svc.color}`}><i className={svc.icon} /></div>
               <h3>{t(lang, `services.${svc.title}`)}</h3>
               <p>{t(lang, `services.${svc.desc}`)}</p>
-              <a href="#" className="service-link"><i className="fas fa-arrow-right" /></a>
+              <a href={svc.href} className="service-link"><i className="fas fa-arrow-right" /></a>
             </div>
           ))}
         </div>

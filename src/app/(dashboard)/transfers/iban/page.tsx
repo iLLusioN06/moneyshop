@@ -3,17 +3,42 @@
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, Button, Input } from "@/components/ui";
 import { ErrorBoundary } from "@/components/error-boundary";
-import { ArrowLeft, QrCode, Copy, Check, Share2, Plus } from "lucide-react";
+import { ArrowLeft, QrCode, Copy, Check, Share2, Plus, Scan, X } from "lucide-react";
 import Link from "next/link";
+import { QrDisplay, QrScanner } from "@/components/qr";
+import { encodeQrData, type QrTransferData } from "@/lib/qr";
 
 export default function IbanPage() {
   const [copiedIban, setCopiedIban] = useState(false);
   const [copiedAddress, setCopiedAddress] = useState(false);
+  const [showScanner, setShowScanner] = useState(false);
+  const [scannedData, setScannedData] = useState<QrTransferData | null>(null);
+
+  // Demo kullanıcı bilgileri (gerçek uygulamada session'dan alınır)
+  const userIban = "IQ12 3456 7890 1234 5678 901";
+  const userName = "Mustafa";
+  const qrValue = encodeQrData({
+    iban: userIban,
+    name: userName,
+    bank: "MoneyShop Finansal Hizmetler",
+  });
 
   const handleCopy = (text: string, setter: (v: boolean) => void) => {
     navigator.clipboard.writeText(text);
     setter(true);
     setTimeout(() => setter(false), 2000);
+  };
+
+  const handleQrScan = (data: QrTransferData) => {
+    setScannedData(data);
+    setShowScanner(false);
+    // Tarama başarılı → transfer formuna yönlendir
+    const params = new URLSearchParams({
+      iban: data.iban,
+      name: data.name,
+    });
+    if (data.amount) params.set("amount", String(data.amount));
+    window.location.href = `/transfers/fast?${params.toString()}`;
   };
 
   return (
@@ -143,37 +168,68 @@ export default function IbanPage() {
         </Card>
       </div>
 
-      {/* QR Code Section */}
+      {/* QR Code Section - Gerçek QR Kod */}
       <Card>
         <CardHeader>
           <CardTitle>QR Kod ile Gönderim</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-6">
-            <div className="w-32 h-32 bg-white rounded-xl border-2 border-border flex items-center justify-center flex-shrink-0">
-              <QrCode className="w-20 h-20 text-gray-900" />
-            </div>
-            <div>
+          <div className="flex flex-col sm:flex-row items-center gap-6">
+            <QrDisplay
+              value={qrValue}
+              size={180}
+              filename={`moneyshop-qr-${userName}.png`}
+              shareTitle={`${userName} - MoneyShop QR`}
+              shareText={`MoneyShop hesabıma para göndermek için QR kodu okutun.\nIBAN: ${userIban}`}
+            />
+            <div className="flex-1 text-center sm:text-left">
               <p className="text-sm font-medium text-text-primary mb-1">
                 QR Kodunu Paylaş
               </p>
               <p className="text-sm text-text-muted mb-3">
                 Gönderen kişi bu QR kodu okutarak anında para gönderebilir.
+                İndir, paylaş veya kopyala butonlarını kullanabilirsiniz.
               </p>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm">
-                  <Download className="w-4 h-4 mr-2" />
-                  İndir
-                </Button>
-                <Button variant="outline" size="sm">
-                  <Share2 className="w-4 h-4 mr-2" />
-                  Paylaş
-                </Button>
-              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowScanner(true)}
+              >
+                <Scan className="w-4 h-4 mr-2" />
+                QR Kod Tara
+              </Button>
             </div>
           </div>
         </CardContent>
       </Card>
+
+      {/* QR Scanner Modal */}
+      {showScanner && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-[fade-in_0.15s_ease-out]">
+          <div className="bg-surface rounded-2xl shadow-2xl border border-border max-w-md w-full mx-4 animate-[slide-up_0.2s_ease-out]">
+            <div className="flex items-center justify-between p-5 border-b border-border">
+              <h3 className="text-lg font-semibold text-text-primary flex items-center gap-2">
+                <Scan className="w-4 h-4" />
+                QR Kod Tara
+              </h3>
+              <button
+                onClick={() => setShowScanner(false)}
+                className="p-1.5 rounded-lg hover:bg-surface-secondary transition-colors"
+              >
+                <X className="w-4 h-4 text-text-muted" />
+              </button>
+            </div>
+            <div className="p-5">
+              <QrScanner onScan={handleQrScan} onClose={() => setShowScanner(false)} />
+              {scannedData && (
+                <div className="mt-4 p-3 rounded-lg bg-profit/10 border border-profit/20 text-sm text-profit text-center">
+                  ✅ QR kod başarıyla okundu! {scannedData.name} için transfer sayfasına yönlendiriliyorsunuz...
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

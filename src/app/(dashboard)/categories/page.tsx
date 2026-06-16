@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardHeader,
@@ -25,6 +26,7 @@ import {
   AlertCircle,
   Circle,
   RefreshCw,
+  ArrowLeft,
 } from "lucide-react";
 import type { Category } from "@/types";
 
@@ -69,6 +71,7 @@ const emptyForm: CategoryForm = {
 };
 
 export default function CategoriesPage() {
+  const router = useRouter();
   const { data: categories, isLoading, error: fetchError, refetch } = useCategories();
 
   const [showModal, setShowModal] = useState(false);
@@ -215,8 +218,12 @@ export default function CategoriesPage() {
     <div className="space-y-6 animate-[fade-in_0.3s_ease-out]">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-text-primary">Kategoriler</h2>
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard")} className="border border-border hover:text-profit hover:bg-profit/10 hover:border-profit/30">
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+          <div>
+            <h2 className="text-2xl font-bold text-text-primary">Kategoriler</h2>
           <p className="text-sm text-text-muted mt-1">
             {safeCategories.length} kategori
           </p>
@@ -232,6 +239,7 @@ export default function CategoriesPage() {
           </Button>
         </div>
       </div>
+    </div>
 
       {/* Error */}
       {fetchError && (

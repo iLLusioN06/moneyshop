@@ -5,19 +5,27 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getExchangeRates, convertAmount, SUPPORTED_CURRENCIES } from "@/lib/exchange-rates";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Yetkilendirme gerekli." }, { status: 401 });
     }
 
+    const { searchParams } = new URL(req.url);
+    const baseCurrency = searchParams.get("base") || "TRY";
+
+    // Desteklenmeyen para birimi varsa varsayılana dön
+    const activeBase = SUPPORTED_CURRENCIES.includes(baseCurrency as never)
+      ? baseCurrency
+      : "TRY";
+
     const userId = session.user.id;
     const now = new Date();
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     const prevMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const prevMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
 
     // Tüm sorguları paralel çalıştır
     const [
@@ -29,8 +37,9 @@ export async function GET() {
       recentTransactions,
       monthlyData,
       categoryBreakdown,
+      exchangeRates,
     ] = await Promise.all([
-      // Toplam bakiye
+      // Aktif hesaplar
       prisma.financialAccount.findMany({
         where: { userId, isActive: true },
       }),
@@ -92,10 +101,31 @@ export async function GET() {
 
       // Kategori bazında harcama dağılımı (bu ay)
       getCategoryBreakdown(userId, monthStart),
+
+      // Güncel döviz kurları
+      getExchangeRates(activeBase).catch(() => null),
     ]);
 
-    // Hesaplamalar
-    const totalBalance = accounts.reduce((sum, acc) => sum + acc.balance, 0);
+    // Hesapları dönüştür
+    const rates = exchangeRates || {};
+    const accountsWithConversion = accounts.map((acc) => {
+      const convertedBalance = convertAmount(acc.balance, acc.currency, rates);
+      return {
+        ...acc,
+        originalBalance: acc.balance,
+        originalCurrency: acc.currency,
+        convertedBalance: Math.round(convertedBalance * 100) / 100,
+        convertedCurrency: activeBase,
+      };
+    });
+
+    // Dönüştürülmüş toplam bakiye
+    const totalBalanceConverted = accountsWithConversion.reduce(
+      (sum, acc) => sum + acc.convertedBalance,
+      0
+    );
+
+    // Gelir/gider — basitlik için olduğu gibi (bunlar zaten TRY varsayılır)
     const totalIncome = monthlyIncome._sum.amount || 0;
     const totalExpense = monthlyExpense._sum.amount || 0;
     const prevIncome = prevMonthIncome._sum.amount || 0;
@@ -104,19 +134,21 @@ export async function GET() {
     // Değişim yüzdeleri
     const incomeChange = prevIncome > 0 ? ((totalIncome - prevIncome) / prevIncome) * 100 : 0;
     const expenseChange = prevExpense > 0 ? ((totalExpense - prevExpense) / prevExpense) * 100 : 0;
-    const netWorth = totalBalance - totalExpense;
+    const netWorth = Math.round((totalBalanceConverted - totalExpense) * 100) / 100;
 
     return NextResponse.json({
       success: true,
       data: {
-        totalBalance,
+        totalBalance: Math.round(totalBalanceConverted * 100) / 100,
         totalIncome,
         totalExpense,
         netWorth,
-        currency: "TRY",
+        currency: activeBase,
         incomeChange: Math.round(incomeChange * 10) / 10,
         expenseChange: Math.round(expenseChange * 10) / 10,
         balanceChange: Math.round((incomeChange - expenseChange) * 10) / 10,
+        accounts: accountsWithConversion,
+        exchangeRates: rates,
         recentTransactions,
         monthlyData,
         categoryBreakdown,

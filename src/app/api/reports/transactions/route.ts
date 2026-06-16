@@ -26,14 +26,28 @@ function buildWhere(userId: string, searchParams: URLSearchParams): Prisma.Trans
   return where;
 }
 
-function buildExportData(transactions: Array<Record<string, unknown>>) {
+function buildExportData(
+  transactions: Array<{
+    date: Date;
+    type: string;
+    amount: number;
+    currency: string;
+    description: string | null;
+    status: string;
+    category: { name: string } | null;
+    account: { name: string } | null;
+    recipientName: string | null;
+    recipientIban: string | null;
+    recipientBank: string | null;
+  }>
+) {
   const typeLabels: Record<string, string> = {
     INCOME: "Gelir",
     EXPENSE: "Gider",
     TRANSFER: "Transfer",
   };
 
-  return transactions.map((tx: any) => ({
+  return transactions.map((tx) => ({
     Tarih: tx.date?.toISOString()?.split("T")[0] || "",
     "İşlem Türü": typeLabels[tx.type] || tx.type || "",
     Tutar: tx.amount ?? "",
@@ -72,7 +86,7 @@ export async function GET(req: Request) {
     }
 
     const dateStr = new Date().toISOString().split("T")[0];
-    const exportData = buildExportData(transactions as any);
+    const exportData = buildExportData(transactions);
 
     if (format === "xlsx") {
       // XLSX — Excel binary

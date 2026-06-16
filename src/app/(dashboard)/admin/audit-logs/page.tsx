@@ -21,6 +21,7 @@ import {
   AlertCircle,
   ChevronLeft,
   ChevronRight,
+  ArrowLeft,
 } from "lucide-react";
 
 interface AuditLog {
@@ -112,8 +113,8 @@ function AuditLogContent() {
             Sistemdeki tüm kullanıcı hareketlerini görüntüleyin
           </p>
         </div>
-        <Button variant="outline" onClick={() => router.push("/admin")}>
-          Admin Paneli
+        <Button variant="ghost" size="sm" onClick={() => router.push("/admin")} className="border border-border hover:text-profit hover:bg-profit/10 hover:border-profit/30">
+          <ArrowLeft className="w-4 h-4" />
         </Button>
       </div>
 

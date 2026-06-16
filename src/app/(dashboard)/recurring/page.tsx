@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardHeader,
@@ -25,6 +26,7 @@ import {
   Calendar,
   ArrowUpDown,
   Loader2,
+  ArrowLeft,
 } from "lucide-react";
 import type { RecurringTransaction } from "@/types";
 
@@ -54,6 +56,7 @@ const frequencyLabels: Record<string, string> = {
 };
 
 function RecurringList() {
+  const router = useRouter();
   const [items, setItems] = useState<RecurringTransaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -107,11 +110,16 @@ function RecurringList() {
   return (
     <div className="space-y-6 animate-[fade-in_0.3s_ease-out]">
       {/* Header */}
-      <div>
+      <div className="flex items-center gap-4">
+          <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard")} className="border border-border hover:text-profit hover:bg-profit/10 hover:border-profit/30">
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+          <div>
         <h2 className="text-2xl font-bold text-text-primary">{t("header.recurring") || "Tekrarlanan İşlemler"}</h2>
         <p className="text-sm text-text-muted mt-1">
           Otomatik tekrarlanan işlemlerinizi yönetin
         </p>
+      </div>
       </div>
 
       {/* Tabs */}

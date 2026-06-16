@@ -12,6 +12,7 @@ import {
 import { ErrorBoundary } from "@/components/error-boundary";
 import { useAccounts } from "@/hooks";
 import { formatCurrency } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 import {
   TrendingUp,
   TrendingDown,
@@ -24,6 +25,7 @@ import {
   Search,
   CheckCircle2,
   XCircle,
+  ArrowLeft,
 } from "lucide-react";
 
 interface Investment {
@@ -64,6 +66,7 @@ const typeColors: Record<string, string> = {
 };
 
 function PortfolioContent() {
+  const router = useRouter();
   const { data: accounts } = useAccounts();
   const [investments, setInvestments] = useState<Investment[]>([]);
   const [summary, setSummary] = useState<PortfolioSummary | null>(null);
@@ -236,11 +239,16 @@ function PortfolioContent() {
 
   return (
     <div className="space-y-6 animate-[fade-in_0.3s_ease-out]">
-      <div>
+      <div className="flex items-center gap-4">
+          <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard")} className="border border-border hover:text-profit hover:bg-profit/10 hover:border-profit/30">
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+          <div>
         <h2 className="text-2xl font-bold text-text-primary">Yatırım Portföyü</h2>
         <p className="text-sm text-text-muted mt-1">
           Yatırımlarınızı takip edin ve yönetin
         </p>
+      </div>
       </div>
 
       {/* Summary Cards */}

@@ -26,6 +26,21 @@ interface CategoryBreakdown {
   percentage: number;
 }
 
+export interface AccountWithConversion {
+  id: string;
+  name: string;
+  type: string;
+  balance: number;
+  currency: string;
+  icon: string | null;
+  color: string | null;
+  isActive: boolean;
+  originalBalance: number;
+  originalCurrency: string;
+  convertedBalance: number;
+  convertedCurrency: string;
+}
+
 export interface DashboardStats {
   totalBalance: number;
   totalIncome: number;
@@ -35,11 +50,14 @@ export interface DashboardStats {
   incomeChange: number;
   expenseChange: number;
   balanceChange: number;
+  accounts: AccountWithConversion[];
+  exchangeRates: Record<string, number>;
   recentTransactions: RecentTransaction[];
   monthlyData: MonthlyDataPoint[];
   categoryBreakdown: CategoryBreakdown[];
 }
 
-export function useDashboard() {
-  return useFetch<DashboardStats>(API_ROUTES.DASHBOARD);
+export function useDashboard(baseCurrency: string = "TRY") {
+  const url = `${API_ROUTES.DASHBOARD}?base=${encodeURIComponent(baseCurrency)}`;
+  return useFetch<DashboardStats>(url);
 }

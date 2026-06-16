@@ -61,6 +61,8 @@ export const CURRENCIES = [
   { value: "EUR", label: "€ Euro", symbol: "€" },
   { value: "GBP", label: "£ Sterlin", symbol: "£" },
   { value: "CHF", label: "CHF İsviçre Frangı", symbol: "CHF" },
+  { value: "AED", label: "AED BAE Dirhemi", symbol: "AED" },
+  { value: "IQD", label: "IQD Irak Dinarı", symbol: "IQD" },
   { value: "XAU", label: "Altın (Gram)", symbol: "Au" },
 ] as const;
 

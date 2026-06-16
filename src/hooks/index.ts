@@ -5,3 +5,4 @@ export { useCategories, useCategory, useCreateCategory, useUpdateCategory, useDe
 export { useBudgets, useBudget, useCreateBudget, useUpdateBudget, useDeleteBudget } from "./use-budgets";
 export type { BudgetWithProgress } from "./use-budgets";
 export { useDashboard } from "./use-dashboard";
+export { useWebSocket } from "./use-websocket";

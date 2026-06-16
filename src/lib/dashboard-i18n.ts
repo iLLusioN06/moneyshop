@@ -88,6 +88,7 @@ const dict: TranslationDict = {
   "dash.verifiedAccount":    { tr: "Doğrulanmış Hesap", en: "Verified Account", ar: "حساب موثق", ku: "Hesaba Pejirandî", fr: "Compte vérifié", ru: "Подтвержденный аккаунт" },
   "dash.unverifiedAccount":  { tr: "Doğrulanmamış Hesap", en: "Unverified Account", ar: "حساب غير موثق", ku: "Hesaba Nepejirandî", fr: "Compte non vérifié", ru: "Неподтвержденный аккаунт" },
   "dash.verifyPrompt":       { tr: "İşlem yapabilmeniz için hesabınızı onaylayınız.", en: "Please verify your account to proceed.", ar: "يرجى توثيق حسابك للمتابعة.", ku: "Ji kerema xwe hesabê xwe piştrast bike.", fr: "Veuillez vérifier votre compte pour continuer.", ru: "Пожалуйста, подтвердите свой аккаунт." },
+  "dash.baseCurrency":       { tr: "Baz Para Birimi", en: "Base Currency", ar: "العملة الأساسية", ku: "Diravê Bingehîn", fr: "Devise de base", ru: "Базовая валюта" },
 
   // --- PROFILE ---
   "profile.title":           { tr: "Profil", en: "Profile", ar: "الملف الشخصي", ku: "Profîl", fr: "Profil", ru: "Профиль" },

@@ -5,7 +5,17 @@
 import type { NextAuthConfig } from "next-auth";
 
 // Auth gerektirmeyen rotalar
-export const publicRoutes = ["/login", "/register", "/api/auth/**"];
+export const publicRoutes = [
+  "/",
+  "/login",
+  "/register",
+  "/forgot-password",
+  "/reset-password",
+  "/pricing",
+  "/faq",
+  "/card",
+  "/api/auth/**",
+];
 
 // Auth sayfaları (giriş yapmış kullanıcılar erişemez)
 export const authRoutes = ["/login", "/register"];

@@ -15,7 +15,7 @@ export async function PUT(req: Request) {
     const parsed = validateRequest(verifyIdentitySchema, body);
     if (!parsed.success) return parsed.response;
 
-    const { dateOfBirth } = parsed.data;
+    const { dateOfBirth, tcKimlik, address, identityNumber } = parsed.data;
 
     // Zaten doğrulanmış mı?
     const user = await prisma.user.findUnique({
@@ -30,17 +30,23 @@ export async function PUT(req: Request) {
       );
     }
 
-    // Hesabı doğrula
+    // KYC verilerini kaydet ve hesabı doğrula
     await prisma.user.update({
       where: { id: session.user.id },
       data: {
+        dateOfBirth: new Date(dateOfBirth),
+        ...(tcKimlik !== undefined && tcKimlik !== ""
+          ? { tcKimlik }
+          : {}),
+        address,
+        identityNumber,
         emailVerified: new Date(),
       },
     });
 
     return NextResponse.json({
       success: true,
-      message: "Hesabınız başarıyla doğrulandı.",
+      message: "Kimliğiniz başarıyla doğrulandı.",
       emailVerified: new Date().toISOString(),
     });
   } catch (error) {
