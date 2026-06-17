@@ -70,7 +70,7 @@ async function handler(req: Request) {
 
     // 2FA kontrolü
     if (user.twoFactorEnabled && user.twoFactorMethod) {
-      const pendingToken = createPendingAuthToken({
+      const pendingToken = await createPendingAuthToken({
         userId: user.id,
         email: user.email,
         name: user.name,

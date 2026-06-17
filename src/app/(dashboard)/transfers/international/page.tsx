@@ -64,7 +64,7 @@ export default function InternationalPage() {
               <div className="bg-sky-50 dark:bg-sky-500/5 border border-sky-200 dark:border-sky-500/20 rounded-lg p-4 flex items-start gap-3">
                 <Globe className="w-5 h-5 text-sky-500 mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium text-sky-800 dark:text-sky-300">IBAN'ını paylaş, dünyadan para al</p>
+                  <p className="text-sm font-medium text-sky-800 dark:text-sky-300">IBAN&apos;ını paylaş, dünyadan para al</p>
                   <p className="text-xs text-sky-600 dark:text-sky-400 mt-1">
                     Gönderen kişiye aşağıdaki IBAN bilgilerini iletmen yeterli.
                   </p>
@@ -72,7 +72,7 @@ export default function InternationalPage() {
               </div>
 
               <div className="bg-surface-secondary rounded-lg p-4 space-y-2">
-                <label className="text-xs text-text-muted">Senin IBAN'ın</label>
+                <label className="text-xs text-text-muted">Senin IBAN&apos;ın</label>
                 <p className="text-sm font-mono font-medium text-text-primary">
                   IQ12 3456 7890 1234 5678 901
                 </p>

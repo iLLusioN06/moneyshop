@@ -82,8 +82,10 @@ export default function FastTransferPage() {
   }, []);
 
   useEffect(() => {
-    fetchAccounts();
-    fetchRecentTransfers();
+    setTimeout(() => {
+      fetchAccounts();
+      fetchRecentTransfers();
+    }, 0);
   }, [fetchAccounts, fetchRecentTransfers]);
 
   const selectedAccount = accounts.find((a) => a.id === senderAccountId);

@@ -75,6 +75,13 @@ model User {
   cards                 Card[]
   pushSubscriptions     PushSubscription[]
   pushNotificationSetting PushNotificationSetting?
+  beneficiaries         Beneficiary[]
+  savingsGoals          SavingsGoal[]
+  installments          Installment[]
+  supportTickets        SupportTicket[]
+  supportMessages       SupportMessage[]
+  transactionTemplates  TransactionTemplate[]
+  splitBills            SplitBill[]
 
   // ─── İki Faktörlü Kimlik Doğrulama (2FA) ──────────────
   twoFactorEnabled   Boolean @default(false)
@@ -165,9 +172,9 @@ model Investment {
   name        String                        // Örn: "Apple", "BTC", "Altın"
   symbol      String                        // Örn: "AAPL", "BTC", "XAU"
   type        String   @default("STOCK")    // STOCK | CRYPTO | COMMODITY | FUND | OTHER
-  shares      Float                         // Adet / Miktar
-  buyPrice    Float                         // Birim alış fiyatı
-  currentPrice Float   @default(0)          // Güncel birim fiyat (manuel girilir)
+  shares      Decimal  @db.Decimal(19, 8)  // Adet / Miktar (kripto için hassasiyet)
+  buyPrice    Decimal  @db.Decimal(19, 4)  // Birim alış fiyatı
+  currentPrice Decimal @default(0) @db.Decimal(19, 4) // Güncel birim fiyat (manuel girilir)
   currency    String   @default("TRY")
   notes       String?
   createdAt   DateTime @default(now())
@@ -210,7 +217,7 @@ model FinancialAccount {
   userId    String
   name      String
   type      String   @default("CHECKING")
-  balance   Float    @default(0)
+  balance   Decimal  @default(0) @db.Decimal(19, 4)
   currency  String   @default("TRY")
   icon      String?
   color     String?
@@ -222,6 +229,7 @@ model FinancialAccount {
   transactions Transaction[]
   recurringTransactions RecurringTransaction[]
   investments           Investment[]
+  installments          Installment[]
 
   @@index([userId])
   @@map("financial_accounts")
@@ -241,6 +249,8 @@ model Category {
   transactions Transaction[]
   budgets      Budget[]
   recurringTransactions RecurringTransaction[]
+  installments          Installment[]
+  transactionTemplates  TransactionTemplate[]
 
   @@index([userId])
   @@map("categories")
@@ -252,7 +262,7 @@ model Transaction {
   userId      String
   categoryId  String?
   type        TransactionType   @default(EXPENSE)
-  amount      Float
+  amount      Decimal  @db.Decimal(19, 4)
   currency    String            @default("TRY")
   description String?
   status      TransactionStatus @default(COMPLETED)
@@ -264,7 +274,7 @@ model Transaction {
   recipientName  String?
   recipientIban  String?
   recipientBank  String?
-  transferFee    Float    @default(0)
+  transferFee    Decimal  @default(0) @db.Decimal(19, 4)
   // Para transferlerinde karşı tarafın kullanıcı ID'si (MoneyShop içi transferlerde)
   recipientUserId String?
   // MoneyShop Card işlemlerinde kart ID'si
@@ -287,8 +297,8 @@ model Budget {
   id         String    @id @default(cuid())
   userId     String
   categoryId String
-  amount     Float
-  spent      Float     @default(0)
+  amount     Decimal   @db.Decimal(19, 4)
+  spent      Decimal   @default(0) @db.Decimal(19, 4)
   currency   String    @default("TRY")
   period     String    @default("MONTHLY")
   startDate  DateTime  @default(now())
@@ -313,7 +323,7 @@ model RecurringTransaction {
   accountId     String
   categoryId    String?
   type          TransactionType @default(EXPENSE)
-  amount        Float
+  amount        Decimal         @db.Decimal(19, 4)
   currency      String   @default("TRY")
   description   String?
   frequency     String                        // DAILY | WEEKLY | BIWEEKLY | MONTHLY | QUARTERLY | YEARLY
@@ -396,11 +406,11 @@ model Card {
   expiryYear    Int
   cvv           String                             // Şifrelenmiş CVV
   status        String   @default("ACTIVE")        // ACTIVE | BLOCKED | CANCELLED | PENDING
-  dailyLimit    Float    @default(5000)
-  monthlyLimit  Float    @default(50000)
-  currentDailySpent  Float @default(0)
-  currentMonthlySpent Float @default(0)
-  balance       Float    @default(0)
+  dailyLimit    Decimal  @default(5000) @db.Decimal(19, 4)
+  monthlyLimit  Decimal  @default(50000) @db.Decimal(19, 4)
+  currentDailySpent  Decimal @default(0) @db.Decimal(19, 4)
+  currentMonthlySpent Decimal @default(0) @db.Decimal(19, 4)
+  balance       Decimal  @default(0) @db.Decimal(19, 4)
   currency      String   @default("IQD")
   issuedAt      DateTime @default(now())
   createdAt     DateTime @default(now())
@@ -471,4 +481,210 @@ model SmsLog {
   @@index([userId])
   @@index([createdAt])
   @@map("sms_logs")
+}
+
+// =============================================
+// Alıcı Rehberi (Beneficiary)
+// =============================================
+
+model Beneficiary {
+  id            String   @id @default(cuid())
+  userId        String
+  name          String
+  phone         String?
+  email         String?
+  iban          String?
+  bankName      String?
+  bankCode      String?
+  accountNumber String?
+  isFavorite    Boolean  @default(false)
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, isFavorite])
+  @@map("beneficiaries")
+}
+
+// =============================================
+// Birikim Hedefleri (Savings Goals)
+// =============================================
+
+model SavingsGoal {
+  id            String   @id @default(cuid())
+  userId        String
+  name          String
+  description   String?
+  targetAmount  Decimal  @db.Decimal(19, 4)
+  currentAmount Decimal  @default(0) @db.Decimal(19, 4)
+  currency      String   @default("TRY")
+  icon          String?  @default("piggy-bank")
+  color         String?  @default("#10b981")
+  deadline      DateTime?
+  isCompleted   Boolean  @default(false)
+  completedAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, isCompleted])
+  @@map("savings_goals")
+}
+
+// =============================================
+// Taksitli Ödemeler (Installments)
+// =============================================
+
+model Installment {
+  id            String   @id @default(cuid())
+  userId        String
+  accountId     String
+  categoryId    String?
+  title         String                        // Taksit açıklaması (ör: "iPhone 15 Pro Max")
+  totalAmount   Decimal  @db.Decimal(19, 4)   // Toplam tutar
+  monthlyAmount Decimal  @db.Decimal(19, 4)   // Aylık taksit tutarı
+  totalPayments Int                           // Toplam taksit sayısı
+  paidPayments  Int      @default(0)          // Ödenen taksit sayısı
+  currency      String   @default("TRY")
+  startDate     DateTime                      // İlk taksit tarihi
+  nextPaymentDate DateTime                    // Bir sonraki ödeme tarihi
+  status        String   @default("ACTIVE")   // ACTIVE | COMPLETED | CANCELLED
+  merchantName  String?                       // Üye işyeri adı
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account  FinancialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  category Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([accountId])
+  @@index([status])
+  @@index([nextPaymentDate])
+  @@map("installments")
+}
+
+// =============================================
+// Destek Talepleri (Support Tickets)
+// =============================================
+
+model SupportTicket {
+  id          String   @id @default(cuid())
+  userId      String
+  subject     String                        // Konu
+  description String   @db.Text             // Açıklama
+  category    String   @default("GENERAL")  // GENERAL | ACCOUNT | TRANSACTION | CARD | TECHNICAL | OTHER
+  priority    String   @default("MEDIUM")   // LOW | MEDIUM | HIGH | URGENT
+  status      String   @default("OPEN")     // OPEN | IN_PROGRESS | WAITING | RESOLVED | CLOSED
+  assignedTo  String?                       // Atanan yönetici
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user     User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages SupportMessage[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([priority])
+  @@index([createdAt])
+  @@map("support_tickets")
+}
+
+model SupportMessage {
+  id        String   @id @default(cuid())
+  ticketId  String
+  userId    String
+  message   String   @db.Text
+  isStaff   Boolean  @default(false)       // Çalışan mesajı mı?
+  createdAt DateTime @default(now())
+
+  ticket SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId])
+  @@index([createdAt])
+  @@map("support_messages")
+}
+
+model TransactionTemplate {
+  id              String   @id @default(cuid())
+  userId          String
+  name            String                          // Şablon adı (ör: "Kira Ödemesi")
+  type            TransactionType @default(TRANSFER)
+  amount          Decimal  @db.Decimal(19, 4)
+  currency        String   @default("IQD")
+  description     String?
+  recipientName   String?
+  recipientIban   String?
+  recipientBank   String?
+  recipientUserId String?                         // MoneyShop içi transfer
+  categoryId      String?
+  isFavorite      Boolean  @default(false)
+  usageCount      Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user     User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([isFavorite])
+  @@map("transaction_templates")
+}
+
+// =============================================
+// Ortak Hesap (Split Bills)
+// =============================================
+
+enum SplitBillStatus {
+  PENDING
+  PARTIAL
+  SETTLED
+  CANCELLED
+}
+
+model SplitBill {
+  id          String          @id @default(cuid())
+  userId      String
+  title       String
+  description String?
+  totalAmount Decimal         @db.Decimal(19, 4)
+  currency    String          @default("IQD")
+  status      SplitBillStatus @default(PENDING)
+  category    String?         // Yemek, Ulaşım, Konaklama, vb.
+  date        DateTime        @default(now())
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  user         User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  participants SplitBillParticipant[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([date])
+  @@map("split_bills")
+}
+
+model SplitBillParticipant {
+  id          String   @id @default(cuid())
+  splitBillId String
+  name        String                          // Katılımcı adı
+  email       String?                         // E-posta (opsiyonel)
+  userId      String?                         // MoneyShop kullanıcısı ise
+  amount      Decimal  @db.Decimal(19, 4)     // Ödenmesi gereken tutar
+  isPaid      Boolean  @default(false)        // Ödeme durumu
+  paidAt      DateTime?                       // Ödeme tarihi
+  createdAt   DateTime @default(now())
+
+  splitBill SplitBill @relation(fields: [splitBillId], references: [id], onDelete: Cascade)
+
+  @@index([splitBillId])
+  @@index([userId])
+  @@map("split_bill_participants")
 }

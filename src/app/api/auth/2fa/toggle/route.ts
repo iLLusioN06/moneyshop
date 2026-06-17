@@ -7,12 +7,13 @@
 // =============================================
 
 import { NextResponse } from "next/server";
+import { compare } from "bcryptjs";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { withRateLimit } from "@/lib/rate-limit";
 import { createAuditLog, getRequestMetadata } from "@/lib/audit";
 import { twoFactorToggleSchema, validateRequest } from "@/lib/validations";
-import { generateBackupCodes, encryptSecret } from "@/lib/two-factor";
+import { generateBackupCodes, encryptSecret, verifyTotpToken, verifyBackupCode, verifySmsCode } from "@/lib/two-factor";
 
 async function handler(req: Request) {
   try {
@@ -86,6 +87,58 @@ async function handler(req: Request) {
         backupCodes: backupCodes.plain,
       });
     } else {
+      // 2FA'yı kapat — şifre ve 2FA kodu zorunlu
+      if (!parsed.data.password) {
+        return NextResponse.json(
+          { error: "2FA'yı kapatmak için parolanızı girmelisiniz." },
+          { status: 400 }
+        );
+      }
+
+      if (!parsed.data.code) {
+        return NextResponse.json(
+          { error: "2FA'yı kapatmak için doğrulama kodunuzu girmelisiniz." },
+          { status: 400 }
+        );
+      }
+
+      // Parola doğrulaması
+      const fullUser = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { password: true, twoFactorEnabled: true, twoFactorMethod: true, twoFactorSecret: true, twoFactorBackupCodes: true },
+      });
+
+      if (!fullUser?.password) {
+        return NextResponse.json({ error: "Kullanıcı bulunamadı." }, { status: 404 });
+      }
+
+      const passwordValid = await compare(parsed.data.password, fullUser.password);
+      if (!passwordValid) {
+        return NextResponse.json({ error: "Parola hatalı." }, { status: 400 });
+      }
+
+      // 2FA kod doğrulaması
+      let codeValid = false;
+      if (fullUser.twoFactorMethod === "AUTHENTICATOR" && fullUser.twoFactorSecret) {
+        codeValid = await verifyTotpToken(parsed.data.code, fullUser.twoFactorSecret);
+        if (!codeValid && fullUser.twoFactorBackupCodes) {
+          const newBackupCodes = verifyBackupCode(parsed.data.code, fullUser.twoFactorBackupCodes);
+          codeValid = newBackupCodes !== null;
+          if (codeValid) {
+            await prisma.user.update({
+              where: { id: session.user.id },
+              data: { twoFactorBackupCodes: newBackupCodes },
+            });
+          }
+        }
+      } else if (fullUser.twoFactorMethod === "SMS") {
+        codeValid = await verifySmsCode(session.user.id, parsed.data.code);
+      }
+
+      if (!codeValid) {
+        return NextResponse.json({ error: "Doğrulama kodu hatalı." }, { status: 400 });
+      }
+
       // 2FA'yı kapat
       await prisma.user.update({
         where: { id: session.user.id },

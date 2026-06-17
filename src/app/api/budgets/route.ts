@@ -5,6 +5,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getCacheHeaders } from "@/lib/utils";
 
 // GET /api/budgets - Bütçeleri listele (harcama ilerlemesi ile)
 export async function GET() {
@@ -22,42 +23,50 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
     });
 
-    // Her bütçe için güncel harcama miktarını hesapla
+    // Tek sorguyla tüm dönem harcamalarını al (N+1 önlemi)
     const now = new Date();
-    const budgetsWithSpent = await Promise.all(
-      budgets.map(async (budget) => {
-        let periodStart: Date;
-        switch (budget.period) {
-          case "WEEKLY":
-            periodStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
-            break;
-          case "YEARLY":
-            periodStart = new Date(now.getFullYear(), 0, 1);
-            break;
-          case "MONTHLY":
-          default:
-            periodStart = new Date(now.getFullYear(), now.getMonth(), 1);
-        }
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
+    const yearStart = new Date(now.getFullYear(), 0, 1);
 
-        // Dönem içindeki harcamaları topla
-        const spent = await prisma.transaction.aggregate({
-          where: {
-            userId,
-            categoryId: budget.categoryId,
-            type: "EXPENSE",
-            date: { gte: periodStart },
-          },
-          _sum: { amount: true },
-        });
+    const categoryIds = [...new Set(budgets.map((b) => b.categoryId))];
 
-        return {
-          ...budget,
-          spent: spent._sum.amount || 0,
-        };
-      })
-    );
+    const spentAggregates = await prisma.transaction.groupBy({
+      by: ["categoryId"],
+      where: {
+        userId,
+        categoryId: { in: categoryIds },
+        type: "EXPENSE",
+        date: { gte: yearStart },
+      },
+      _sum: { amount: true },
+    });
 
-    return NextResponse.json({ success: true, data: budgetsWithSpent });
+    const spentMap = new Map(spentAggregates.map((s) => [s.categoryId, Number(s._sum.amount) || 0]));
+
+    const budgetsWithSpent = budgets.map((budget) => {
+      let periodStart: Date;
+      switch (budget.period) {
+        case "WEEKLY":
+          periodStart = weekStart;
+          break;
+        case "YEARLY":
+          periodStart = yearStart;
+          break;
+        case "MONTHLY":
+        default:
+          periodStart = monthStart;
+      }
+
+      const totalSpent = spentMap.get(budget.categoryId) || 0;
+
+      return {
+        ...budget,
+        spent: totalSpent,
+      };
+    });
+
+    return NextResponse.json({ success: true, data: budgetsWithSpent }, { headers: getCacheHeaders(30) });
   } catch (error) {
     console.error("Budgets GET error:", error);
     return NextResponse.json(

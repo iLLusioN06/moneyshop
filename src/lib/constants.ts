@@ -24,9 +24,15 @@ export const ROUTES = {
   PAYMENTS: "/payments",
   CARD: "/my-card",
   ADMIN: "/admin",
+  ANNOUNCEMENTS: "/admin/announcements",
+  SMS_SEND: "/admin/sms-send",
   RECURRING: "/recurring",
   REPORTS: "/reports",
   PORTFOLIO: "/portfolio",
+  INSTALLMENTS: "/installments",
+  SUPPORT: "/support",
+  TEMPLATES: "/templates",
+  SPLIT_BILLS: "/split-bills",
 } as const;
 
 // API route'ları

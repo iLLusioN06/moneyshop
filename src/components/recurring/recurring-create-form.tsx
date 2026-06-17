@@ -94,21 +94,22 @@ export function RecurringCreateForm({ show, onClose, onSuccess }: RecurringCreat
 
   useEffect(() => {
     if (show) {
-      fetchAccounts();
-      fetchCategories();
-      // Reset form
-      setType("EXPENSE");
-      setAmount("");
-      setCategoryId("");
-      setFrequency("MONTHLY");
-      setDescription("");
-      setStartDate(new Date().toISOString().split("T")[0]);
-      setEndDate("");
-      setTotalOccurrences("");
-      setTransferRecipientName("");
-      setTransferRecipientIban("");
-      setTransferRecipientBank("");
-      setError("");
+      setTimeout(() => {
+        fetchAccounts();
+        fetchCategories();
+        setType("EXPENSE");
+        setAmount("");
+        setCategoryId("");
+        setFrequency("MONTHLY");
+        setDescription("");
+        setStartDate(new Date().toISOString().split("T")[0]);
+        setEndDate("");
+        setTotalOccurrences("");
+        setTransferRecipientName("");
+        setTransferRecipientIban("");
+        setTransferRecipientBank("");
+        setError("");
+      }, 0);
     }
   }, [show, fetchAccounts, fetchCategories]);
 

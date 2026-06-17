@@ -5,6 +5,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getCacheHeaders } from "@/lib/utils";
 
 // ─── Types ───────────────────────────────────────────────
 
@@ -96,10 +97,18 @@ export async function GET() {
     }
 
     // 2) Kart ile ilişkili tüm işlemleri çek (kategori dahil)
+    // Son 12 ay için veri çek (sınırsız data çekmeyi önle)
+    const twelveMonthsAgo = new Date();
+    twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12);
+
     const transactions = await prisma.transaction.findMany({
-      where: { cardId: card.id },
+      where: {
+        cardId: card.id,
+        date: { gte: twelveMonthsAgo },
+      },
       include: { category: true },
       orderBy: { date: "desc" },
+      take: 1000,
     });
 
     const currency = card.currency || "IQD";
@@ -127,15 +136,15 @@ export async function GET() {
     const expenses = transactions.filter((t) => t.type === "EXPENSE");
     const incomes = transactions.filter((t) => t.type === "INCOME");
 
-    const totalSpent = expenses.reduce((s, t) => s + t.amount, 0);
-    const totalIncome = incomes.reduce((s, t) => s + t.amount, 0);
+    const totalSpent = expenses.reduce((s, t) => s + Number(t.amount), 0);
+    const totalIncome = incomes.reduce((s, t) => s + Number(t.amount), 0);
     const totalTransactions = transactions.length;
     const avgTransaction = totalTransactions > 0
-      ? expenses.reduce((s, t) => s + t.amount, 0) / (expenses.length || 1)
+      ? expenses.reduce((s, t) => s + Number(t.amount), 0) / (expenses.length || 1)
       : 0;
 
     const biggestExpense = expenses.length > 0
-      ? expenses.reduce((max, t) => (t.amount > max.amount ? t : max), expenses[0])
+      ? expenses.reduce((max, t) => (Number(t.amount) > Number(max.amount) ? t : max), expenses[0])
       : null;
 
     // ── Category Breakdown (sadece giderler) ──
@@ -150,12 +159,12 @@ export async function GET() {
         amount: 0,
         count: 0,
       };
-      existing.amount += tx.amount;
+      existing.amount += Number(tx.amount);
       existing.count++;
       categoryMap.set(catId, existing);
     }
 
-    const totalExpenseAmount = expenses.reduce((s, t) => s + t.amount, 0);
+    const totalExpenseAmount = expenses.reduce((s, t) => s + Number(t.amount), 0);
     const categoryBreakdown: CategorySpending[] = Array.from(categoryMap.entries())
       .map(([catId, data]) => ({
         categoryId: catId === "__uncategorized__" ? null : catId,
@@ -183,8 +192,8 @@ export async function GET() {
       const key = getMonthKey(tx.date);
       if (monthlyMap.has(key)) {
         const entry = monthlyMap.get(key)!;
-        if (tx.type === "INCOME") entry.income += tx.amount;
-        else if (tx.type === "EXPENSE") entry.expense += tx.amount;
+        if (tx.type === "INCOME") entry.income += Number(tx.amount);
+        else if (tx.type === "EXPENSE") entry.expense += Number(tx.amount);
         entry.count++;
       }
     }
@@ -212,7 +221,7 @@ export async function GET() {
       if (tx.date >= thirtyDaysAgo) {
         const key = formatDateStr(tx.date);
         const existing = dailyMap.get(key) || { amount: 0, count: 0 };
-        existing.amount += tx.amount;
+        existing.amount += Number(tx.amount);
         existing.count++;
         dailyMap.set(key, existing);
       }
@@ -239,7 +248,7 @@ export async function GET() {
           totalTransactions,
           avgTransaction: Math.round(avgTransaction * 100) / 100,
           biggestExpense: biggestExpense
-            ? { amount: biggestExpense.amount, description: biggestExpense.description, date: biggestExpense.date }
+            ? { amount: Number(biggestExpense.amount), description: biggestExpense.description, date: biggestExpense.date }
             : null,
           currency,
         },
@@ -247,7 +256,7 @@ export async function GET() {
         monthlyTrend,
         dailySpending,
       } satisfies CardAnalytics,
-    });
+    }, { headers: getCacheHeaders(60) });
   } catch (error) {
     console.error("[cards-analytics] Error:", error);
     return NextResponse.json(

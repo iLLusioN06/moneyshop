@@ -8,6 +8,7 @@ import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 import { withRateLimit } from "@/lib/rate-limit";
 import { createAuditLog, getRequestMetadata } from "@/lib/audit";
+import { getCacheHeaders } from "@/lib/utils";
 import { sendNotification, buildTransactionEmail, buildTransferEmail, type EmailEvent } from "@/lib/email";
 import {
   emitTransactionEvent,
@@ -85,7 +86,7 @@ export async function GET(req: Request) {
       page: filters.page,
       limit: filters.limit,
       totalPages: Math.ceil(total / filters.limit),
-    });
+    }, { headers: getCacheHeaders(15) });
   } catch (error) {
     console.error("Transactions GET error:", error);
     return NextResponse.json(
@@ -215,7 +216,7 @@ async function postHandler(req: Request) {
         emitBalanceEvent(userId, {
           accountId,
           accountName: account.name,
-          newBalance: account.balance + balanceChange,
+          newBalance: Number(account.balance) + balanceChange,
           currency: currency || account.currency,
           change: balanceChange,
         });

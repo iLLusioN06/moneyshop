@@ -35,8 +35,8 @@ export async function GET(req: Request) {
     const typeBreakdown: Record<string, { cost: number; current: number }> = {};
 
     for (const inv of investments) {
-      const cost = inv.shares * inv.buyPrice;
-      const current = inv.shares * inv.currentPrice;
+      const cost = Number(inv.shares) * Number(inv.buyPrice);
+      const current = Number(inv.shares) * Number(inv.currentPrice);
       totalCost += cost;
       totalCurrent += current;
 

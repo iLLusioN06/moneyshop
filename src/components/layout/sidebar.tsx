@@ -26,6 +26,12 @@ import {
   Shield,
   Tags,
   Home,
+  Bell,
+  MessageSquare,
+  CalendarCheck,
+  Headphones,
+  Bookmark,
+  Users,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { t } from "@/lib/dashboard-i18n";
@@ -36,6 +42,10 @@ const allNavItems: { href: string; labelKey: string; icon: React.ElementType }[]
   { href: ROUTES.TRANSACTIONS, labelKey: "nav.transactions", icon: ArrowUpDown },
   { href: ROUTES.TRANSFERS, labelKey: "nav.transfers", icon: ArrowLeftRight },
   { href: ROUTES.RECURRING, labelKey: "nav.recurring", icon: Repeat },
+  { href: ROUTES.TEMPLATES, labelKey: "nav.templates", icon: Bookmark },
+  { href: ROUTES.SPLIT_BILLS, labelKey: "nav.splitBills", icon: Users },
+  { href: ROUTES.INSTALLMENTS, labelKey: "nav.installments", icon: CalendarCheck },
+  { href: ROUTES.SUPPORT, labelKey: "nav.support", icon: Headphones },
   { href: ROUTES.PORTFOLIO, labelKey: "nav.portfolio", icon: BarChart3 },
   { href: ROUTES.DEPOSIT, labelKey: "nav.deposit", icon: HandCoins },
   { href: ROUTES.WITHDRAW, labelKey: "nav.withdraw", icon: Banknote },
@@ -45,6 +55,8 @@ const allNavItems: { href: string; labelKey: string; icon: React.ElementType }[]
   { href: ROUTES.CARD, labelKey: "nav.card", icon: CreditCard },
   { href: ROUTES.REPORTS, labelKey: "nav.reports", icon: FileText },
   { href: ROUTES.ADMIN, labelKey: "nav.adminPanel", icon: Shield },
+  { href: ROUTES.ANNOUNCEMENTS, labelKey: "nav.announcements", icon: Bell },
+  { href: ROUTES.SMS_SEND, labelKey: "nav.smsSend", icon: MessageSquare },
   { href: ROUTES.PROFILE, labelKey: "nav.profile", icon: User },
 ];
 

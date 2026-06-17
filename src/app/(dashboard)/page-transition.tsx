@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 type TransitionPhase = "idle" | "exiting" | "entering";
 
@@ -59,7 +60,7 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
     "";
 
   return (
-    <div className={animationClass} style={animationClass ? undefined : { opacity: 1 }}>
+    <div className={cn("flex-1 min-h-0 flex flex-col", animationClass)} style={animationClass ? undefined : { opacity: 1 }}>
       {displayChildren}
     </div>
   );

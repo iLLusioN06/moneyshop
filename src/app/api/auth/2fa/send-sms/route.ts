@@ -34,7 +34,7 @@ async function handler(req: Request) {
     const code = generateSmsCode();
 
     // Kodu geçici olarak sakla
-    storeSmsCode(session.user.id, code);
+    await storeSmsCode(session.user.id, code);
 
     // SMS gönder (formatlı mesaj)
     const message = buildVerificationSms(code);

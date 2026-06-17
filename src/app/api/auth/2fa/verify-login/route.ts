@@ -26,7 +26,7 @@ async function handler(req: Request) {
     const { pendingToken, code, isBackupCode } = parsed.data;
 
     // Pending token'ı doğrula
-    const pending = consumePendingAuth(pendingToken);
+    const pending = await consumePendingAuth(pendingToken);
     if (!pending) {
       return NextResponse.json(
         { error: "Oturum süresi doldu. Lütfen tekrar giriş yapın." },
@@ -95,7 +95,7 @@ async function handler(req: Request) {
       verified = await verifyTotpToken(code, user.twoFactorSecret);
     } else if (user.twoFactorMethod === "SMS") {
       // SMS kodu doğrulama
-      verified = verifySmsCode(user.id, code);
+      verified = await verifySmsCode(user.id, code);
     }
 
     if (!verified) {

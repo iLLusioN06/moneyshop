@@ -77,7 +77,7 @@ function PaymentForm({
     } catch { setError("Hesaplar alınamadı."); }
   }, []);
 
-  useEffect(() => { fetchAccounts(); }, [fetchAccounts]);
+  useEffect(() => { setTimeout(() => fetchAccounts(), 0); }, [fetchAccounts]);
 
   const selectedAccount = accounts.find((a) => a.id === accountId);
 
@@ -181,39 +181,24 @@ function PaymentForm({
 // ─── Fatura Seçim Ekranı ────────────────────────────────────────────────────
 function PaymentSelection({ onSelect }: { onSelect: (id: string) => void }) {
   return (
-    <Card className="overflow-hidden">
-      <CardHeader className="bg-gradient-to-r from-secondary/5 to-transparent border-b border-border">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-secondary to-secondary-dark flex items-center justify-center shadow-md">
-            <Receipt className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <CardTitle>Ödemeler</CardTitle>
-            <p className="text-sm text-text-muted mt-0.5">Fatura ve ödeme işlemlerinizi gerçekleştirin</p>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="p-6">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {billTypes.map((bt, idx) => {
-            const Icon = bt.icon;
-            return (
-              <button
-                key={bt.id}
-                onClick={() => onSelect(bt.id)}
-                className="group flex flex-col items-center gap-3 p-5 rounded-2xl bg-surface border-2 border-border hover:border-secondary/30 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 animate-[slide-up_0.3s_ease-out] opacity-0 [animation-fill-mode:forwards]"
-                style={{ animationDelay: `${idx * 0.05}s` }}
-              >
-                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${bt.gradient} flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:shadow-lg transition-all duration-300`}>
-                  <Icon className="w-7 h-7 text-white" />
-                </div>
-                <span className="text-sm font-medium text-text-primary group-hover:text-secondary transition-colors">{bt.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </CardContent>
-    </Card>
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
+      {billTypes.map((bt, idx) => {
+        const Icon = bt.icon;
+        return (
+          <button
+            key={bt.id}
+            onClick={() => onSelect(bt.id)}
+            className="group flex flex-col items-center gap-3 p-6 rounded-2xl bg-surface border-2 border-border hover:border-secondary/30 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 animate-[slide-up_0.3s_ease-out] opacity-0 [animation-fill-mode:forwards]"
+            style={{ animationDelay: `${idx * 0.05}s` }}
+          >
+            <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${bt.gradient} flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:shadow-lg transition-all duration-300`}>
+              <Icon className="w-7 h-7 text-white" />
+            </div>
+            <span className="text-sm font-medium text-text-primary group-hover:text-secondary transition-colors">{bt.label}</span>
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
@@ -233,7 +218,7 @@ function PaymentsContent() {
     finally { setPaymentsLoading(false); }
   }, []);
 
-  useEffect(() => { fetchRecentPayments(); }, [fetchRecentPayments]);
+  useEffect(() => { setTimeout(() => fetchRecentPayments(), 0); }, [fetchRecentPayments]);
 
   const handleBack = () => setSelectedBill(null);
 
@@ -248,14 +233,9 @@ function PaymentsContent() {
 
   return (
     <div className="space-y-6 animate-[fade-in_0.3s_ease-out]">
-      <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard")} className="border border-border hover:text-profit hover:bg-profit/10 hover:border-profit/30">
-            <ArrowLeft className="w-4 h-4" />
-          </Button>
-          <div>
+      <div className="space-y-1">
         <h2 className="text-2xl font-bold text-text-primary">Ödemeler</h2>
-        <p className="text-sm text-text-muted mt-1">Fatura ve ödeme işlemlerinizi yönetin</p>
-      </div>
+        <p className="text-sm text-text-muted">Fatura ve ödeme işlemlerinizi yönetin</p>
       </div>
 
       <PaymentSelection onSelect={setSelectedBill} />
@@ -291,14 +271,14 @@ function PaymentsContent() {
             />
           ) : (
             <div className="divide-y divide-border">
-              {recentPayments.map((tx, idx) => (
+              {recentPayments.slice(0, 5).map((tx, idx) => (
                 <div
                   key={tx.id}
-                  className="flex items-center justify-between p-4 hover:bg-surface-tertiary/50 transition-colors group animate-[slide-up_0.2s_ease-out] opacity-0 [animation-fill-mode:forwards]"
+                  className="flex items-center justify-between px-4 py-2.5 hover:bg-surface-tertiary/50 transition-colors group animate-[slide-up_0.2s_ease-out] opacity-0 [animation-fill-mode:forwards]"
                   style={{ animationDelay: `${idx * 0.05}s` }}
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-9 h-9 rounded-lg bg-loss/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                    <div className="w-8 h-8 rounded-lg bg-loss/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
                       <Receipt className="w-4 h-4 text-loss" />
                     </div>
                     <div className="min-w-0">

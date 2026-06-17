@@ -49,7 +49,7 @@ export default function AboutPage() {
             Dijital Ödemenin Geleceğini <span style={{ background: "linear-gradient(135deg, #0052FF, #00D4AA)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Şekillendiriyoruz</span>
           </h1>
           <p className="text-lg md:text-xl text-[#6B7280] max-w-3xl mx-auto leading-relaxed">
-            MoneyShop, Irak ve Kürdistan Bölgesi'ndeki işletmelere modern, güvenli ve uyumlu dijital ödeme çözümleri sunan lider bir finansal teknoloji şirketidir.
+            MoneyShop, Irak ve Kürdistan Bölgesi&apos;ndeki işletmelere modern, güvenli ve uyumlu dijital ödeme çözümleri sunan lider bir finansal teknoloji şirketidir.
           </p>
         </div>
       </section>

@@ -92,8 +92,10 @@ export default function EftTransferPage() {
   }, []);
 
   useEffect(() => {
-    fetchAccounts();
-    fetchRecentTransfers();
+    setTimeout(() => {
+      fetchAccounts();
+      fetchRecentTransfers();
+    }, 0);
   }, [fetchAccounts, fetchRecentTransfers]);
 
   const selectedAccount = accounts.find((a) => a.id === senderAccountId);
@@ -484,7 +486,7 @@ export default function EftTransferPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Son EFT'ler</CardTitle>
+              <CardTitle>Son EFT&apos;ler</CardTitle>
             </CardHeader>
             <CardContent>
               {recentLoading ? (

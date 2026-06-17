@@ -68,7 +68,9 @@ export function SearchDropdown({ query, onClose, inputRef }: SearchDropdownProps
   // Fetch results
   useEffect(() => {
     if (query.length < 2) {
-      setResults(null);
+      setTimeout(() => {
+        setResults(null);
+      }, 0);
       return;
     }
 

@@ -1,13 +1,31 @@
 "use client";
 
 import { useState } from "react";
-import { FileText, FileDown, Mail, Loader2, CheckCircle2 } from "lucide-react";
+import { FileText, FileDown, Mail, Loader2, CheckCircle2, Share2 } from "lucide-react";
 import DekontModal from "@/components/dekont-modal";
+import ReceiptShare from "@/components/receipt/receipt-share";
+import { t } from "@/lib/dashboard-i18n";
 
 // ─── Props ───────────────────────────────────────────────
 
 interface DekontActionsProps {
   transactionId: string;
+  transaction?: {
+    id: string;
+    type: string;
+    amount: number;
+    currency: string;
+    date: string;
+    status: string;
+    description?: string;
+    account?: { name: string } | null;
+    category?: { name: string; color: string } | null;
+    recipientName?: string;
+    recipientIban?: string;
+    recipientBank?: string;
+    transferFee?: number;
+  };
+  userName?: string;
   /** Hide view button (e.g. when already on detail page) */
   noView?: boolean;
   /** Compact mode for list rows */
@@ -16,7 +34,7 @@ interface DekontActionsProps {
 
 // ─── Component ───────────────────────────────────────────
 
-export default function DekontActions({ transactionId, noView, compact }: DekontActionsProps) {
+export default function DekontActions({ transactionId, transaction, userName, noView, compact }: DekontActionsProps) {
   const [showModal, setShowModal] = useState(false);
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -74,6 +92,13 @@ export default function DekontActions({ transactionId, noView, compact }: Dekont
               <Mail className="w-3.5 h-3.5" />
             )}
           </button>
+          {transaction && userName && (
+            <ReceiptShare
+              transaction={transaction}
+              userName={userName}
+              t={t}
+            />
+          )}
         </div>
         {showModal && <DekontModal transactionId={transactionId} onClose={() => setShowModal(false)} />}
       </>
@@ -113,6 +138,13 @@ export default function DekontActions({ transactionId, noView, compact }: Dekont
           )}
           {sent ? "Gönderildi" : "E-posta"}
         </button>
+        {transaction && userName && (
+          <ReceiptShare
+            transaction={transaction}
+            userName={userName}
+            t={t}
+          />
+        )}
       </div>
       {showModal && <DekontModal transactionId={transactionId} onClose={() => setShowModal(false)} />}
     </>

@@ -128,7 +128,7 @@ function IbanDeposit({ onBack }: { onBack: () => void }) {
     } catch { setError("Hesaplar alınamadı."); }
   }, []);
 
-  useEffect(() => { fetchAccounts(); }, [fetchAccounts]);
+  useEffect(() => { setTimeout(() => fetchAccounts(), 0); }, [fetchAccounts]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(iban.replace(/\s/g, ""));
@@ -187,7 +187,7 @@ function IbanDeposit({ onBack }: { onBack: () => void }) {
               <Landmark className="w-6 h-6 text-white" />
             </div>
             <div>
-              <CardTitle className="text-lg">Kendi IBAN'ın ile Yatır</CardTitle>
+              <CardTitle className="text-lg">Kendi IBAN&apos;ın ile Yatır</CardTitle>
               <p className="text-sm text-text-muted mt-0.5">
                 Aşağıdaki IBAN numarasına havale/EFT yaparak hesabınıza para yatırabilirsiniz.
               </p>
@@ -325,7 +325,7 @@ function CardDeposit({ onBack }: { onBack: () => void }) {
     } catch { setError("Hesaplar alınamadı."); }
   }, []);
 
-  useEffect(() => { fetchAccounts(); }, [fetchAccounts]);
+  useEffect(() => { setTimeout(() => fetchAccounts(), 0); }, [fetchAccounts]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -449,7 +449,7 @@ function AtmDeposit({ onBack }: { onBack: () => void }) {
     } catch { setError("Hesaplar alınamadı."); }
   }, []);
 
-  useEffect(() => { fetchAccounts(); }, [fetchAccounts]);
+  useEffect(() => { setTimeout(() => fetchAccounts(), 0); }, [fetchAccounts]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -502,8 +502,8 @@ function AtmDeposit({ onBack }: { onBack: () => void }) {
               <Banknote className="w-6 h-6 text-white" />
             </div>
             <div>
-              <CardTitle className="text-lg">ATM'den MoneyShop Card ile Yatır</CardTitle>
-              <p className="text-sm text-text-muted mt-0.5">Size özel barkod/kodu ATM'de okutarak veya MoneyShop Card ile para yatırın.</p>
+              <CardTitle className="text-lg">ATM&apos;den MoneyShop Card ile Yatır</CardTitle>
+              <p className="text-sm text-text-muted mt-0.5">Size özel barkod/kodu ATM&apos;de okutarak veya MoneyShop Card ile para yatırın.</p>
             </div>
           </div>
         </CardHeader>
@@ -557,14 +557,9 @@ function DepositSelection({ onSelect }: { onSelect: (id: string) => void }) {
   return (
     <div className="space-y-6 animate-[fade-in_0.3s_ease-out]">
       {/* Page Header */}
-      <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard")} className="border border-border hover:text-profit hover:bg-profit/10 hover:border-profit/30">
-            <ArrowLeft className="w-4 h-4" />
-          </Button>
-          <div>
+      <div className="space-y-1">
         <h2 className="text-2xl font-bold text-text-primary">{t("deposit.title")}</h2>
-        <p className="text-sm text-text-muted mt-1">{t("deposit.selectMethod")}</p>
-      </div>
+        <p className="text-sm text-text-muted">{t("deposit.selectMethod")}</p>
       </div>
 
       {/* Selection Cards */}

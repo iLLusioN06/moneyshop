@@ -34,7 +34,6 @@ import {
   Send,
   ArrowUpDown,
   ArrowRightLeft,
-  ArrowLeft,
   Wallet,
   BarChart3,
   FileText,
@@ -194,7 +193,9 @@ export default function SettingsPage() {
         }).then((url: string) => setTwoFactorQrDataUrl(url));
       });
     } else {
-      setTwoFactorQrDataUrl("");
+      setTimeout(() => {
+        setTwoFactorQrDataUrl("");
+      }, 0);
     }
   }, [twoFactorOtpauth]);
 
@@ -467,9 +468,6 @@ export default function SettingsPage() {
     <ErrorBoundary>
     <div className="space-y-6 animate-[fade-in_0.3s_ease-out]">
       <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard")} className="border border-border hover:text-profit hover:bg-profit/10 hover:border-profit/30">
-            <ArrowLeft className="w-4 h-4" />
-          </Button>
           <div>
         <h2 className="text-2xl font-bold text-text-primary">Ayarlar</h2>
         <p className="text-sm text-text-muted mt-1">
@@ -903,7 +901,7 @@ export default function SettingsPage() {
 
                             {/* Doğrulama Kodu */}
                             <p className="text-xs text-text-muted">
-                              Google Authenticator'daki 6 haneli kodu girin:
+                              Google Authenticator&apos;daki 6 haneli kodu girin:
                             </p>
                             <input
                               type="text"

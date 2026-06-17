@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, FileText } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { FooterSection } from "@/components/landing/footer-section";
 import { t, tArray, type Language } from "@/lib/landing-i18n";
 import "../landing.css";

@@ -16,6 +16,8 @@ export interface NavItem {
 export const ADMIN_ROUTES = [
   "/settings",
   "/admin",
+  "/admin/announcements",
+  "/admin/sms-send",
 ];
 
 // Herkesin erişebileceği route'lar
@@ -30,6 +32,8 @@ export const PUBLIC_ROUTES = [
   "/withdraw",
   "/payments",
   "/my-card",
+  "/templates",
+  "/split-bills",
 ];
 
 // Role bazlı route kontrolü

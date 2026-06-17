@@ -30,7 +30,7 @@ function buildExportData(
   transactions: Array<{
     date: Date;
     type: string;
-    amount: number;
+    amount: number | { toNumber(): number };
     currency: string;
     description: string | null;
     status: string;
@@ -50,7 +50,7 @@ function buildExportData(
   return transactions.map((tx) => ({
     Tarih: tx.date?.toISOString()?.split("T")[0] || "",
     "İşlem Türü": typeLabels[tx.type] || tx.type || "",
-    Tutar: tx.amount ?? "",
+    Tutar: typeof tx.amount === "number" ? tx.amount : Number(tx.amount),
     "Para Birimi": tx.currency || "",
     Açıklama: tx.description || "",
     Durum: tx.status || "",
@@ -79,6 +79,7 @@ export async function GET(req: Request) {
       where,
       include: { category: true, account: true },
       orderBy: { date: "desc" },
+      take: 10000,
     });
 
     if (format === "json") {

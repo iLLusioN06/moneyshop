@@ -5,9 +5,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { resetPasswordSchema, validateRequest } from "@/lib/validations";
+import { withRateLimit } from "@/lib/rate-limit";
 import { hash } from "bcryptjs";
 
-export async function POST(req: Request) {
+async function handler(req: Request) {
   try {
     const body = await req.json();
     const parsed = validateRequest(resetPasswordSchema, body);
@@ -75,3 +76,5 @@ export async function POST(req: Request) {
     );
   }
 }
+
+export const POST = withRateLimit({ maxRequests: 5, windowMs: 900_000 }, handler);

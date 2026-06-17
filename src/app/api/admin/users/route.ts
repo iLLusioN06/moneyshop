@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import type { Prisma, UserRole } from "@prisma/client";
+import { adminUpdateUserSchema, validateRequest } from "@/lib/validations";
 
 // Admin rolü kontrolü
 async function checkAdmin() {
@@ -26,7 +27,7 @@ export async function GET(req: Request) {
 
     const { searchParams } = new URL(req.url);
     const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "20");
+    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") || "20")));
     const search = searchParams.get("search");
     const role = searchParams.get("role") as UserRole | null;
     const status = searchParams.get("status");
@@ -103,14 +104,10 @@ export async function PATCH(req: Request) {
     }
 
     const body = await req.json();
-    const { userId, role, isActive } = body;
+    const parsed = validateRequest(adminUpdateUserSchema, body);
+    if (!parsed.success) return parsed.response;
 
-    if (!userId) {
-      return NextResponse.json(
-        { error: "Kullanıcı ID gereklidir." },
-        { status: 400 }
-      );
-    }
+    const { userId, role, isActive } = parsed.data;
 
     // Kendini güncellemeye çalışıyorsa engelle
     if (userId === session.user.id) {
@@ -122,13 +119,6 @@ export async function PATCH(req: Request) {
 
     const updateData: Record<string, unknown> = {};
     if (role) {
-      const validRoles: UserRole[] = ["USER", "MODERATOR", "ADMIN"];
-      if (!validRoles.includes(role as UserRole)) {
-        return NextResponse.json(
-          { error: "Geçersiz rol." },
-          { status: 400 }
-        );
-      }
       updateData.role = role;
     }
     if (typeof isActive === "boolean") {

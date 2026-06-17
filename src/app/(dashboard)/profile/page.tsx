@@ -40,8 +40,19 @@ import {
   Activity,
   Target,
   TrendingUp,
+  ScanLine,
+  Upload,
+  Loader2,
 } from "lucide-react";
 import { t } from "@/lib/dashboard-i18n";
+import { performOCR, validateFileSize, validateFileType, fileToBase64, type OCRResult } from "@/lib/ocr-service";
+import {
+  isWebAuthnSupported,
+  isPlatformAuthenticatorAvailable,
+  createRegistrationOptions,
+  startRegistration,
+  completeRegistration,
+} from "@/lib/webauthn";
 
 // --- Types ---
 interface ProfileData {
@@ -248,8 +259,10 @@ function PersonalInfoTab({
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (profile?.name) setName(profile.name);
-    if (profile?.image !== undefined) setImage(profile.image || "");
+    setTimeout(() => {
+      if (profile?.name) setName(profile.name);
+      if (profile?.image !== undefined) setImage(profile.image || "");
+    }, 0);
   }, [profile?.name, profile?.image]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -446,6 +459,67 @@ function SecurityTab({ profile }: { profile: ProfileData | null }) {
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
+  // Biometric auth state
+  const [biometricSupported, setBiometricSupported] = useState(false);
+  const [biometricEnabled, setBiometricEnabled] = useState(false);
+  const [biometricLoading, setBiometricLoading] = useState(false);
+  const [biometricStatus, setBiometricStatus] = useState<string | null>(null);
+
+  const checkBiometricSupport = useCallback(async () => {
+    const supported = isWebAuthnSupported();
+    setBiometricSupported(supported);
+
+    if (supported) {
+      const platformAvailable = await isPlatformAuthenticatorAvailable();
+      setBiometricSupported(platformAvailable);
+    }
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => checkBiometricSupport(), 0);
+  }, [checkBiometricSupport]);
+
+  const handleBiometricToggle = async () => {
+    if (biometricEnabled) {
+      // Devre dışı bırak
+      setBiometricEnabled(false);
+      setBiometricStatus("Biyometrik kimlik devre dışı bırakıldı.");
+      setTimeout(() => setBiometricStatus(null), 3000);
+      return;
+    }
+
+    // Etkinleştir - WebAuthn registration başlat
+    setBiometricLoading(true);
+    setBiometricStatus(null);
+
+    try {
+      const options = await createRegistrationOptions(
+        profile?.id || "",
+        profile?.email || "",
+        profile?.name || profile?.email || "User"
+      );
+
+      const credential = await startRegistration(options);
+
+      if (credential) {
+        const success = await completeRegistration(credential, options.challenge);
+        if (success) {
+          setBiometricEnabled(true);
+          setBiometricStatus("Biyometrik kimlik başarıyla etkinleştirildi!");
+        } else {
+          setBiometricStatus("Kayıt başarısız oldu.");
+        }
+      } else {
+        setBiometricStatus("İşlem iptal edildi veya başarısız oldu.");
+      }
+    } catch (err) {
+      setBiometricStatus("Hata: " + (err instanceof Error ? err.message : "Bilinmeyen hata"));
+    } finally {
+      setBiometricLoading(false);
+      setTimeout(() => setBiometricStatus(null), 5000);
+    }
+  };
+
   const handleChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
     setFieldErrors({});
@@ -502,6 +576,7 @@ function SecurityTab({ profile }: { profile: ProfileData | null }) {
     { label: "E-posta Doğrulama", ok: !!profile?.emailVerified },
     { label: "Parola Koruması", ok: true },
     { label: "Hesap Aktif", ok: profile?.isActive !== false },
+    { label: "Biyometrik Kimlik", ok: biometricEnabled },
   ];
   const securityScore = securityItems.filter((i) => i.ok).length;
   const securityPercent = Math.round((securityScore / securityItems.length) * 100);
@@ -578,6 +653,72 @@ function SecurityTab({ profile }: { profile: ProfileData | null }) {
                 </li>
               ))}
             </ul>
+          </CardContent>
+        </Card>
+
+        {/* Biometric Auth */}
+        <Card>
+          <CardContent className="p-5">
+            <h4 className="text-sm font-semibold text-text-primary mb-3 flex items-center gap-2">
+              <Fingerprint className="w-4 h-4 text-secondary" />
+              Biyometrik Kimlik Doğrulama
+            </h4>
+
+            {!biometricSupported ? (
+              <div className="p-3 rounded-lg bg-surface-secondary border border-border">
+                <p className="text-xs text-text-muted">
+                  Cihazınız biyometrik kimlik doğrulamayı desteklemiyor.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <p className="text-xs text-text-muted">
+                  Parmak izi veya Face ID ile hızlı ve güvenli giriş yapın.
+                </p>
+
+                <button
+                  onClick={handleBiometricToggle}
+                  disabled={biometricLoading}
+                  className={`w-full flex items-center justify-between p-3 rounded-lg border transition-colors ${
+                    biometricEnabled
+                      ? "bg-profit/5 border-profit/20 hover:bg-profit/10"
+                      : "bg-surface-secondary border-border hover:bg-surface-tertiary"
+                  } disabled:opacity-50`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                      biometricEnabled ? "bg-profit/10" : "bg-surface-tertiary"
+                    }`}>
+                      <Fingerprint className={`w-4 h-4 ${biometricEnabled ? "text-profit" : "text-text-muted"}`} />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-sm font-medium text-text-primary">
+                        {biometricEnabled ? "Etkin" : "Devre Dışı"}
+                      </p>
+                      <p className="text-xs text-text-muted">
+                        {biometricEnabled ? "Biyometrik kimlik aktif" : "Tıklayarak etkinleştirin"}
+                      </p>
+                    </div>
+                  </div>
+                  <div className={`w-10 h-6 rounded-full transition-colors ${
+                    biometricEnabled ? "bg-profit" : "bg-border"
+                  }`}>
+                    <div className={`w-5 h-5 rounded-full bg-white shadow-sm transition-transform mt-0.5 ${
+                      biometricEnabled ? "translate-x-4.5" : "translate-x-0.5"
+                    }`} />
+                  </div>
+                </button>
+
+                {biometricStatus && (
+                  <p className={`text-xs ${
+                    biometricStatus.includes("başarıyla") ? "text-profit" : 
+                    biometricStatus.includes("Hata") || biometricStatus.includes("başarısız") ? "text-loss" : "text-text-muted"
+                  }`}>
+                    {biometricStatus}
+                  </p>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -914,7 +1055,7 @@ function ProfileContent() {
   }, [session?.user?.id]);
 
   useEffect(() => {
-    fetchProfile();
+    setTimeout(() => fetchProfile(), 0);
   }, [fetchProfile]);
 
   if (isLoading) {
@@ -1006,6 +1147,12 @@ function VerificationBanner({
     identityNumber: "",
   });
 
+  // OCR state
+  const [ocrLoading, setOcrLoading] = useState(false);
+  const [ocrProgress, setOcrProgress] = useState(0);
+  const [ocrResult, setOcrResult] = useState<OCRResult | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
   const handleChange =
     (field: string) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -1013,6 +1160,73 @@ function VerificationBanner({
       setFieldErrors({});
       setError("");
     };
+
+  // OCR ile kimlik bilgilerini oku
+  const handleOCR = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Dosya doğrulama
+    if (!validateFileType(file)) {
+      setError("Geçersiz dosya türü. JPG, PNG veya WebP yükleyin.");
+      return;
+    }
+
+    if (!validateFileSize(file, 5)) {
+      setError("Dosya boyutu 5MB'dan küçük olmalıdır.");
+      return;
+    }
+
+    setOcrLoading(true);
+    setOcrProgress(0);
+    setError("");
+    setOcrResult(null);
+
+    // Önizleme oluştur
+    const preview = URL.createObjectURL(file);
+    setPreviewUrl(preview);
+
+    try {
+      const result = await performOCR(file, (progress) => {
+        setOcrProgress(progress);
+      });
+
+      setOcrResult(result);
+
+      if (result.success && result.data) {
+        // Okunan bilgileri forma doldur
+        setForm((prev) => ({
+          ...prev,
+          tcKimlik: result.data.tcKimlik || prev.tcKimlik,
+          dateOfBirth: result.data.dateOfBirth || prev.dateOfBirth,
+          identityNumber: result.data.documentNumber || result.data.tcKimlik || prev.identityNumber,
+        }));
+
+        if (!result.data.tcKimlik && !result.data.documentNumber) {
+          setError("Belgeden bilgi çıkarılamadı. Lütfen formu manuel doldurun.");
+        }
+      } else {
+        setError(result.error || "OCR işlemi başarısız oldu.");
+      }
+    } catch {
+      setError("OCR işlemi sırasında bir hata oluştu.");
+    } finally {
+      setOcrLoading(false);
+      setOcrProgress(0);
+    }
+  };
+
+  // OCR'ı temizle
+  const clearOCR = () => {
+    setOcrResult(null);
+    setPreviewUrl(null);
+    setForm({
+      dateOfBirth: "",
+      tcKimlik: "",
+      address: "",
+      identityNumber: "",
+    });
+  };
 
   // dateOfBirth'i YYYY-MM-DD formatına çevir (input[type=date] için)
   const toDateInputValue = (date: string | null | undefined): string => {
@@ -1023,15 +1237,17 @@ function VerificationBanner({
 
   // Profile yüklendiğinde, eğer KYC verileri varsa formu doldur (manuel düzeltme için)
   useEffect(() => {
-    if (profile) {
-      setForm((prev) => ({
-        ...prev,
-        dateOfBirth: prev.dateOfBirth || toDateInputValue(profile.dateOfBirth),
-        tcKimlik: prev.tcKimlik || profile.tcKimlik || "",
-        address: prev.address || profile.address || "",
-        identityNumber: prev.identityNumber || profile.identityNumber || "",
-      }));
-    }
+    setTimeout(() => {
+      if (profile) {
+        setForm((prev) => ({
+          ...prev,
+          dateOfBirth: prev.dateOfBirth || toDateInputValue(profile.dateOfBirth),
+          tcKimlik: prev.tcKimlik || profile.tcKimlik || "",
+          address: prev.address || profile.address || "",
+          identityNumber: prev.identityNumber || profile.identityNumber || "",
+        }));
+      }
+    }, 0);
   }, [profile]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -1122,6 +1338,75 @@ function VerificationBanner({
                 {error}
               </div>
             )}
+
+            {/* OCR Section */}
+            <div className="p-4 rounded-lg bg-secondary/5 border border-secondary/20">
+              <div className="flex items-center gap-2 mb-3">
+                <ScanLine className="w-4 h-4 text-secondary" />
+                <span className="text-sm font-medium text-text-primary">Otomatik Bilgi Çıkarma (OCR)</span>
+              </div>
+              <p className="text-xs text-text-muted mb-3">
+                Kimlik belgenizi yükleyin, bilgiler otomatik olarak doldurulsun.
+              </p>
+
+              {previewUrl ? (
+                <div className="space-y-3">
+                  <div className="relative">
+                    <img
+                      src={previewUrl}
+                      alt="Yüklenen belge"
+                      className="w-full h-32 object-contain rounded-lg border border-border"
+                    />
+                    <button
+                      type="button"
+                      onClick={clearOCR}
+                      className="absolute top-2 right-2 p-1 rounded-full bg-surface/80 hover:bg-surface text-text-muted hover:text-loss transition-colors"
+                    >
+                      <XCircle className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  {ocrLoading && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-sm text-secondary">
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>OCR işleniyor... %{ocrProgress}</span>
+                      </div>
+                      <div className="h-2 bg-border rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-secondary rounded-full transition-all duration-300"
+                          style={{ width: `${ocrProgress}%` }}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {ocrResult && !ocrLoading && (
+                    <div className="text-xs text-text-muted">
+                      <span className="font-medium">Okunan güvenilirlik:</span>{" "}
+                      %{Math.round(ocrResult.confidence)}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-surface-secondary/50 transition-colors">
+                  <Upload className="w-6 h-6 text-text-muted mb-2" />
+                  <span className="text-sm text-text-muted">
+                    {ocrLoading ? "Yükleniyor..." : "Kimlik belgesi yükleyin"}
+                  </span>
+                  <span className="text-xs text-text-muted mt-1">
+                    JPG, PNG veya WebP (maks. 5MB)
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png,image/webp,image/heic"
+                    onChange={handleOCR}
+                    className="hidden"
+                    disabled={ocrLoading}
+                  />
+                </label>
+              )}
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input

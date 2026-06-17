@@ -123,7 +123,11 @@ function IbanWithdraw({ onBack }: { onBack: () => void }) {
     } catch { setError("Hesaplar alınamadı."); }
   }, []);
 
-  useEffect(() => { fetchAccounts(); }, [fetchAccounts]);
+  useEffect(() => {
+    setTimeout(() => {
+      fetchAccounts();
+    }, 0);
+  }, [fetchAccounts]);
 
   const selectedAccount = accounts.find((a) => a.id === accountId);
 
@@ -302,7 +306,11 @@ function QrWithdraw({ onBack }: { onBack: () => void }) {
     } catch { setError("Hesaplar alınamadı."); }
   }, []);
 
-  useEffect(() => { fetchAccounts(); }, [fetchAccounts]);
+  useEffect(() => {
+    setTimeout(() => {
+      fetchAccounts();
+    }, 0);
+  }, [fetchAccounts]);
 
   const selectedAccount = accounts.find((a) => a.id === accountId);
 
@@ -357,7 +365,7 @@ function QrWithdraw({ onBack }: { onBack: () => void }) {
             </div>
             <div>
               <CardTitle className="text-lg">QR ile Para Çek</CardTitle>
-              <p className="text-sm text-text-muted mt-0.5">ATM'lerde QR kod okutarak hesabınızdan para çekin.</p>
+              <p className="text-sm text-text-muted mt-0.5">ATM&apos;lerde QR kod okutarak hesabınızdan para çekin.</p>
             </div>
           </div>
         </CardHeader>
@@ -432,7 +440,11 @@ function CardWithdraw({ onBack }: { onBack: () => void }) {
     } catch { setError("Hesaplar alınamadı."); }
   }, []);
 
-  useEffect(() => { fetchAccounts(); }, [fetchAccounts]);
+  useEffect(() => {
+    setTimeout(() => {
+      fetchAccounts();
+    }, 0);
+  }, [fetchAccounts]);
 
   const selectedAccount = accounts.find((a) => a.id === accountId);
 
@@ -546,14 +558,9 @@ function WithdrawSelection({ onSelect }: { onSelect: (id: string) => void }) {
   const router = useRouter();
   return (
     <div className="space-y-6 animate-[fade-in_0.3s_ease-out]">
-      <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard")} className="border border-border hover:text-profit hover:bg-profit/10 hover:border-profit/30">
-            <ArrowLeft className="w-4 h-4" />
-          </Button>
-          <div>
+      <div className="space-y-1">
         <h2 className="text-2xl font-bold text-text-primary">{t("withdraw.title")}</h2>
-        <p className="text-sm text-text-muted mt-1">{t("withdraw.selectMethod")}</p>
-      </div>
+        <p className="text-sm text-text-muted">{t("withdraw.selectMethod")}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4">

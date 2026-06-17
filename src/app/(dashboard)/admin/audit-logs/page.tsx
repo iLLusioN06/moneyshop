@@ -95,7 +95,7 @@ function AuditLogContent() {
   }, [page, actionFilter, entityFilter, searchQuery]);
 
   useEffect(() => {
-    fetchLogs();
+    setTimeout(() => fetchLogs(), 0);
   }, [fetchLogs]);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -106,16 +106,16 @@ function AuditLogContent() {
 
   return (
     <div className="space-y-6 animate-[fade-in_0.3s_ease-out]">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" size="sm" onClick={() => router.push("/admin")} className="border border-border hover:text-profit hover:bg-profit/10 hover:border-profit/30">
+          <ArrowLeft className="w-4 h-4" />
+        </Button>
         <div>
           <h2 className="text-2xl font-bold text-text-primary">Denetim Günlükleri</h2>
           <p className="text-sm text-text-muted mt-1">
             Sistemdeki tüm kullanıcı hareketlerini görüntüleyin
           </p>
         </div>
-        <Button variant="ghost" size="sm" onClick={() => router.push("/admin")} className="border border-border hover:text-profit hover:bg-profit/10 hover:border-profit/30">
-          <ArrowLeft className="w-4 h-4" />
-        </Button>
       </div>
 
       {/* Filters */}

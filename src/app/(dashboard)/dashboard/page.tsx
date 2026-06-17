@@ -11,6 +11,11 @@ import {
   RecentTransactions,
   CurrencyMarquee,
 } from "@/components/dashboard";
+import HealthScore from "@/components/dashboard/health-score";
+import FraudAlerts from "@/components/dashboard/fraud-alerts";
+import CBIRates from "@/components/dashboard/cbi-rates";
+import OnboardingWizard from "@/components/onboarding/onboarding-wizard";
+import PullToRefresh from "@/components/pull-to-refresh";
 import { CURRENCIES } from "@/lib/constants";
 import { useDashboard } from "@/hooks";
 import { useRouter } from "next/navigation";
@@ -44,6 +49,7 @@ export default function DashboardPage() {
 
   const [isVerified, setIsVerified] = useState(false);
   const [isCheckingVerification, setIsCheckingVerification] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   // WebSocket olayı geldiğinde dashboard verilerini tazele
   useEffect(() => {
@@ -63,6 +69,16 @@ export default function DashboardPage() {
       .catch(() => {})
       .finally(() => setIsCheckingVerification(false));
   }, [session?.user?.id, session?.user?.role, router]);
+
+  // Check if onboarding is needed
+  useEffect(() => {
+    setTimeout(() => {
+      const onboardingCompleted = localStorage.getItem("moneyshop-onboarding-completed");
+      if (!onboardingCompleted) {
+        setShowOnboarding(true);
+      }
+    }, 0);
+  }, []);
 
   const handleBaseCurrencyChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -115,8 +131,13 @@ export default function DashboardPage() {
   const monthlyData = dashData?.monthlyData || [];
   const recentTransactions = dashData?.recentTransactions || [];
 
+  const handleRefresh = useCallback(async () => {
+    await refetch();
+  }, [refetch]);
+
   return (
     <ErrorBoundary>
+      <PullToRefresh onRefresh={handleRefresh}>
       <div className="space-y-6 animate-[fade-in_0.3s_ease-out]">
         {/* Header */}
         <div className="flex items-center justify-between flex-wrap gap-4">
@@ -219,6 +240,19 @@ export default function DashboardPage() {
               <div className="animate-[slide-up_0.4s_ease-out] opacity-0 [animation-fill-mode:forwards]" style={{ animationDelay: '0.45s' }}>
                 <RecentTransactions transactions={recentTransactions} />
               </div>
+              <div className="animate-[slide-up_0.4s_ease-out] opacity-0 [animation-fill-mode:forwards]" style={{ animationDelay: '0.55s' }}>
+                <HealthScore t={t} />
+              </div>
+            </div>
+
+            {/* Fraud Alerts - Staggered Entry */}
+            <div className="animate-[slide-up_0.4s_ease-out] opacity-0 [animation-fill-mode:forwards]" style={{ animationDelay: '0.65s' }}>
+              <FraudAlerts t={t} />
+            </div>
+
+            {/* CBI Rates - Staggered Entry */}
+            <div className="animate-[slide-up_0.4s_ease-out] opacity-0 [animation-fill-mode:forwards]" style={{ animationDelay: '0.75s' }}>
+              <CBIRates t={t} />
             </div>
 
             {/* Verification Status */}
@@ -267,7 +301,13 @@ export default function DashboardPage() {
             </div>
           </>
         ) : null}
+
+        {/* Onboarding Wizard */}
+        {showOnboarding && (
+          <OnboardingWizard onComplete={() => setShowOnboarding(false)} />
+        )}
       </div>
+      </PullToRefresh>
     </ErrorBoundary>
   );
 }

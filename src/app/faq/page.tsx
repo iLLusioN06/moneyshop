@@ -435,14 +435,14 @@ export default function FaqPage() {
       <nav className={`navbar${scrolled ? " scrolled" : ""}`} id="navbar">
         <div className="nav-container">
           <div className="nav-row-top">
-            <a href="/" className="logo" onClick={(e) => { e.preventDefault(); window.location.reload(); }}>
+            <Link href="/" className="logo" onClick={(e) => { e.preventDefault(); window.location.reload(); }}>
               <div className="logo-icon">
                 <i className="fas fa-wallet" />
               </div>
               <span className="logo-text">
                 Money<span>Shop</span>
               </span>
-            </a>
+            </Link>
 
             <div className="nav-actions">
               {session?.user ? (
@@ -493,14 +493,14 @@ export default function FaqPage() {
           </div>
 
           <ul className="nav-links">
-            <li><a href="/#services">{t(lang, "nav.services")}</a></li>
-            <li><a href="/#how-it-works">{t(lang, "nav.howItWorks")}</a></li>
-            <li><a href="/card">{t(lang, "nav.card")}</a></li>
-            <li><a href="/#features">{t(lang, "nav.features")}</a></li>
-            <li><a href="/#compliance">{t(lang, "nav.compliance")}</a></li>
-            <li><a href="/#roadmap">{t(lang, "nav.roadmap")}</a></li>
-            <li><a href="/pricing">{t(lang, "nav.pricing")}</a></li>
-            <li><a href="/faq" className="active">{t(lang, "nav.faq")}</a></li>
+            <li><Link href="/#services">{t(lang, "nav.services")}</Link></li>
+            <li><Link href="/#how-it-works">{t(lang, "nav.howItWorks")}</Link></li>
+            <li><Link href="/card">{t(lang, "nav.card")}</Link></li>
+            <li><Link href="/#features">{t(lang, "nav.features")}</Link></li>
+            <li><Link href="/#compliance">{t(lang, "nav.compliance")}</Link></li>
+            <li><Link href="/#roadmap">{t(lang, "nav.roadmap")}</Link></li>
+            <li><Link href="/pricing">{t(lang, "nav.pricing")}</Link></li>
+            <li><Link href="/faq" className="active">{t(lang, "nav.faq")}</Link></li>
           </ul>
         </div>
       </nav>

@@ -396,14 +396,14 @@ export default function CardApplicationPage() {
       <nav className={`navbar${scrolled ? " scrolled" : ""}`} id="navbar">
         <div className="nav-container">
           <div className="nav-row-top">
-            <a href="/" className="logo" onClick={(e) => { e.preventDefault(); window.location.reload(); }}>
+            <Link href="/" className="logo" onClick={(e) => { e.preventDefault(); window.location.reload(); }}>
               <div className="logo-icon">
                 <i className="fas fa-wallet" />
               </div>
               <span className="logo-text">
                 Money<span>Shop</span>
               </span>
-            </a>
+            </Link>
 
             <div className="nav-type-menu">
               <button
@@ -472,28 +472,28 @@ export default function CardApplicationPage() {
           <ul className={`nav-links${activeType !== "default" ? " type-menu-active" : ""}`}>
             {activeType === "individual" ? (
               <>
-                <li><a href="/#transfer">{t(lang, "nav.moneyTransfer")}</a></li>
-                <li><a href="/#card" className="active">{t(lang, "nav.card")}</a></li>
-                <li><a href="/#investment">{t(lang, "nav.investment")}</a></li>
-                <li><a href="/#payments">{t(lang, "nav.paymentOperations")}</a></li>
+                <li><Link href="/#transfer">{t(lang, "nav.moneyTransfer")}</Link></li>
+                <li><Link href="/#card" className="active">{t(lang, "nav.card")}</Link></li>
+                <li><Link href="/#investment">{t(lang, "nav.investment")}</Link></li>
+                <li><Link href="/#payments">{t(lang, "nav.paymentOperations")}</Link></li>
               </>
             ) : activeType === "corporate" ? (
               <>
-                <li><a href="/#physical-payment">{t(lang, "nav.physicalPayment")}</a></li>
-                <li><a href="/#online-payment">{t(lang, "nav.onlinePayment")}</a></li>
-                <li><a href="/#payment-distribution">{t(lang, "nav.paymentDistribution")}</a></li>
-                <li><a href="/#card-solutions">{t(lang, "nav.cardSolutions")}</a></li>
+                <li><Link href="/#physical-payment">{t(lang, "nav.physicalPayment")}</Link></li>
+                <li><Link href="/#online-payment">{t(lang, "nav.onlinePayment")}</Link></li>
+                <li><Link href="/#payment-distribution">{t(lang, "nav.paymentDistribution")}</Link></li>
+                <li><Link href="/#card-solutions">{t(lang, "nav.cardSolutions")}</Link></li>
               </>
             ) : (
               <>
-                <li><a href="/#services">{t(lang, "nav.services")}</a></li>
-                <li><a href="/#how-it-works">{t(lang, "nav.howItWorks")}</a></li>
-                <li><a href="/#card" className="active">{t(lang, "nav.card")}</a></li>
-                <li><a href="/#features">{t(lang, "nav.features")}</a></li>
-                <li><a href="/#compliance">{t(lang, "nav.compliance")}</a></li>
-                <li><a href="/#roadmap">{t(lang, "nav.roadmap")}</a></li>
-                <li><a href="/pricing">{t(lang, "nav.pricing")}</a></li>
-                <li><a href="/faq">{t(lang, "nav.faq")}</a></li>
+                <li><Link href="/#services">{t(lang, "nav.services")}</Link></li>
+                <li><Link href="/#how-it-works">{t(lang, "nav.howItWorks")}</Link></li>
+                <li><Link href="/#card" className="active">{t(lang, "nav.card")}</Link></li>
+                <li><Link href="/#features">{t(lang, "nav.features")}</Link></li>
+                <li><Link href="/#compliance">{t(lang, "nav.compliance")}</Link></li>
+                <li><Link href="/#roadmap">{t(lang, "nav.roadmap")}</Link></li>
+                <li><Link href="/pricing">{t(lang, "nav.pricing")}</Link></li>
+                <li><Link href="/faq">{t(lang, "nav.faq")}</Link></li>
               </>
             )}
           </ul>

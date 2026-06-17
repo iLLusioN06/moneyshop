@@ -640,14 +640,14 @@ export default function PricingPage() {
       <nav className={`navbar${scrolled ? " scrolled" : ""}`} id="navbar">
         <div className="nav-container">
           <div className="nav-row-top">
-            <a href="/" className="logo" onClick={(e) => { e.preventDefault(); window.location.reload(); }}>
+            <Link href="/" className="logo" onClick={(e) => { e.preventDefault(); window.location.reload(); }}>
               <div className="logo-icon">
                 <i className="fas fa-wallet" />
               </div>
               <span className="logo-text">
                 Money<span>Shop</span>
               </span>
-            </a>
+            </Link>
 
             <div className="nav-type-menu">
               <button
@@ -714,14 +714,14 @@ export default function PricingPage() {
           </div>
 
           <ul className="nav-links">
-            <li><a href="/#services">{lang === "tr" ? "Hizmetler" : "Services"}</a></li>
-            <li><a href="/#how-it-works">{lang === "tr" ? "Nasıl Çalışır" : "How It Works"}</a></li>
-            <li><a href="/card">{lang === "tr" ? "MoneyShop Card" : "MoneyShop Card"}</a></li>
-            <li><a href="/#features">{lang === "tr" ? "Özellikler" : "Features"}</a></li>
-            <li><a href="/#compliance">{lang === "tr" ? "Uyumluluk" : "Compliance"}</a></li>
-            <li><a href="/#roadmap">{lang === "tr" ? "Yol Haritası" : "Roadmap"}</a></li>
-            <li><a href="/pricing" className="active">{lang === "tr" ? "Ücretler" : "Pricing"}</a></li>
-            <li><a href="/faq">{lang === "tr" ? "SSS" : "FAQ"}</a></li>
+            <li><Link href="/#services">{lang === "tr" ? "Hizmetler" : "Services"}</Link></li>
+            <li><Link href="/#how-it-works">{lang === "tr" ? "Nasıl Çalışır" : "How It Works"}</Link></li>
+            <li><Link href="/card">{lang === "tr" ? "MoneyShop Card" : "MoneyShop Card"}</Link></li>
+            <li><Link href="/#features">{lang === "tr" ? "Özellikler" : "Features"}</Link></li>
+            <li><Link href="/#compliance">{lang === "tr" ? "Uyumluluk" : "Compliance"}</Link></li>
+            <li><Link href="/#roadmap">{lang === "tr" ? "Yol Haritası" : "Roadmap"}</Link></li>
+            <li><Link href="/pricing" className="active">{lang === "tr" ? "Ücretler" : "Pricing"}</Link></li>
+            <li><Link href="/faq">{lang === "tr" ? "SSS" : "FAQ"}</Link></li>
           </ul>
         </div>
       </nav>

@@ -4,6 +4,7 @@
 
 import { NextResponse } from "next/server";
 import { getExchangeRates, SUPPORTED_CURRENCIES } from "@/lib/exchange-rates";
+import { getCacheHeaders } from "@/lib/utils";
 
 export async function GET(req: Request) {
   try {
@@ -26,7 +27,7 @@ export async function GET(req: Request) {
         rates,
         updatedAt: new Date().toISOString(),
       },
-    });
+    }, { headers: getCacheHeaders(300) });
   } catch (error) {
     console.error("Exchange rates error:", error);
     return NextResponse.json(

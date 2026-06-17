@@ -5,7 +5,7 @@
 // =============================================
 
 import { OTP } from "otplib";
-import { createHash, randomBytes, createCipheriv, createDecipheriv } from "crypto";
+import { createHash, randomBytes, randomInt, createCipheriv, createDecipheriv } from "crypto";
 import { prisma } from "./prisma";
 import { hashSmsCode } from "./sms";
 
@@ -22,7 +22,14 @@ const APP_NAME = "MoneyShop";
  * AES-256-GCM ile, AUTH_SECRET'ten türetilmiş bir key kullanır.
  */
 function getEncryptionKey(): Buffer {
-  const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "fallback-dev-key-32chars!!";
+  const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
+  if (!secret) {
+    throw new Error(
+      "[security] AUTH_SECRET veya NEXTAUTH_SECRET tanımlı değil! " +
+      "TOTP secret'ları güvenli bir şekilde şifrelenemiyor. " +
+      "Lütfen .env dosyasında AUTH_SECRET tanımlayın."
+    );
+  }
   return createHash("sha256").update(secret).digest();
 }
 
@@ -116,7 +123,7 @@ export function generateBackupCodes(): { plain: string[]; hashed: string } {
     const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     let code = "";
     for (let j = 0; j < 8; j++) {
-      code += chars[Math.floor(Math.random() * chars.length)];
+      code += chars[randomInt(chars.length)];
       if (j === 3) code += "-";
     }
     plain.push(code);
@@ -149,6 +156,8 @@ export function verifyBackupCode(code: string, storedHashed: string): string | n
 
 // ─── Pending 2FA Giriş Token'ı ──────────────────────────
 
+import { redis } from "./redis";
+
 interface PendingAuth {
   userId: string;
   email: string;
@@ -159,29 +168,81 @@ interface PendingAuth {
   expiresAt: number;
 }
 
-const pendingAuthStore = new Map<string, PendingAuth>();
+// Redis key prefixes
+const PENDING_AUTH_PREFIX = "moneyshop:2fa:auth:";
+const PENDING_SMS_PREFIX = "moneyshop:2fa:sms:";
+const PENDING_AUTH_TTL = 600; // 10 dakika (saniye)
+const PENDING_SMS_TTL = 300; // 5 dakika (saniye)
 
-const CLEANUP_INTERVAL = setInterval(() => {
-  const now = Date.now();
-  for (const [token, data] of pendingAuthStore.entries()) {
-    if (now > data.expiresAt) {
-      pendingAuthStore.delete(token);
+// In-memory fallback (Redis yoksa)
+const pendingAuthStore = new Map<string, PendingAuth>();
+const pendingSmsStore = new Map<string, { userId: string; code: string; expiresAt: number }>();
+
+// Cleanup intervals (sadece in-memory için)
+let CLEANUP_INTERVAL: ReturnType<typeof setInterval> | null = null;
+let SMS_CLEANUP: ReturnType<typeof setInterval> | null = null;
+
+function startCleanupIfNeeded() {
+  if (redis) return; // Redis varsa cleanup gerekmez
+
+  if (!CLEANUP_INTERVAL) {
+    CLEANUP_INTERVAL = setInterval(() => {
+      const now = Date.now();
+      for (const [token, data] of pendingAuthStore.entries()) {
+        if (now > data.expiresAt) {
+          pendingAuthStore.delete(token);
+        }
+      }
+    }, 60_000);
+    if (CLEANUP_INTERVAL.unref) CLEANUP_INTERVAL.unref();
+  }
+
+  if (!SMS_CLEANUP) {
+    SMS_CLEANUP = setInterval(() => {
+      const now = Date.now();
+      for (const [key, data] of pendingSmsStore.entries()) {
+        if (now > data.expiresAt) {
+          pendingSmsStore.delete(key);
+        }
+      }
+    }, 60_000);
+    if (SMS_CLEANUP.unref) SMS_CLEANUP.unref();
+  }
+}
+
+export async function createPendingAuthToken(data: Omit<PendingAuth, "expiresAt">): Promise<string> {
+  const token = randomBytes(32).toString("hex");
+  const entry: PendingAuth = { ...data, expiresAt: Date.now() + PENDING_AUTH_TTL * 1000 };
+
+  if (redis) {
+    try {
+      await redis.setex(
+        `${PENDING_AUTH_PREFIX}${token}`,
+        PENDING_AUTH_TTL,
+        JSON.stringify(entry)
+      );
+      return token;
+    } catch {
+      // Redis hatası → in-memory fallback
     }
   }
-}, 60_000);
 
-if (CLEANUP_INTERVAL.unref) CLEANUP_INTERVAL.unref();
-
-export function createPendingAuthToken(data: Omit<PendingAuth, "expiresAt">): string {
-  const token = randomBytes(32).toString("hex");
-  pendingAuthStore.set(token, {
-    ...data,
-    expiresAt: Date.now() + 10 * 60 * 1000, // 10 dakika
-  });
+  startCleanupIfNeeded();
+  pendingAuthStore.set(token, entry);
   return token;
 }
 
-export function getPendingAuth(token: string): PendingAuth | null {
+export async function getPendingAuth(token: string): Promise<PendingAuth | null> {
+  if (redis) {
+    try {
+      const raw = await redis.get(`${PENDING_AUTH_PREFIX}${token}`);
+      if (!raw) return null;
+      return JSON.parse(raw) as PendingAuth;
+    } catch {
+      // Redis hatası → in-memory fallback
+    }
+  }
+
   const data = pendingAuthStore.get(token);
   if (!data) return null;
   if (Date.now() > data.expiresAt) {
@@ -191,8 +252,18 @@ export function getPendingAuth(token: string): PendingAuth | null {
   return data;
 }
 
-export function consumePendingAuth(token: string): PendingAuth | null {
-  const data = getPendingAuth(token);
+export async function consumePendingAuth(token: string): Promise<PendingAuth | null> {
+  if (redis) {
+    try {
+      const raw = await redis.getdel(`${PENDING_AUTH_PREFIX}${token}`);
+      if (!raw) return null;
+      return JSON.parse(raw) as PendingAuth;
+    } catch {
+      // Redis hatası → in-memory fallback
+    }
+  }
+
+  const data = pendingAuthStore.get(token) || null;
   if (data) {
     pendingAuthStore.delete(token);
   }
@@ -204,40 +275,47 @@ export function clearPendingAuthStore(): void {
 }
 
 export function stopPendingAuthCleanup(): void {
-  clearInterval(CLEANUP_INTERVAL);
+  if (CLEANUP_INTERVAL) {
+    clearInterval(CLEANUP_INTERVAL);
+    CLEANUP_INTERVAL = null;
+  }
 }
 
 // ─── SMS 2FA Kodu Geçici Depolama ──────────────────────
 
-interface PendingSmsCode {
-  userId: string;
-  code: string;
-  expiresAt: number;
-}
+export async function storeSmsCode(userId: string, code: string): Promise<void> {
+  const hashed = hashSmsCode(code);
+  const entry = { userId, code: hashed, expiresAt: Date.now() + PENDING_SMS_TTL * 1000 };
 
-const pendingSmsStore = new Map<string, PendingSmsCode>();
-
-const SMS_CLEANUP = setInterval(() => {
-  const now = Date.now();
-  for (const [key, data] of pendingSmsStore.entries()) {
-    if (now > data.expiresAt) {
-      pendingSmsStore.delete(key);
+  if (redis) {
+    try {
+      await redis.setex(
+        `${PENDING_SMS_PREFIX}${userId}`,
+        PENDING_SMS_TTL,
+        JSON.stringify(entry)
+      );
+      return;
+    } catch {
+      // Redis hatası → in-memory fallback
     }
   }
-}, 60_000);
 
-if (SMS_CLEANUP.unref) SMS_CLEANUP.unref();
-
-export function storeSmsCode(userId: string, code: string): void {
-  const hashed = hashSmsCode(code);
-  pendingSmsStore.set(userId, {
-    userId,
-    code: hashed,
-    expiresAt: Date.now() + 5 * 60 * 1000,
-  });
+  startCleanupIfNeeded();
+  pendingSmsStore.set(userId, entry);
 }
 
-export function verifySmsCode(userId: string, code: string): boolean {
+export async function verifySmsCode(userId: string, code: string): Promise<boolean> {
+  if (redis) {
+    try {
+      const raw = await redis.getdel(`${PENDING_SMS_PREFIX}${userId}`);
+      if (!raw) return false;
+      const stored = JSON.parse(raw) as { code: string };
+      return hashSmsCode(code) === stored.code;
+    } catch {
+      // Redis hatası → in-memory fallback
+    }
+  }
+
   const stored = pendingSmsStore.get(userId);
   if (!stored) return false;
   if (Date.now() > stored.expiresAt) {
@@ -251,10 +329,16 @@ export function verifySmsCode(userId: string, code: string): boolean {
 
 export function clearSmsCode(userId: string): void {
   pendingSmsStore.delete(userId);
+  if (redis) {
+    redis.del(`${PENDING_SMS_PREFIX}${userId}`).catch(() => {});
+  }
 }
 
 export function stopSmsCleanup(): void {
-  clearInterval(SMS_CLEANUP);
+  if (SMS_CLEANUP) {
+    clearInterval(SMS_CLEANUP);
+    SMS_CLEANUP = null;
+  }
 }
 
 // ─── Kullanıcı 2FA Durumu ───────────────────────────────

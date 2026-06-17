@@ -6,11 +6,12 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { forgotPasswordSchema, validateRequest } from "@/lib/validations";
 import { sendEmail, buildPasswordResetEmail } from "@/lib/email";
+import { withRateLimit } from "@/lib/rate-limit";
 import crypto from "crypto";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
-export async function POST(req: Request) {
+async function handler(req: Request) {
   try {
     const body = await req.json();
     const parsed = validateRequest(forgotPasswordSchema, body);
@@ -70,3 +71,5 @@ export async function POST(req: Request) {
     );
   }
 }
+
+export const POST = withRateLimit({ maxRequests: 3, windowMs: 900_000 }, handler);

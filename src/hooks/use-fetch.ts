@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 
 interface FetchState<T> {
   data: T | null;
@@ -21,6 +21,13 @@ export function useFetch<T = unknown>(
     error: "",
   });
   const abortRef = useRef<AbortController | null>(null);
+  const mountedRef = useRef(true);
+
+  // Stable key for fetch options
+  const fetchOptionsKey = useMemo(
+    () => JSON.stringify(fetchOptions),
+    [fetchOptions]
+  );
 
   const execute = useCallback(async () => {
     abortRef.current?.abort();
@@ -52,15 +59,22 @@ export function useFetch<T = unknown>(
         error: err instanceof Error ? err.message : "Bir hata oluştu.",
       });
     }
-  }, [url, JSON.stringify(fetchOptions)]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [url, fetchOptionsKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Initial data load — deferred to avoid synchronous setState in effect
   useEffect(() => {
+    mountedRef.current = true;
     if (!skip) {
-      execute();
+      const timer = setTimeout(() => {
+        if (mountedRef.current) {
+          execute();
+        }
+      }, 0);
+      return () => {
+        clearTimeout(timer);
+        mountedRef.current = false;
+      };
     }
-    return () => {
-      abortRef.current?.abort();
-    };
   }, [execute, skip]);
 
   return { ...state, refetch: execute };

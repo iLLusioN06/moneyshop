@@ -59,14 +59,14 @@ export function Navbar({
       <div className="nav-container">
         {/* TOP ROW: Logo + Type Menu + Actions + Hamburger */}
         <div className="nav-row-top">
-          <a href="/" className="logo" onClick={() => window.location.reload()}>
+          <Link href="/" className="logo" onClick={() => window.location.reload()}>
             <div className="logo-icon">
               <i className="fas fa-wallet" />
             </div>
             <span className="logo-text">
               Money<span>Shop</span>
             </span>
-          </a>
+          </Link>
 
           <div className="nav-type-menu">
             <button

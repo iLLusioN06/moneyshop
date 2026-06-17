@@ -26,10 +26,12 @@ export function getLangDir(lang: Language): "ltr" | "rtl" {
 /** Dot-notated path lookup: t(lang, 'nav.services') */
 export function t(lang: Language, path: string): string {
   const keys = path.split(".");
-  let result: any = messages[lang];
+  let result: NestedMessages = messages[lang];
   for (const key of keys) {
-    if (result == null) return path;
-    result = result[key];
+    const val = result[key];
+    if (typeof val === "string") return val;
+    if (val == null || Array.isArray(val)) return path;
+    result = val;
   }
   return typeof result === "string" ? result : path;
 }
@@ -37,12 +39,14 @@ export function t(lang: Language, path: string): string {
 /** Dot-notated path lookup returning string array */
 export function tArray(lang: Language, path: string): string[] {
   const keys = path.split(".");
-  let result: any = messages[lang];
+  let result: NestedMessages = messages[lang];
   for (const key of keys) {
-    if (result == null) return [];
-    result = result[key];
+    const val = result[key];
+    if (Array.isArray(val)) return val;
+    if (val == null || typeof val === "string") return [];
+    result = val;
   }
-  return Array.isArray(result) ? result : [];
+  return [];
 }
 
 export const messages: Record<Language, NestedMessages> = {

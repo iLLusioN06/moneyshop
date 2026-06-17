@@ -14,6 +14,7 @@ import {
   verifyTotpTokenRaw,
   encryptSecret,
   storeSmsCode,
+  verifySmsCode,
 } from "@/lib/two-factor";
 import { generateSmsCode } from "@/lib/sms";
 
@@ -73,26 +74,37 @@ async function handler(req: Request) {
     }
 
     if (method === "SMS") {
-      // SMS kodu doğrulama (daha önce gönderilmiş olmalı)
-      // Kod daha önce send-sms ile gönderildi ve storeSmsCode ile kaydedildi
-      const user = await prisma.user.findUnique({
-        where: { id: session.user.id },
-        select: { phone: true },
-      });
-
-      if (!user?.phone) {
+      // SMS kodunu sunucu tarafında doğrula
+      if (!code) {
         return NextResponse.json(
-          { error: "Telefon numarası bulunamadı." },
+          { error: "SMS doğrulama kodu zorunludur." },
           { status: 400 }
         );
       }
 
-      // SMS kodu doğrulaması istemci tarafında verifySmsCode ile yapılır
-      // Burada sadece kodun geçerliliğini kontrol ediyoruz
-      // Not: SMS kodu storeSmsCode ile kaydedildi, verifySmsCode ile kontrol edilecek
+      const codeValid = await verifySmsCode(session.user.id, code);
+      if (!codeValid) {
+        return NextResponse.json(
+          { error: "SMS doğrulama kodu hatalı veya süresi dolmuş." },
+          { status: 400 }
+        );
+      }
+
+      // Denetim günlüğü
+      const meta = getRequestMetadata(req);
+      await createAuditLog({
+        userId: session.user.id,
+        action: "UPDATE",
+        entity: "USER",
+        entityId: session.user.id,
+        details: { twoFactorSetup: "SMS", status: "verified" },
+        ip: meta.ip,
+        userAgent: meta.userAgent,
+      });
+
       return NextResponse.json({
         success: true,
-        message: "SMS doğrulaması başarılı.",
+        message: "SMS doğrulaması başarılı. İki faktörlü doğrulama aktif edilebilir.",
       });
     }
 

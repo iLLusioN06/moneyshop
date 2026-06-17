@@ -99,27 +99,27 @@ function EmailLogsContent() {
   }, [page, statusFilter, eventFilter]);
 
   useEffect(() => {
-    fetchLogs();
+    setTimeout(() => fetchLogs(), 0);
   }, [fetchLogs]);
 
   return (
     <div className="space-y-6 animate-[fade-in_0.3s_ease-out]">
       <div className="flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-text-primary">E-posta Günlükleri</h2>
-          <p className="text-sm text-text-muted mt-1">
-            Gönderilen e-postaların durumunu görüntüleyin
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={fetchLogs} isLoading={loading}>
-            <RefreshCw className="w-4 h-4" />
-            Yenile
-          </Button>
+        <div className="flex items-center gap-3">
           <Button variant="ghost" size="sm" onClick={() => router.push("/admin")} className="border border-border hover:text-profit hover:bg-profit/10 hover:border-profit/30">
             <ArrowLeft className="w-4 h-4" />
           </Button>
+          <div>
+            <h2 className="text-2xl font-bold text-text-primary">E-posta Günlükleri</h2>
+            <p className="text-sm text-text-muted mt-1">
+              Gönderilen e-postaların durumunu görüntüleyin
+            </p>
+          </div>
         </div>
+        <Button variant="outline" size="sm" onClick={fetchLogs} isLoading={loading}>
+          <RefreshCw className="w-4 h-4" />
+          Yenile
+        </Button>
       </div>
 
       {/* Stats Cards */}

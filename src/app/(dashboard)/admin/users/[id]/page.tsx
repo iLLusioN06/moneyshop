@@ -174,7 +174,7 @@ export default function UserDetailPage() {
   }
 
   useEffect(() => {
-    fetchUser();
+    setTimeout(() => fetchUser(), 0);
   }, [userId]);
 
   const transactionTypeColor = (type: string) => {

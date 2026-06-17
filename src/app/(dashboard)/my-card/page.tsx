@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { CreditCard, Shield, AlertCircle, RefreshCw, Lock, Unlock, XCircle, ArrowUpDown, Wallet, BarChart3, ArrowLeft } from "lucide-react";
+import { CreditCard, Shield, AlertCircle, RefreshCw, Lock, Unlock, XCircle, ArrowUpDown, Wallet, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { CardSpendingAnalytics } from "@/components/card/card-spending-analytics";
@@ -81,7 +81,7 @@ export default function MyCardPage() {
   };
 
   useEffect(() => {
-    fetchCard();
+    setTimeout(() => fetchCard(), 0);
   }, []);
 
   const handleCardAction = async (action: string) => {
@@ -161,9 +161,6 @@ export default function MyCardPage() {
         {/* Header */}
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard")} className="border border-border hover:text-profit hover:bg-profit/10 hover:border-profit/30">
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
             <div>
               <h2 className="text-2xl font-bold text-text-primary">{t("card.title")}</h2>
               <p className="text-sm text-text-muted mt-1">{t("card.subtitle")}</p>

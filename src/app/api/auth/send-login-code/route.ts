@@ -75,7 +75,7 @@ async function handler(req: Request) {
     return NextResponse.json({
       success: true,
       message: "SMS kodunuz gönderildi.",
-      phone: user.phone,
+      phone: user.phone.replace(/.(?=.{4})/g, "*"),
     });
   } catch (error) {
     console.error("Send login code error:", error);

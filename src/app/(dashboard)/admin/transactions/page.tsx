@@ -92,7 +92,7 @@ export default function AdminTransactionsPage() {
   }
 
   useEffect(() => {
-    fetchTransactions();
+    setTimeout(() => fetchTransactions(), 0);
   }, [page, typeFilter, statusFilter]);
 
   function handleSearch(e: React.FormEvent) {

@@ -33,6 +33,9 @@ export async function GET() {
       userGrowth,
       weeklyTransactions,
       failedTransactions,
+      transactionsByType,
+      topUsers,
+      transactionsByDay,
     ] = await Promise.all([
       prisma.user.count(),
       prisma.user.count({ where: { isActive: true } }),
@@ -87,6 +90,30 @@ export async function GET() {
       prisma.transaction.count({
         where: { status: "FAILED", date: { gte: monthStart } },
       }),
+      // İşlem dağılımı (tür bazında)
+      prisma.transaction.groupBy({
+        by: ["type"],
+        _count: { id: true },
+        _sum: { amount: true },
+      }),
+      // En çok işlem yapan kullanıcılar
+      prisma.$queryRaw<Array<Record<string, unknown>>>`
+        SELECT u.id, u.name, u.email, COUNT(t.id)::int AS "transactionCount", COALESCE(SUM(t.amount)::numeric, 0) AS "totalVolume"
+        FROM "User" u
+        INNER JOIN transactions t ON t."userId" = u.id
+        WHERE t.status = 'COMPLETED'
+        GROUP BY u.id
+        ORDER BY "totalVolume" DESC
+        LIMIT 10
+      `,
+      // Haftalık işlem dağılımı (gün bazında)
+      prisma.$queryRaw<Array<Record<string, unknown>>>`
+        SELECT TO_CHAR("date", 'Day') AS day, COUNT(*)::int AS count, COALESCE(SUM(amount)::numeric, 0) AS volume
+        FROM transactions
+        WHERE status = 'COMPLETED'
+        GROUP BY TO_CHAR("date", 'Day'), EXTRACT(DOW FROM "date")
+        ORDER BY EXTRACT(DOW FROM "date") ASC
+      `,
     ]);
 
     // Aylık gelir/gider trendini formatla
@@ -127,29 +154,51 @@ export async function GET() {
       _sum: { amount: true },
     });
 
-    const incomeGrowth = prevMonthIncome._sum.amount && prevMonthIncome._sum.amount > 0
-      ? (((monthlyIncome._sum.amount || 0) - prevMonthIncome._sum.amount) / prevMonthIncome._sum.amount) * 100
+    const incomeGrowth = prevMonthIncome._sum.amount && Number(prevMonthIncome._sum.amount) > 0
+      ? (((Number(monthlyIncome._sum.amount) || 0) - Number(prevMonthIncome._sum.amount)) / Number(prevMonthIncome._sum.amount)) * 100
       : 0;
 
     return NextResponse.json({
       success: true,
       data: {
+        avgTransactionAmount: totalTransactions > 0 ? (Number(totalVolume._sum.amount) || 0) / totalTransactions : 0,
         totalUsers,
         activeUsers,
         suspendedUsers: totalUsers - activeUsers,
         totalAccounts,
         totalTransactions,
         monthlyTransactions,
-        monthlyIncome: monthlyIncome._sum.amount || 0,
-        monthlyExpense: monthlyExpense._sum.amount || 0,
-        totalVolume: totalVolume._sum.amount || 0,
+        monthlyIncome: Number(monthlyIncome._sum.amount) || 0,
+        monthlyExpense: Number(monthlyExpense._sum.amount) || 0,
+        totalVolume: Number(totalVolume._sum.amount) || 0,
         incomeGrowth: Math.round(incomeGrowth * 10) / 10,
-        weeklyVolume: weeklyTransactions._sum.amount || 0,
+        weeklyVolume: Number(weeklyTransactions._sum.amount) || 0,
         weeklyTransactionCount: weeklyTransactions._count.id || 0,
         failedTransactions,
         recentTransactions,
         monthlyRevenue: Array.from(monthlyMap.values()),
         userGrowth: Array.from(growthMap.values()),
+        transactionsByType: (transactionsByType as Array<{ type: string; _count: { id: number }; _sum: { amount: number | null } }>)
+          .filter((t) => t.type)
+          .map((t) => ({
+            type: t.type,
+            count: t._count.id,
+            volume: Number(t._sum.amount) || 0,
+          })),
+        topUsers: (topUsers as unknown as Array<{ id: string; name: string | null; email: string; transactionCount: unknown; totalVolume: unknown }>)
+          .map((u) => ({
+            id: u.id,
+            name: u.name,
+            email: u.email,
+            transactionCount: Number(u.transactionCount) || 0,
+            totalVolume: Number(u.totalVolume) || 0,
+          })),
+        transactionsByDay: (transactionsByDay as unknown as Array<{ day: string; count: unknown; volume: unknown }>)
+          .map((d) => ({
+            day: (d.day ?? "").trim(),
+            count: Number(d.count) || 0,
+            volume: Number(d.volume) || 0,
+          })),
       },
     });
   } catch (error) {

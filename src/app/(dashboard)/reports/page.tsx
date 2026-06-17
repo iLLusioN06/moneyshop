@@ -25,7 +25,6 @@ import {
   Wallet,
   PieChart,
   BarChart3,
-  ArrowLeft,
 } from "lucide-react";
 import {
   BarChart,
@@ -110,6 +109,8 @@ async function generatePDF(
 
 type ReportType = "all" | "income" | "expense" | "transfer";
 
+type DatePreset = "today" | "week" | "month" | "last-month" | "quarter" | "year" | "custom";
+
 interface DashboardSummary {
   totalIncome: number;
   totalExpense: number;
@@ -125,10 +126,27 @@ interface CategorySummary {
   color: string;
 }
 
+interface MonthlyData {
+  month: string;
+  income: number;
+  expense: number;
+}
+
 interface ChartTooltipProps {
   active?: boolean;
   payload?: Array<{ name: string; value: number; color: string }>;
   label?: string;
+}
+
+interface SavedReport {
+  id: string;
+  name: string;
+  type: ReportType;
+  startDate: string;
+  endDate: string;
+  accountId: string;
+  categoryId?: string;
+  createdAt: string;
 }
 
 function BarTooltip({ active, payload, label }: ChartTooltipProps) {
@@ -154,12 +172,118 @@ function ReportsContent() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [accountId, setAccountId] = useState("");
+  const [categoryId, setCategoryId] = useState("");
+  const [datePreset, setDatePreset] = useState<DatePreset>("month");
   const [exporting, setExporting] = useState<"csv" | "pdf" | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [categories, setCategories] = useState<CategorySummary[]>([]);
+  const [allCategories, setAllCategories] = useState<Array<{ id: string; name: string }>>([]);
+  const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
   const [loadingSummary, setLoadingSummary] = useState(true);
+  const [savedReports, setSavedReports] = useState<SavedReport[]>([]);
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [reportName, setReportName] = useState("");
+
+  // Date preset handler
+  const applyDatePreset = (preset: DatePreset) => {
+    setDatePreset(preset);
+    const now = new Date();
+    const today = now.toISOString().split("T")[0];
+
+    switch (preset) {
+      case "today":
+        setStartDate(today);
+        setEndDate(today);
+        break;
+      case "week": {
+        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        setStartDate(weekAgo.toISOString().split("T")[0]);
+        setEndDate(today);
+        break;
+      }
+      case "month": {
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        setStartDate(monthStart.toISOString().split("T")[0]);
+        setEndDate(today);
+        break;
+      }
+      case "last-month": {
+        const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+        setStartDate(lastMonthStart.toISOString().split("T")[0]);
+        setEndDate(lastMonthEnd.toISOString().split("T")[0]);
+        break;
+      }
+      case "quarter": {
+        const quarterStart = new Date(now.getFullYear(), Math.floor(now.getMonth() / 3) * 3, 1);
+        setStartDate(quarterStart.toISOString().split("T")[0]);
+        setEndDate(today);
+        break;
+      }
+      case "year": {
+        const yearStart = new Date(now.getFullYear(), 0, 1);
+        setStartDate(yearStart.toISOString().split("T")[0]);
+        setEndDate(today);
+        break;
+      }
+      case "custom":
+        break;
+    }
+  };
+
+  // Save report configuration
+  const handleSaveReport = () => {
+    if (!reportName.trim()) return;
+    const newReport: SavedReport = {
+      id: Date.now().toString(),
+      name: reportName.trim(),
+      type: reportType,
+      startDate,
+      endDate,
+      accountId,
+      categoryId,
+      createdAt: new Date().toISOString(),
+    };
+    const updated = [...savedReports, newReport];
+    setSavedReports(updated);
+    localStorage.setItem("moneyshop-reports", JSON.stringify(updated));
+    setShowSaveModal(false);
+    setReportName("");
+    setSuccess("Rapor şablonu kaydedildi!");
+  };
+
+  // Load saved report
+  const handleLoadReport = (report: SavedReport) => {
+    setReportType(report.type);
+    setStartDate(report.startDate);
+    setEndDate(report.endDate);
+    setAccountId(report.accountId);
+    setCategoryId(report.categoryId || "");
+    setDatePreset("custom");
+  };
+
+  // Delete saved report
+  const handleDeleteReport = (id: string) => {
+    const updated = savedReports.filter((r) => r.id !== id);
+    setSavedReports(updated);
+    localStorage.setItem("moneyshop-reports", JSON.stringify(updated));
+  };
+
+  // Load saved reports from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem("moneyshop-reports");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        // Use setTimeout to avoid synchronous setState in effect
+        setTimeout(() => setSavedReports(parsed), 0);
+      } catch {
+        // ignore
+      }
+    }
+  }, []);
 
   useEffect(() => {
     // Fetch dashboard summary data
@@ -288,9 +412,6 @@ function ReportsContent() {
   return (
     <div className="space-y-6 animate-[fade-in_0.3s_ease-out]">
       <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard")} className="border border-border hover:text-profit hover:bg-profit/10 hover:border-profit/30">
-            <ArrowLeft className="w-4 h-4" />
-          </Button>
           <div>
         <h2 className="text-2xl font-bold text-text-primary">Finansal Raporlar</h2>
         <p className="text-sm text-text-muted mt-1">
@@ -436,13 +557,52 @@ function ReportsContent() {
       {/* Export Section */}
       <Card className="overflow-hidden">
         <CardHeader className="bg-gradient-to-r from-secondary/5 to-transparent border-b border-border">
-          <CardTitle>
-            <FileText className="w-5 h-5 inline mr-2" />
-            Rapor Dışa Aktar
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle>
+              <FileText className="w-5 h-5 inline mr-2" />
+              Özel Rapor Oluşturucu
+            </CardTitle>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowSaveModal(true)}
+            >
+              Raporu Kaydet
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
+            {/* Saved Reports */}
+            {savedReports.length > 0 && (
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-2">
+                  Kayıtlı Raporlar
+                </label>
+                <div className="flex gap-2 flex-wrap">
+                  {savedReports.map((report) => (
+                    <div
+                      key={report.id}
+                      className="flex items-center gap-2 px-3 py-2 bg-surface-tertiary rounded-lg"
+                    >
+                      <button
+                        onClick={() => handleLoadReport(report)}
+                        className="text-sm text-secondary hover:underline"
+                      >
+                        {report.name}
+                      </button>
+                      <button
+                        onClick={() => handleDeleteReport(report.id)}
+                        className="text-text-muted hover:text-loss"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Report Type */}
             <div>
               <label className="block text-sm font-medium text-text-primary mb-2">
@@ -465,6 +625,36 @@ function ReportsContent() {
               </div>
             </div>
 
+            {/* Date Presets */}
+            <div>
+              <label className="block text-sm font-medium text-text-primary mb-2">
+                Dönem Seçimi
+              </label>
+              <div className="flex gap-2 flex-wrap">
+                {[
+                  { value: "today" as DatePreset, label: "Bugün" },
+                  { value: "week" as DatePreset, label: "Son 7 Gün" },
+                  { value: "month" as DatePreset, label: "Bu Ay" },
+                  { value: "last-month" as DatePreset, label: "Geçen Ay" },
+                  { value: "quarter" as DatePreset, label: "Bu Çeyrek" },
+                  { value: "year" as DatePreset, label: "Bu Yıl" },
+                  { value: "custom" as DatePreset, label: "Özel" },
+                ].map((preset) => (
+                  <button
+                    key={preset.value}
+                    onClick={() => applyDatePreset(preset.value)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                      datePreset === preset.value
+                        ? "bg-secondary/10 text-secondary border border-secondary/30"
+                        : "bg-surface border border-border text-text-muted hover:bg-surface-tertiary"
+                    }`}
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Date Range */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -474,7 +664,10 @@ function ReportsContent() {
                 <input
                   type="date"
                   value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
+                  onChange={(e) => {
+                    setStartDate(e.target.value);
+                    setDatePreset("custom");
+                  }}
                   className="w-full px-3 py-2 rounded-lg border border-border bg-surface text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
                 />
               </div>
@@ -485,27 +678,47 @@ function ReportsContent() {
                 <input
                   type="date"
                   value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
+                  onChange={(e) => {
+                    setEndDate(e.target.value);
+                    setDatePreset("custom");
+                  }}
                   className="w-full px-3 py-2 rounded-lg border border-border bg-surface text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
                 />
               </div>
             </div>
 
             {/* Account Filter */}
-            <div>
-              <label className="block text-sm font-medium text-text-primary mb-1">
-                Hesap (Opsiyonel)
-              </label>
-              <select
-                value={accountId}
-                onChange={(e) => setAccountId(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-border bg-surface text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
-              >
-                <option value="">Tüm Hesaplar</option>
-                {accounts?.map((acc: { id: string; name: string }) => (
-                  <option key={acc.id} value={acc.id}>{acc.name}</option>
-                ))}
-              </select>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-1">
+                  Hesap (Opsiyonel)
+                </label>
+                <select
+                  value={accountId}
+                  onChange={(e) => setAccountId(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-border bg-surface text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
+                >
+                  <option value="">Tüm Hesaplar</option>
+                  {accounts?.map((acc: { id: string; name: string }) => (
+                    <option key={acc.id} value={acc.id}>{acc.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-text-primary mb-1">
+                  Kategori (Opsiyonel)
+                </label>
+                <select
+                  value={categoryId}
+                  onChange={(e) => setCategoryId(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-border bg-surface text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50"
+                >
+                  <option value="">Tüm Kategoriler</option>
+                  {allCategories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             {/* Export Buttons */}
@@ -551,6 +764,52 @@ function ReportsContent() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Save Report Modal */}
+      {showSaveModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <Card className="w-full max-w-md">
+            <CardContent className="p-6">
+              <h3 className="text-lg font-bold text-text-primary mb-4">Raporu Kaydet</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-text-primary mb-1">
+                    Rapor Adı
+                  </label>
+                  <input
+                    type="text"
+                    value={reportName}
+                    onChange={(e) => setReportName(e.target.value)}
+                    placeholder="Örn: Aylık Gider Raporu"
+                    className="w-full px-4 py-2 border border-border rounded-lg bg-surface-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50"
+                  />
+                </div>
+                <div className="text-sm text-text-muted">
+                  <p>Filtreler: {reportTypes.find((r) => r.value === reportType)?.label}</p>
+                  <p>Tarih: {startDate || "Belirtilmedi"} - {endDate || "Belirtilmedi"}</p>
+                  {accountId && <p>Hesap: Seçili</p>}
+                </div>
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => setShowSaveModal(false)}
+                  >
+                    İptal
+                  </Button>
+                  <Button
+                    className="flex-1"
+                    onClick={handleSaveReport}
+                    disabled={!reportName.trim()}
+                  >
+                    Kaydet
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }

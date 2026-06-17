@@ -59,7 +59,10 @@ const emailSchema = z
 
 const passwordSchema = z
   .string()
-  .min(6, "Parola en az 6 karakter olmalıdır.");
+  .min(8, "Parola en az 8 karakter olmalıdır.")
+  .regex(/[A-Z]/, "Parola en az bir büyük harf içermelidir.")
+  .regex(/[a-z]/, "Parola en az bir küçük harf içermelidir.")
+  .regex(/[0-9]/, "Parola en az bir rakam içermelidir.");
 
 // ─── Auth Şemaları ───────────────────────────────────────
 
@@ -197,6 +200,17 @@ export const updateProfileSchema = z
     image: z
       .string()
       .url("Geçerli bir URL giriniz.")
+      .refine(
+        (url) => {
+          try {
+            const parsed = new URL(url);
+            return parsed.protocol === "https:" || parsed.protocol === "http:";
+          } catch {
+            return false;
+          }
+        },
+        { message: "Geçerli bir görsel URL'si giriniz (http/https)." }
+      )
       .nullable()
       .optional(),
   })
@@ -316,6 +330,8 @@ export const twoFactorToggleSchema = z
   .object({
     enabled: z.boolean(),
     method: z.enum(["AUTHENTICATOR", "SMS"]).optional(),
+    password: z.string().min(1, "Parola zorunludur.").optional(),
+    code: z.string().min(1, "Doğrulama kodu zorunludur.").optional(),
   })
   .strict();
 
@@ -338,3 +354,104 @@ export const twoFactorSendSmsSchema = z
   .strict();
 
 export type TwoFactorSendSmsInput = z.infer<typeof twoFactorSendSmsSchema>;
+
+// ─── Admin Şemaları ───────────────────────────────────────
+
+export const adminUpdateUserSchema = z
+  .object({
+    userId: z.string().min(1, "Kullanıcı ID zorunludur."),
+    role: z.enum(["USER", "MODERATOR", "ADMIN"]).optional(),
+    isActive: z.boolean().optional(),
+  })
+  .strict()
+  .refine((data) => data.role !== undefined || data.isActive !== undefined, {
+    message: "Güncellenecek alan belirtilmelidir (role veya isActive).",
+  });
+
+export type AdminUpdateUserInput = z.infer<typeof adminUpdateUserSchema>;
+
+// ─── Finansal İşlem Şemaları ────────────────────────────────
+
+export const createWithdrawalSchema = z
+  .object({
+    accountId: z.string().min(1, "Hesap ID zorunludur."),
+    amount: z
+      .number()
+      .positive("Tutar 0'dan büyük olmalıdır.")
+      .finite("Geçersiz tutar."),
+    method: z.enum(["iban", "qr", "card"], {
+      message: "Geçersiz para çekme yöntemi. iban, qr veya card olmalıdır.",
+    }),
+    recipientIban: z.string().optional(),
+    recipientName: z.string().optional(),
+  })
+  .strict()
+  .refine(
+    (data) => {
+      if (data.method === "iban") {
+        return !!data.recipientIban && !!data.recipientName;
+      }
+      return true;
+    },
+    { message: "IBAN yöntemi için alıcı adı ve IBAN zorunludur.", path: ["recipientIban"] }
+  );
+
+export type CreateWithdrawalInput = z.infer<typeof createWithdrawalSchema>;
+
+export const createDepositSchema = z
+  .object({
+    accountId: z.string().min(1, "Hesap ID zorunludur."),
+    amount: z
+      .number()
+      .positive("Tutar 0'dan büyük olmalıdır.")
+      .finite("Geçersiz tutar."),
+    method: z.enum(["iban", "card", "atm"], {
+      message: "Geçersiz para yatırma yöntemi.",
+    }),
+  })
+  .strict();
+
+export type CreateDepositInput = z.infer<typeof createDepositSchema>;
+
+export const createPaymentSchema = z
+  .object({
+    accountId: z.string().min(1, "Hesap ID zorunludur."),
+    amount: z
+      .number()
+      .positive("Tutar 0'dan büyük olmalıdır.")
+      .finite("Geçersiz tutar."),
+    billType: z.string().min(1, "Fatura türü zorunludur."),
+    referenceNumber: z.string().optional(),
+  })
+  .strict();
+
+export type CreatePaymentInput = z.infer<typeof createPaymentSchema>;
+
+export const createTransferSchema = z
+  .object({
+    type: z.enum(["fast", "eft"], {
+      message: "Geçersiz transfer türü. fast veya eft olmalıdır.",
+    }),
+    senderAccountId: z.string().min(1, "Gönderen hesap ID zorunludur."),
+    amount: z
+      .number()
+      .positive("Tutar 0'dan büyük olmalıdır.")
+      .finite("Geçersiz tutar."),
+    currency: z.string().length(3).optional(),
+    description: z.string().max(500).optional(),
+    recipientIdentifier: z.string().optional(),
+    recipientName: z.string().optional(),
+    recipientIban: z.string().optional(),
+    recipientBank: z.string().optional(),
+  })
+  .strict()
+  .refine(
+    (data) => {
+      if (data.type === "fast") return !!data.recipientIdentifier;
+      if (data.type === "eft") return !!data.recipientName && !!data.recipientIban;
+      return true;
+    },
+    { message: "Transfer türüne göre zorunlu alanları doldurun." }
+  );
+
+export type CreateTransferInput = z.infer<typeof createTransferSchema>;

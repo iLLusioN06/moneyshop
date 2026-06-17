@@ -109,7 +109,7 @@ export default function RequestPage() {
                     Kopyala
                     </Button>
                     <Button size="sm" variant="outline" className="flex-1">
-                    WhatsApp'ta Gönder
+                    WhatsApp&apos;ta Gönder
                     </Button>
                     <Button size="sm" variant="outline" className="flex-1">
                     E-Posta ile Gönder

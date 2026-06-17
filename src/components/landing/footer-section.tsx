@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { Language } from "@/lib/landing-i18n";
 
 interface Props {
@@ -14,10 +15,10 @@ export function FooterSection({ lang, t, tArray }: Props) {
       <div className="footer-container">
         <div className="footer-grid">
           <div className="footer-brand">
-            <a href="/" className="logo">
+            <Link href="/" className="logo">
               <div className="logo-icon"><i className="fas fa-wallet" /></div>
               <span className="logo-text">Money<span>Shop</span></span>
-            </a>
+            </Link>
             <p>{t(lang, "footer.description")}</p>
             <div className="footer-social">
               {[

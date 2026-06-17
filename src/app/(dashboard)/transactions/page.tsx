@@ -32,7 +32,6 @@ import {
   Download,
   FileSpreadsheet,
   FileText,
-  ArrowLeft,
 } from "lucide-react";
 import type { Transaction, FinancialAccount, Category } from "@/types";
 
@@ -55,6 +54,15 @@ interface TransactionForm {
   amount: string;
   description: string;
   date: string;
+}
+
+interface BulkTransaction {
+  accountId: string;
+  type: string;
+  amount: number;
+  description?: string;
+  date?: string;
+  categoryId?: string;
 }
 
 const emptyForm: TransactionForm = {
@@ -99,6 +107,19 @@ export default function TransactionsPage() {
   // Export
   const [showExportMenu, setShowExportMenu] = useState(false);
 
+  // Bulk operations
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [showBulkActions, setShowBulkActions] = useState(false);
+  const [bulkAction, setBulkAction] = useState<string>("");
+  const [isBulkProcessing, setIsBulkProcessing] = useState(false);
+
+  // Import
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [importPreview, setImportPreview] = useState<BulkTransaction[]>([]);
+  const [isImporting, setIsImporting] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
+
   const buildExportUrl = (format: string) => {
     const params = new URLSearchParams();
     params.set("format", format);
@@ -129,7 +150,9 @@ export default function TransactionsPage() {
   }, []);
 
   useEffect(() => {
-    fetchDropdowns();
+    setTimeout(() => {
+      fetchDropdowns();
+    }, 0);
   }, [fetchDropdowns]);
 
   const fetchTransactions = useCallback(async () => {
@@ -162,7 +185,9 @@ export default function TransactionsPage() {
   }, [page, filterType, filterAccount, filterStart, filterEnd, filterSearch]);
 
   useEffect(() => {
-    fetchTransactions();
+    setTimeout(() => {
+      fetchTransactions();
+    }, 0);
   }, [fetchTransactions]);
 
   const openAddModal = () => {
@@ -234,6 +259,164 @@ export default function TransactionsPage() {
     }
   };
 
+  // Bulk operations
+  const toggleSelectAll = () => {
+    if (selectedIds.size === transactions.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(transactions.map((t) => t.id)));
+    }
+  };
+
+  const toggleSelect = (id: string) => {
+    const newSelected = new Set(selectedIds);
+    if (newSelected.has(id)) {
+      newSelected.delete(id);
+    } else {
+      newSelected.add(id);
+    }
+    setSelectedIds(newSelected);
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.size === 0) return;
+    setIsBulkProcessing(true);
+    try {
+      const res = await fetch("/api/transactions/bulk", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: Array.from(selectedIds) }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSelectedIds(new Set());
+        setShowBulkActions(false);
+        setBulkAction("");
+        fetchTransactions();
+      } else {
+        setError(data.error || "Toplu silme sırasında hata oluştu.");
+      }
+    } catch {
+      setError("Toplu silme sırasında hata oluştu.");
+    } finally {
+      setIsBulkProcessing(false);
+    }
+  };
+
+  const handleBulkStatusChange = async (status: string) => {
+    if (selectedIds.size === 0) return;
+    setIsBulkProcessing(true);
+    try {
+      const res = await fetch("/api/transactions/bulk", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: Array.from(selectedIds), updates: { status } }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSelectedIds(new Set());
+        setShowBulkActions(false);
+        setBulkAction("");
+        fetchTransactions();
+      } else {
+        setError(data.error || "Toplu güncelleme sırasında hata oluştu.");
+      }
+    } catch {
+      setError("Toplu güncelleme sırasında hata oluştu.");
+    } finally {
+      setIsBulkProcessing(false);
+    }
+  };
+
+  // Import handlers
+  const parseCSV = (text: string): BulkTransaction[] => {
+    const lines = text.split("\n").filter((line) => line.trim());
+    if (lines.length < 2) return [];
+
+    const headers = lines[0].split(";").map((h) => h.trim().replace(/"/g, "").toLowerCase());
+    const transactions: BulkTransaction[] = [];
+
+    for (let i = 1; i < lines.length; i++) {
+      const values = lines[i].split(";").map((v) => v.trim().replace(/"/g, ""));
+      const row: Record<string, string> = {};
+      headers.forEach((h, idx) => {
+        row[h] = values[idx] || "";
+      });
+
+      // Map Turkish headers to English
+      const typeMap: Record<string, string> = { "gelir": "INCOME", "gider": "EXPENSE", "transfer": "TRANSFER" };
+      const statusMap: Record<string, string> = { "tamamlandı": "COMPLETED", "bekliyor": "PENDING", "başarısız": "FAILED", "iptal": "CANCELLED" };
+
+      const amount = parseFloat(row["tutar"] || "0");
+      if (amount <= 0 || !accounts.length) continue;
+
+      // Find account by name
+      const accountName = row["hesap"] || "";
+      const account = accounts.find((a) => a.name.toLowerCase() === accountName.toLowerCase()) || accounts[0];
+
+      transactions.push({
+        accountId: account?.id || "",
+        type: typeMap[row["tür"]?.toLowerCase() || ""] || "EXPENSE",
+        amount,
+        description: row["açıklama"] || "",
+        date: row["tarih"] || new Date().toISOString().split("T")[0],
+      });
+    }
+
+    return transactions;
+  };
+
+  const handleFileImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setImportFile(file);
+    setImportError(null);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      try {
+        const parsed = parseCSV(text);
+        if (parsed.length === 0) {
+          setImportError("CSV dosyasında geçerli işlem bulunamadı. Format: Tarih;Tür;Tutar;Para Birimi;Açıklama;Kategori;Hesap;Durum");
+          return;
+        }
+        setImportPreview(parsed);
+      } catch {
+        setImportError("CSV dosyası ayrıştırılamadı.");
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const handleImportConfirm = async () => {
+    if (importPreview.length === 0) return;
+    setIsImporting(true);
+    setImportError(null);
+
+    try {
+      const res = await fetch("/api/transactions/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ transactions: importPreview }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setShowImportModal(false);
+        setImportFile(null);
+        setImportPreview([]);
+        fetchTransactions();
+      } else {
+        setImportError(data.error || "İçe aktarma sırasında hata oluştu.");
+      }
+    } catch {
+      setImportError("İçe aktarma sırasında hata oluştu.");
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
   const filteredCategories = categories.filter(
     (c) => !form.type || c.type === form.type
   );
@@ -243,9 +426,6 @@ export default function TransactionsPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard")} className="border border-border hover:text-profit hover:bg-profit/10 hover:border-profit/30">
-            <ArrowLeft className="w-4 h-4" />
-          </Button>
           <div>
             <h2 className="text-2xl font-bold text-text-primary">İşlemler</h2>
           <p className="text-sm text-text-muted mt-1">
@@ -282,6 +462,10 @@ export default function TransactionsPage() {
               </div>
             )}
           </div>
+          <Button variant="outline" onClick={() => setShowImportModal(true)}>
+            <FileSpreadsheet className="w-4 h-4" />
+            İçe Aktar
+          </Button>
           <Button onClick={openAddModal}>
             <Plus className="w-4 h-4" />
             Yeni İşlem
@@ -403,13 +587,79 @@ export default function TransactionsPage() {
         </div>
       )}
 
+      {/* Bulk Actions Bar */}
+      {selectedIds.size > 0 && (
+        <Card className="bg-secondary/5 border-secondary/20">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium text-secondary">
+                  {selectedIds.size} işlem seçildi
+                </span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedIds(new Set())}
+                >
+                  Seçimi Kaldır
+                </Button>
+              </div>
+              <div className="flex items-center gap-2">
+                <select
+                  value={bulkAction}
+                  onChange={(e) => setBulkAction(e.target.value)}
+                  className="h-8 px-3 rounded-lg border border-border bg-surface text-sm focus:outline-none focus:ring-2 focus:ring-secondary/30"
+                >
+                  <option value="">İşlem Seçin</option>
+                  <option value="status-completed">Tamamlandı Olarak İşaretle</option>
+                  <option value="status-pending">Bekliyor Olarak İşaretle</option>
+                  <option value="delete">Sil</option>
+                </select>
+                <Button
+                  size="sm"
+                  disabled={!bulkAction || isBulkProcessing}
+                  onClick={() => {
+                    if (bulkAction === "delete") {
+                      handleBulkDelete();
+                    } else if (bulkAction === "status-completed") {
+                      handleBulkStatusChange("COMPLETED");
+                    } else if (bulkAction === "status-pending") {
+                      handleBulkStatusChange("PENDING");
+                    }
+                  }}
+                >
+                  {isBulkProcessing ? (
+                    <span className="animate-spin">⏳</span>
+                  ) : (
+                    "Uygula"
+                  )}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* List */}
       <Card className="overflow-hidden">
         <div className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent px-5 py-3 border-b border-border">
-          <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2">
-            <ArrowUpDown className="w-4 h-4 text-secondary" />
-            İşlem Geçmişi
-          </h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2">
+              <ArrowUpDown className="w-4 h-4 text-secondary" />
+              İşlem Geçmişi
+            </h3>
+            {transactions.length > 0 && (
+              <label className="flex items-center gap-2 text-sm text-text-muted cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={selectedIds.size === transactions.length && transactions.length > 0}
+                  onChange={toggleSelectAll}
+                  className="w-4 h-4 rounded border-border text-secondary focus:ring-secondary/30"
+                />
+                Tümünü Seç
+              </label>
+            )}
+          </div>
         </div>
         <CardContent className="p-0">
           {isLoading ? (
@@ -441,9 +691,18 @@ export default function TransactionsPage() {
               {transactions.map((t) => (
                 <div
                   key={t.id}
-                  className="flex items-center justify-between p-4 hover:bg-surface-tertiary/50 transition-colors group"
+                  className={cn(
+                    "flex items-center justify-between p-4 hover:bg-surface-tertiary/50 transition-colors group",
+                    selectedIds.has(t.id) && "bg-secondary/5"
+                  )}
                 >
                   <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.has(t.id)}
+                      onChange={() => toggleSelect(t.id)}
+                      className="w-4 h-4 rounded border-border text-secondary focus:ring-secondary/30 flex-shrink-0"
+                    />
                     <div
                       className={cn(
                         "w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0",
@@ -721,6 +980,140 @@ export default function TransactionsPage() {
                   <Trash2 className="w-4 h-4" />
                   Sil
                 </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Import Modal */}
+      {showImportModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <Card className="w-full max-w-2xl overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent">
+              <div className="flex items-center justify-between">
+                <CardTitle>İşlem İçe Aktar</CardTitle>
+                <button
+                  onClick={() => {
+                    setShowImportModal(false);
+                    setImportFile(null);
+                    setImportPreview([]);
+                    setImportError(null);
+                  }}
+                  className="p-1 rounded-lg hover:bg-surface-tertiary text-text-muted"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="space-y-4">
+                {importError && (
+                  <div className="shake-alert p-3 rounded-lg bg-loss/10 border border-loss/20 text-sm text-loss">
+                    {importError}
+                  </div>
+                )}
+
+                {!importFile ? (
+                  <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
+                    <FileSpreadsheet className="w-12 h-12 text-text-muted mx-auto mb-4" />
+                    <p className="text-text-primary font-medium mb-2">
+                      CSV dosyası seçin
+                    </p>
+                    <p className="text-text-muted text-sm mb-4">
+                      Format: Tarih;Tür;Tutar;Para Birimi;Açıklama;Kategori;Hesap;Durum
+                    </p>
+                    <label className="inline-flex items-center gap-2 px-4 py-2 bg-secondary text-white rounded-lg cursor-pointer hover:bg-secondary-dark transition-colors">
+                      <FileSpreadsheet className="w-4 h-4" />
+                      Dosya Seç
+                      <input
+                        type="file"
+                        accept=".csv"
+                        onChange={handleFileImport}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex items-center justify-between p-3 bg-surface-tertiary rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <FileSpreadsheet className="w-5 h-5 text-secondary" />
+                        <div>
+                          <p className="text-sm font-medium text-text-primary">{importFile.name}</p>
+                          <p className="text-xs text-text-muted">{importPreview.length} işlem bulundu</p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => {
+                          setImportFile(null);
+                          setImportPreview([]);
+                        }}
+                        className="p-1 hover:bg-surface rounded-lg text-text-muted"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    {importPreview.length > 0 && (
+                      <div className="max-h-64 overflow-y-auto border border-border rounded-lg">
+                        <table className="w-full text-sm">
+                          <thead className="bg-surface-tertiary sticky top-0">
+                            <tr>
+                              <th className="px-3 py-2 text-left text-xs font-medium text-text-muted">Tarih</th>
+                              <th className="px-3 py-2 text-left text-xs font-medium text-text-muted">Tür</th>
+                              <th className="px-3 py-2 text-right text-xs font-medium text-text-muted">Tutar</th>
+                              <th className="px-3 py-2 text-left text-xs font-medium text-text-muted">Açıklama</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-border">
+                            {importPreview.slice(0, 10).map((t, i) => (
+                              <tr key={i} className="hover:bg-surface-tertiary/50">
+                                <td className="px-3 py-2 text-text-primary">{t.date || "-"}</td>
+                                <td className="px-3 py-2">
+                                  <Badge variant={t.type === "INCOME" ? "success" : t.type === "EXPENSE" ? "danger" : "info"} size="sm">
+                                    {t.type === "INCOME" ? "Gelir" : t.type === "EXPENSE" ? "Gider" : "Transfer"}
+                                  </Badge>
+                                </td>
+                                <td className="px-3 py-2 text-right text-text-primary">{formatCurrency(t.amount, "IQD")}</td>
+                                <td className="px-3 py-2 text-text-muted truncate max-w-[200px]">{t.description || "-"}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                        {importPreview.length > 10 && (
+                          <p className="text-center text-xs text-text-muted py-2">
+                            ...ve {importPreview.length - 10} işlem daha
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                    <div className="flex gap-3 pt-2">
+                      <Button
+                        variant="outline"
+                        className="flex-1"
+                        onClick={() => {
+                          setShowImportModal(false);
+                          setImportFile(null);
+                          setImportPreview([]);
+                          setImportError(null);
+                        }}
+                      >
+                        İptal
+                      </Button>
+                      <Button
+                        className="flex-1"
+                        isLoading={isImporting}
+                        disabled={importPreview.length === 0}
+                        onClick={handleImportConfirm}
+                      >
+                        <FileSpreadsheet className="w-4 h-4" />
+                        {importPreview.length} İşlemi İçe Aktar
+                      </Button>
+                    </div>
+                  </>
+                )}
               </div>
             </CardContent>
           </Card>

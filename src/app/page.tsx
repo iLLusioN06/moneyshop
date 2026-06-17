@@ -158,24 +158,26 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
   }, [activeService]);
 
   useEffect(() => {
-    if (activeService === "fast") {
-      setFastSlideIndex(0);
-    }
-    if (activeService === "eft") {
-      setEftSlideIndex(0);
-    }
-    if (activeService === "international") {
-      setInternationalSlideIndex(0);
-    }
-    if (activeService === "iban") {
-      setIbanSlideIndex(0);
-    }
-    if (activeService === "request") {
-      setRequestSlideIndex(0);
-    }
-    if (activeService === "secure") {
-      setSecureSlideIndex(0);
-    }
+    setTimeout(() => {
+      if (activeService === "fast") {
+        setFastSlideIndex(0);
+      }
+      if (activeService === "eft") {
+        setEftSlideIndex(0);
+      }
+      if (activeService === "international") {
+        setInternationalSlideIndex(0);
+      }
+      if (activeService === "iban") {
+        setIbanSlideIndex(0);
+      }
+      if (activeService === "request") {
+        setRequestSlideIndex(0);
+      }
+      if (activeService === "secure") {
+        setSecureSlideIndex(0);
+      }
+    }, 0);
   }, [activeService]);
 
   // Scroll effects: navbar shadow, active nav link, scroll-to-top
@@ -621,7 +623,7 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
                 }}>
                   <div className="service-feature" style={{flexDirection:"column", alignItems:"center", textAlign:"center", padding:"28px 24px", background:"var(--white)", border:"1px solid var(--gray-3)"}}>
                     <i className="fas fa-mobile-alt" style={{fontSize:32, marginBottom:12}} />
-                    <strong style={{fontSize:16}}>MoneyShop Mobil'i İndir</strong>
+                    <strong style={{fontSize:16}}>MoneyShop Mobil&apos;i İndir</strong>
                     <span style={{fontSize:13, lineHeight:1.6}}>Uygulamayı ücretsiz indir, hemen hesabını oluştur.</span>
                   </div>
                   <div className="service-feature" style={{flexDirection:"column", alignItems:"center", textAlign:"center", padding:"28px 24px", background:"var(--white)", border:"1px solid var(--gray-3)"}}>
@@ -639,7 +641,7 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
                 {/* Card comparison section */}
                 <div style={{marginTop:60}}>
                   <h3 style={{fontSize:32, fontWeight:800, textAlign:"center", marginBottom:30}}>
-                    Senin MoneyShop Card'ın Hangisi?
+                    Senin MoneyShop Card&apos;ın Hangisi?
                   </h3>
                   <div style={{display:"flex", justifyContent:"center", gap:12, marginBottom:36}}>
                     {(["standart","silver","gold"] as const).map((card) => (
@@ -1554,7 +1556,7 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
                             <i className="fas fa-history" style={{fontSize:16, color:"var(--primary)"}} />
                             <div>
                               <strong style={{fontSize:13}}>İşlem Geçmişi</strong>
-                              <span style={{fontSize:12, color:"var(--gray-5)", marginTop:2, display:"block"}}>Tüm işlemlerinizi dashboard'dan takip edin.</span>
+                              <span style={{fontSize:12, color:"var(--gray-5)", marginTop:2, display:"block"}}>Tüm işlemlerinizi dashboard&apos;dan takip edin.</span>
                             </div>
                           </div>
                         </>
@@ -2164,7 +2166,7 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
                       <span className="gradient-text">Çözümleri</span>
                     </h2>
                     <p style={{fontSize:16, lineHeight:1.7, color:"var(--gray-5)", maxWidth:540, marginBottom:28}}>
-                      İşletmen için fiziki, sanal veya ön ödemeli kart çözümleri. Tüm kartların yönetimi tek dashboard'da.
+                      İşletmen için fiziki, sanal veya ön ödemeli kart çözümleri. Tüm kartların yönetimi tek dashboard&apos;da.
                     </p>
                     <Link href="/register" className="btn-primary">
                       <i className="fas fa-paper-plane" /> Hemen Başla
@@ -2226,7 +2228,7 @@ const [selectedCardSolution, setSelectedCardSolution] = useState<"physical" | "v
                   <div className="service-feature" style={{flexDirection:"column", alignItems:"center", textAlign:"center", padding:"28px 24px", background:"var(--white)", border:"1px solid var(--gray-3)"}}>
                     <i className="fas fa-chart-simple" style={{fontSize:32, marginBottom:12}} />
                     <strong style={{fontSize:16}}>Anlık Yönetim</strong>
-                    <span style={{fontSize:13, lineHeight:1.6}}>Tüm kartları dashboard'dan yönet.</span>
+                    <span style={{fontSize:13, lineHeight:1.6}}>Tüm kartları dashboard&apos;dan yönet.</span>
                   </div>
                 </div>
 

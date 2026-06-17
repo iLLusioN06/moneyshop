@@ -7,7 +7,7 @@
 // - Uyarı mesajları
 // =============================================
 
-import { createHash } from "crypto";
+import { createHash, randomInt } from "crypto";
 import { prisma } from "@/lib/prisma";
 
 // ─── Twilio Client ──────────────────────────────
@@ -19,12 +19,11 @@ const APP_NAME = "MoneyShop";
 
 let twilioClient: import("twilio").Twilio | null = null;
 
-function getTwilioClient(): import("twilio").Twilio | null {
+async function getTwilioClient(): Promise<import("twilio").Twilio | null> {
   if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN) return null;
   if (!twilioClient) {
-    // Dynamic import to avoid module-level side effects
-    const twilio = require("twilio");
-    twilioClient = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+    const twilioModule = await import("twilio");
+    twilioClient = twilioModule.default(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
   }
   return twilioClient;
 }
@@ -35,7 +34,7 @@ function getTwilioClient(): import("twilio").Twilio | null {
  * 6 haneli rastgele SMS kodu oluşturur.
  */
 export function generateSmsCode(): string {
-  return String(Math.floor(100000 + Math.random() * 900000));
+  return String(randomInt(100000, 1000000));
 }
 
 /**
@@ -61,7 +60,7 @@ export interface SendSmsResult {
  * - Hata durumunda { success: false, error } döner
  */
 export async function sendSms(phone: string, message: string): Promise<SendSmsResult> {
-  const client = getTwilioClient();
+  const client = await getTwilioClient();
 
   // Dev mode: Twilio yoksa konsola log
   if (!client || !TWILIO_PHONE_NUMBER) {

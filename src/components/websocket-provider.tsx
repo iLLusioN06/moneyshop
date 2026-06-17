@@ -120,7 +120,9 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         eventVersion,
       }}
     >
-      {children}
+      <div className="flex-1 min-h-0 flex flex-col">
+        {children}
+      </div>
       <ToastContainer toasts={toasts} setToasts={setToasts} />
     </WebSocketContext.Provider>
   );

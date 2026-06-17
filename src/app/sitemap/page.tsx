@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, LayoutDashboard, FileText, Shield, Building2, HelpCircle, CreditCard, DollarSign, Send, ChevronRight } from "lucide-react";
+import { ArrowLeft, LayoutDashboard, Shield, Building2, HelpCircle, Send, ChevronRight } from "lucide-react";
 import { FooterSection } from "@/components/landing/footer-section";
 import { t, tArray, type Language } from "@/lib/landing-i18n";
 import "../landing.css";

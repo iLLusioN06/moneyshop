@@ -20,8 +20,12 @@ function verifyCron(req: Request): boolean {
   const authHeader = req.headers.get("authorization") || "";
   const secret = process.env.CRON_SECRET;
   if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      console.error("[cron] CRON_SECRET production'da tanımlı değil — istek reddedildi!");
+      return false;
+    }
     console.warn("[cron] CRON_SECRET not set — allowing request (dev mode)");
-    return true; // Dev mode: allow without secret
+    return true;
   }
   return authHeader === `Bearer ${secret}`;
 }
@@ -177,7 +181,7 @@ async function processRecurringTransactions(): Promise<ProcessRecurringResult> {
           `Tekrarlanan işleminiz otomatik olarak gerçekleştirildi:`,
           ``,
           `  Tür: ${recurring.type === "INCOME" ? "Gelir" : recurring.type === "EXPENSE" ? "Gider" : "Transfer"}`,
-          `  Tutar: ${recurring.type === "INCOME" ? "+" : "-"}${recurring.amount.toFixed(2)} ${recurring.currency}`,
+          `  Tutar: ${recurring.type === "INCOME" ? "+" : "-"}${Number(recurring.amount).toFixed(2)} ${recurring.currency}`,
           `  Hesap: ${recurring.account.name}`,
           recurring.description ? `  Açıklama: ${recurring.description}` : "",
           `  Tarih: ${now.toLocaleDateString("tr-TR")}`,
@@ -239,7 +243,7 @@ async function checkBudgets(): Promise<BudgetAlertResult> {
         _sum: { amount: true },
       });
 
-      const spent = spentAgg._sum.amount || 0;
+      const spent = Number(spentAgg._sum.amount) || 0;
 
       // spent alanını güncelle (opsiyonel, cache)
       await prisma.budget.update({
@@ -247,9 +251,9 @@ async function checkBudgets(): Promise<BudgetAlertResult> {
         data: { spent },
       });
 
-      if (spent === 0 || budget.amount === 0) continue;
+      if (spent === 0 || Number(budget.amount) === 0) continue;
 
-      const percentage = (spent / budget.amount) * 100;
+      const percentage = (spent / Number(budget.amount)) * 100;
       const categoryName = budget.category?.name || "Kategori";
 
       if (percentage >= 100) {
@@ -262,9 +266,9 @@ async function checkBudgets(): Promise<BudgetAlertResult> {
             `⚠️ Bütçe limitiniz aşıldı!`,
             ``,
             `  Kategori: ${categoryName}`,
-            `  Bütçe: ${budget.amount.toFixed(2)} ${budget.currency}`,
-            `  Harcanan: ${spent.toFixed(2)} ${budget.currency}`,
-            `  Aşım: ${(spent - budget.amount).toFixed(2)} ${budget.currency}`,
+            `  Bütçe: ${Number(budget.amount).toFixed(2)} ${budget.currency}`,
+            `  Harcanan: ${Number(spent).toFixed(2)} ${budget.currency}`,
+            `  Aşım: ${(Number(spent) - Number(budget.amount)).toFixed(2)} ${budget.currency}`,
             ``,
             `Harcamalarınızı gözden geçirmek isteyebilirsiniz.`,
             ``,
@@ -284,8 +288,8 @@ async function checkBudgets(): Promise<BudgetAlertResult> {
             `⚠️ Bütçe limitinize yaklaşıyorsunuz!`,
             ``,
             `  Kategori: ${categoryName}`,
-            `  Bütçe: ${budget.amount.toFixed(2)} ${budget.currency}`,
-            `  Harcanan: ${spent.toFixed(2)} ${budget.currency}`,
+            `  Bütçe: ${Number(budget.amount).toFixed(2)} ${budget.currency}`,
+            `  Harcanan: ${Number(spent).toFixed(2)} ${budget.currency}`,
             `  Oran: %${percentage.toFixed(0)}`,
             ``,
             `Harcamalarınızı gözden geçirmek isteyebilirsiniz.`,
@@ -336,7 +340,9 @@ export async function POST(req: Request) {
     };
   } catch (error) {
     console.error("[cron] Fatal error:", error);
-    summary.error = error instanceof Error ? error.message : "Unknown error";
+    summary.error = process.env.NODE_ENV === "production"
+      ? "Internal error"
+      : error instanceof Error ? error.message : "Unknown error";
   }
 
   summary.durationMs = Date.now() - startTime;

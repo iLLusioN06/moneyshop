@@ -57,6 +57,24 @@ interface AdminStats {
   weeklyVolume: number;
   weeklyTransactionCount: number;
   failedTransactions: number;
+  avgTransactionAmount: number;
+  topUsers: Array<{
+    id: string;
+    name: string | null;
+    email: string;
+    transactionCount: number;
+    totalVolume: number;
+  }>;
+  transactionsByDay: Array<{
+    day: string;
+    count: number;
+    volume: number;
+  }>;
+  transactionsByType: Array<{
+    type: string;
+    count: number;
+    volume: number;
+  }>;
   recentTransactions: Array<{
     id: string;
     type: string;
@@ -104,6 +122,22 @@ function StatCard({
   );
 }
 
+function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: { name: string; value: number; color: string }[]; label?: string }) {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-surface border border-border rounded-lg shadow-lg p-3 text-sm">
+        <p className="font-medium text-text-primary mb-2">{label}</p>
+        {payload.map((entry) => (
+          <p key={entry.name} style={{ color: entry.color }} className="font-medium">
+            {entry.name}: {formatCurrency(entry.value)}
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+}
+
 export default function AdminPage() {
   const router = useRouter();
   const [stats, setStats] = useState<AdminStats | null>(null);
@@ -127,7 +161,7 @@ export default function AdminPage() {
   }
 
   useEffect(() => {
-    fetchStats();
+    setTimeout(() => fetchStats(), 0);
   }, []);
 
   const transactionTypeColor = (type: string) => {
@@ -146,22 +180,6 @@ export default function AdminPage() {
       case "TRANSFER": return "Transfer";
       default: return type;
     }
-  };
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-surface border border-border rounded-lg shadow-lg p-3 text-sm">
-          <p className="font-medium text-text-primary mb-2">{label}</p>
-          {payload.map((entry: any) => (
-            <p key={entry.name} style={{ color: entry.color }} className="font-medium">
-              {entry.name}: {formatCurrency(entry.value)}
-            </p>
-          ))}
-        </div>
-      );
-    }
-    return null;
   };
 
   return (
@@ -265,6 +283,14 @@ export default function AdminPage() {
               color="text-secondary"
               bgColor="bg-secondary/10"
             />
+            <StatCard
+              title="Ortalama İşlem"
+              value={formatCurrency(stats.avgTransactionAmount)}
+              subtitle="İşlem başına ortalama tutar"
+              icon={BarChart3}
+              color="text-accent"
+              bgColor="bg-accent/10"
+            />
           </div>
 
           {/* Charts Row */}
@@ -336,65 +362,174 @@ export default function AdminPage() {
             </Card>
           </div>
 
+          {/* Advanced Analytics */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Transaction Distribution by Type */}
+            <Card className="overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent border-b border-border">
+                <div className="flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-secondary" />
+                  <CardTitle className="text-sm">İşlem Dağılımı</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="p-5">
+                {(stats.transactionsByType?.length ?? 0) === 0 ? (
+                  <div className="h-48 flex items-center justify-center text-sm text-text-muted">
+                    Veri bulunamadı
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {(stats.transactionsByType ?? []).map((item) => {
+                      const total = (stats.transactionsByType ?? []).reduce((sum, t) => sum + t.count, 0);
+                      const percentage = total > 0 ? (item.count / total) * 100 : 0;
+                      const typeColor = item.type === "INCOME" ? "bg-profit" : item.type === "EXPENSE" ? "bg-loss" : "bg-secondary";
+                      return (
+                        <div key={item.type} className="space-y-1">
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-text-primary font-medium">
+                              {item.type === "INCOME" ? "Gelir" : item.type === "EXPENSE" ? "Gider" : "Transfer"}
+                            </span>
+                            <span className="text-text-muted">{item.count} işlem</span>
+                          </div>
+                          <div className="h-2 bg-surface-tertiary rounded-full overflow-hidden">
+                            <div
+                              className={`h-full ${typeColor} rounded-full transition-all duration-500`}
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                          <div className="flex items-center justify-between text-xs text-text-muted">
+                            <span>%{percentage.toFixed(1)}</span>
+                            <span>{formatCurrency(item.volume)}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Top Users by Volume */}
+            <Card className="overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-accent/10 via-accent/5 to-transparent border-b border-border">
+                <div className="flex items-center gap-2">
+                  <Users className="w-5 h-5 text-accent" />
+                  <CardTitle className="text-sm">En Çok İşlem Yapan Kullanıcılar</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="p-5">
+                {(stats.topUsers?.length ?? 0) === 0 ? (
+                  <div className="h-48 flex items-center justify-center text-sm text-text-muted">
+                    Veri bulunamadı
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {(stats.topUsers ?? []).slice(0, 5).map((user, index) => (
+                      <div key={user.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-tertiary/50 transition-colors">
+                        <div className="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-sm font-bold text-secondary">
+                          {index + 1}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-text-primary truncate">
+                            {user.name || user.email}
+                          </p>
+                          <p className="text-xs text-text-muted">
+                            {user.transactionCount} işlem
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm font-medium text-text-primary">
+                            {formatCurrency(user.totalVolume)}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Transactions by Day of Week */}
+            <Card className="overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-profit/10 via-profit/5 to-transparent border-b border-border">
+                <div className="flex items-center gap-2">
+                  <Activity className="w-5 h-5 text-profit" />
+                  <CardTitle className="text-sm">Haftalık İşlem Dağılımı</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="p-5">
+                {(stats.transactionsByDay?.length ?? 0) === 0 ? (
+                  <div className="h-48 flex items-center justify-center text-sm text-text-muted">
+                    Veri bulunamadı
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                      {(stats.transactionsByDay ?? []).map((item) => {
+                      const maxCount = Math.max(...stats.transactionsByDay.map((d) => d.count));
+                      const percentage = maxCount > 0 ? (item.count / maxCount) * 100 : 0;
+                      return (
+                        <div key={item.day} className="flex items-center gap-3">
+                          <span className="w-12 text-xs text-text-muted font-medium">{item.day}</span>
+                          <div className="flex-1 h-4 bg-surface-tertiary rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-secondary rounded-full transition-all duration-500"
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                          <span className="w-16 text-xs text-text-muted text-right">{item.count} işlem</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Quick Actions */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <Card className="cursor-pointer hover:shadow-md transition-all overflow-hidden" onClick={() => router.push("/admin/users")}>
-              <CardContent className="p-5 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
-                    <Users className="w-6 h-6 text-secondary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-text-primary">Kullanıcı Yönetimi</h3>
-                    <p className="text-sm text-text-muted">Listele, rol değiştir, yönet</p>
-                  </div>
+          <div className="flex gap-3">
+            <Card className="cursor-pointer hover:shadow-lg hover:-translate-y-0.5 hover:border-secondary/30 transition-all duration-200 overflow-hidden flex-1 min-w-0" onClick={() => router.push("/admin/users")}>
+              <CardContent className="p-3 flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-secondary/10 group-hover:bg-secondary/20 flex items-center justify-center flex-shrink-0 transition-colors">
+                  <Users className="w-4 h-4 text-secondary" />
                 </div>
-                <ArrowRight className="w-5 h-5 text-text-muted" />
+                <span className="font-medium text-xs truncate">Kullanıcı Yönetimi</span>
               </CardContent>
             </Card>
 
-            <Card className="cursor-pointer hover:shadow-md transition-all overflow-hidden" onClick={() => router.push("/admin/transactions")}>
-              <CardContent className="p-5 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
-                    <ArrowUpDown className="w-6 h-6 text-accent" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-text-primary">İşlem İzleme</h3>
-                    <p className="text-sm text-text-muted">Görüntüle ve filtrele</p>
-                  </div>
+            <Card className="cursor-pointer hover:shadow-lg hover:-translate-y-0.5 hover:border-accent/30 transition-all duration-200 overflow-hidden flex-1 min-w-0" onClick={() => router.push("/admin/transactions")}>
+              <CardContent className="p-3 flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-accent/10 group-hover:bg-accent/20 flex items-center justify-center flex-shrink-0 transition-colors">
+                  <ArrowUpDown className="w-4 h-4 text-accent" />
                 </div>
-                <ArrowRight className="w-5 h-5 text-text-muted" />
+                <span className="font-medium text-xs truncate">İşlem İzleme</span>
               </CardContent>
             </Card>
 
-            <Card className="cursor-pointer hover:shadow-md transition-all overflow-hidden" onClick={() => router.push("/admin/email-logs")}>
-              <CardContent className="p-5 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-profit/10 flex items-center justify-center">
-                    <Mail className="w-6 h-6 text-profit" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-text-primary">E-posta Günlükleri</h3>
-                    <p className="text-sm text-text-muted">Gönderim durumları</p>
-                  </div>
+            <Card className="cursor-pointer hover:shadow-lg hover:-translate-y-0.5 hover:border-secondary/30 transition-all duration-200 overflow-hidden flex-1 min-w-0" onClick={() => router.push("/admin/sms-logs")}>
+              <CardContent className="p-3 flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-secondary/10 group-hover:bg-secondary/20 flex items-center justify-center flex-shrink-0 transition-colors">
+                  <Mail className="w-4 h-4 text-secondary" />
                 </div>
-                <ArrowRight className="w-5 h-5 text-text-muted" />
+                <span className="font-medium text-xs truncate">SMS Logları</span>
               </CardContent>
             </Card>
 
-            <Card className="cursor-pointer hover:shadow-md transition-all overflow-hidden" onClick={() => router.push("/admin/audit-logs")}>
-              <CardContent className="p-5 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center">
-                    <History className="w-6 h-6 text-purple-500" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-text-primary">Denetim Günlükleri</h3>
-                    <p className="text-sm text-text-muted">Kullanıcı hareketleri</p>
-                  </div>
+            <Card className="cursor-pointer hover:shadow-lg hover:-translate-y-0.5 hover:border-profit/30 transition-all duration-200 overflow-hidden flex-1 min-w-0" onClick={() => router.push("/admin/email-logs")}>
+              <CardContent className="p-3 flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-profit/10 group-hover:bg-profit/20 flex items-center justify-center flex-shrink-0 transition-colors">
+                  <Mail className="w-4 h-4 text-profit" />
                 </div>
-                <ArrowRight className="w-5 h-5 text-text-muted" />
+                <span className="font-medium text-xs truncate">E-posta Günlükleri</span>
+              </CardContent>
+            </Card>
+
+            <Card className="cursor-pointer hover:shadow-lg hover:-translate-y-0.5 hover:border-purple-500/30 transition-all duration-200 overflow-hidden flex-1 min-w-0" onClick={() => router.push("/admin/audit-logs")}>
+              <CardContent className="p-3 flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20 flex items-center justify-center flex-shrink-0 transition-colors">
+                  <History className="w-4 h-4 text-purple-500" />
+                </div>
+                <span className="font-medium text-xs truncate">Denetim Günlükleri</span>
               </CardContent>
             </Card>
           </div>

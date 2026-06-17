@@ -6,8 +6,10 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getExchangeRates, convertAmount, SUPPORTED_CURRENCIES } from "@/lib/exchange-rates";
+import { withRateLimit } from "@/lib/rate-limit";
+import { getCacheHeaders } from "@/lib/utils";
 
-export async function GET(req: Request) {
+async function handler(req: Request) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -109,10 +111,10 @@ export async function GET(req: Request) {
     // Hesapları dönüştür
     const rates = exchangeRates || {};
     const accountsWithConversion = accounts.map((acc) => {
-      const convertedBalance = convertAmount(acc.balance, acc.currency, rates);
+      const convertedBalance = convertAmount(Number(acc.balance), acc.currency, rates);
       return {
         ...acc,
-        originalBalance: acc.balance,
+        originalBalance: Number(acc.balance),
         originalCurrency: acc.currency,
         convertedBalance: Math.round(convertedBalance * 100) / 100,
         convertedCurrency: activeBase,
@@ -126,10 +128,10 @@ export async function GET(req: Request) {
     );
 
     // Gelir/gider — basitlik için olduğu gibi (bunlar zaten TRY varsayılır)
-    const totalIncome = monthlyIncome._sum.amount || 0;
-    const totalExpense = monthlyExpense._sum.amount || 0;
-    const prevIncome = prevMonthIncome._sum.amount || 0;
-    const prevExpense = prevMonthExpense._sum.amount || 0;
+    const totalIncome = Number(monthlyIncome._sum.amount) || 0;
+    const totalExpense = Number(monthlyExpense._sum.amount) || 0;
+    const prevIncome = Number(prevMonthIncome._sum.amount) || 0;
+    const prevExpense = Number(prevMonthExpense._sum.amount) || 0;
 
     // Değişim yüzdeleri
     const incomeChange = prevIncome > 0 ? ((totalIncome - prevIncome) / prevIncome) * 100 : 0;
@@ -153,7 +155,7 @@ export async function GET(req: Request) {
         monthlyData,
         categoryBreakdown,
       },
-    });
+    }, { headers: getCacheHeaders(30) });
   } catch (error) {
     console.error("Dashboard GET error:", error);
     return NextResponse.json(
@@ -239,7 +241,7 @@ async function getCategoryBreakdown(userId: string, monthStart: Date) {
   });
 
   const totalExpense = transactions.reduce(
-    (sum, t) => sum + (t._sum.amount || 0),
+    (sum, t) => sum + (Number(t._sum.amount) || 0),
     0
   );
 
@@ -262,10 +264,12 @@ async function getCategoryBreakdown(userId: string, monthStart: Date) {
       category: cat?.name || "Bilinmeyen",
       color: cat?.color || "#94a3b8",
       icon: cat?.icon || "circle",
-      amount: t._sum.amount || 0,
+      amount: Number(t._sum.amount) || 0,
       percentage: totalExpense > 0
-        ? Math.round(((t._sum.amount || 0) / totalExpense) * 100)
+        ? Math.round(((Number(t._sum.amount) || 0) / totalExpense) * 100)
         : 0,
     };
   });
 }
+
+export const GET = withRateLimit({ maxRequests: 30, windowMs: 60_000 }, handler);

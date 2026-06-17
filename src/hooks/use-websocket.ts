@@ -10,7 +10,7 @@
 
 "use client";
 
-import { useEffect, useRef, useCallback, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io, type Socket } from "socket.io-client";
 import { useSession } from "next-auth/react";
 
@@ -61,16 +61,22 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
   const { data: session } = useSession();
   const socketRef = useRef<Socket | null>(null);
   const [connected, setConnected] = useState(false);
+  const [socketInstance, setSocketInstance] = useState<Socket | null>(null);
   const optionsRef = useRef(options);
 
   // Her render'da en güncel options'a eriş
-  optionsRef.current = options;
+  useEffect(() => {
+    optionsRef.current = options;
+  });
 
   // ─── Bağlantı Kurulumu ─────────────────────────────
 
   useEffect(() => {
     const socket = io(WS_URL, WS_OPTIONS);
     socketRef.current = socket;
+    setTimeout(() => {
+      setSocketInstance(socket);
+    }, 0);
 
     socket.on("connect", () => {
       setConnected(true);
@@ -110,19 +116,19 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
     return () => {
       socket.disconnect();
       socketRef.current = null;
+      setSocketInstance(null);
     };
   }, [session?.user?.id]);
 
   // ─── Oda Katılma (session değişirse) ──────────────
 
   useEffect(() => {
-    const socket = socketRef.current;
-    if (!socket || !connected || !session?.user?.id) return;
-    socket.emit("join", session.user.id);
+    if (!socketRef.current || !connected || !session?.user?.id) return;
+    socketRef.current.emit("join", session.user.id);
   }, [session?.user?.id, connected]);
 
   return {
     connected,
-    socket: socketRef.current,
+    socket: socketInstance,
   };
 }

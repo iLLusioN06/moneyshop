@@ -29,7 +29,6 @@ import {
   ChartLine,
   Banknote,
   HandCoins,
-  ArrowLeft,
 } from "lucide-react";
 import type { FinancialAccount } from "@/types";
 
@@ -104,7 +103,7 @@ export default function AccountsPage() {
   }, []);
 
   useEffect(() => {
-    fetchAccounts();
+    setTimeout(() => fetchAccounts(), 0);
   }, [fetchAccounts]);
 
   const openAddModal = () => {
@@ -193,9 +192,6 @@ export default function AccountsPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={() => router.push("/dashboard")} className="border border-border hover:text-profit hover:bg-profit/10 hover:border-profit/30">
-            <ArrowLeft className="w-4 h-4" />
-          </Button>
           <div>
           <h2 className="text-2xl font-bold text-text-primary">Hesaplar</h2>
           <p className="text-sm text-text-muted mt-1">

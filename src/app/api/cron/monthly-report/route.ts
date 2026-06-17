@@ -23,6 +23,10 @@ function verifyCron(req: Request): boolean {
   const authHeader = req.headers.get("authorization") || "";
   const secret = process.env.CRON_SECRET;
   if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      console.error("[cron-monthly] CRON_SECRET production'da tanımlı değil — istek reddedildi!");
+      return false;
+    }
     console.warn("[cron-monthly] CRON_SECRET not set — allowing request (dev mode)");
     return true;
   }
@@ -89,10 +93,10 @@ async function generateUserReport(userId: string, userName: string): Promise<{ p
   // 2) Summary
   const totalIncome = transactions
     .filter((t) => t.type === "INCOME")
-    .reduce((sum, t) => sum + t.amount, 0);
+    .reduce((sum, t) => Number(sum) + Number(t.amount), 0);
   const totalExpense = transactions
     .filter((t) => t.type === "EXPENSE")
-    .reduce((sum, t) => sum + t.amount, 0);
+    .reduce((sum, t) => Number(sum) + Number(t.amount), 0);
 
   const summary: ReportSummary = {
     totalIncome,
@@ -110,7 +114,7 @@ async function generateUserReport(userId: string, userName: string): Promise<{ p
 
   const accountBalances: AccountBalance[] = accounts.map((a) => ({
     name: a.name,
-    balance: a.balance,
+    balance: Number(a.balance),
     currency: a.currency,
     type: a.type,
   }));
@@ -122,11 +126,11 @@ async function generateUserReport(userId: string, userName: string): Promise<{ p
   for (const tx of expenseTransactions) {
     const catName = tx.category?.name || "Diğer";
     const existing = categoryMap.get(catName) || { amount: 0, color: tx.category?.color || "#94a3b8" };
-    existing.amount += tx.amount;
+    existing.amount += Number(tx.amount);
     categoryMap.set(catName, existing);
   }
 
-  const totalExpenseAmount = expenseTransactions.reduce((sum, t) => sum + t.amount, 0);
+  const totalExpenseAmount = expenseTransactions.reduce((sum, t) => sum + Number(t.amount), 0);
   const categoryBreakdown: CategoryBreakdown[] = Array.from(categoryMap.entries())
     .map(([name, data]) => ({
       name,
@@ -138,13 +142,13 @@ async function generateUserReport(userId: string, userName: string): Promise<{ p
 
   // 5) Top transactions (by absolute amount, limit 10)
   const topTransactions: TopTransaction[] = transactions
-    .sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount))
+    .sort((a, b) => Math.abs(Number(b.amount)) - Math.abs(Number(a.amount)))
     .slice(0, 10)
     .map((t) => ({
       date: t.date,
       type: t.type,
       description: t.description,
-      amount: t.amount,
+      amount: Number(t.amount),
       currency: t.currency,
       categoryName: t.category?.name || null,
     }));
@@ -299,7 +303,9 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: process.env.NODE_ENV === "production"
+          ? "Internal error"
+          : error instanceof Error ? error.message : "Unknown error",
         durationMs: Date.now() - startTime,
       },
       { status: 500 }

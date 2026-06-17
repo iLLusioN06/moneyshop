@@ -7,6 +7,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 import { withRateLimit } from "@/lib/rate-limit";
+import { createTransferSchema, validateRequest } from "@/lib/validations";
 import { sendNotification, buildTransferEmail } from "@/lib/email";
 import {
   emitTransactionEvent,
@@ -69,48 +70,20 @@ async function postHandler(req: Request) {
 
     const userId = session.user.id;
     const body = await req.json();
+    const parsed = validateRequest(createTransferSchema, body);
+    if (!parsed.success) return parsed.response;
+
     const {
-      type, // "fast" | "eft"
+      type,
       senderAccountId,
       amount,
       currency,
       description,
-      // FAST için (MoneyShop içi)
-      recipientIdentifier, // email veya kullanıcı adı
-      // EFT için (harici hesaba)
+      recipientIdentifier,
       recipientName,
       recipientIban,
       recipientBank,
-    } = body;
-
-    // Validasyon
-    if (!senderAccountId || !amount || !type) {
-      return NextResponse.json(
-        { error: "Gönderen hesap, tutar ve transfer türü zorunludur." },
-        { status: 400 }
-      );
-    }
-
-    if (amount <= 0) {
-      return NextResponse.json(
-        { error: "Tutar 0'dan büyük olmalıdır." },
-        { status: 400 }
-      );
-    }
-
-    if (type === "fast" && !recipientIdentifier) {
-      return NextResponse.json(
-        { error: "Alıcı e-posta veya kullanıcı adı zorunludur." },
-        { status: 400 }
-      );
-    }
-
-    if (type === "eft" && (!recipientName || !recipientIban)) {
-      return NextResponse.json(
-        { error: "Alıcı adı ve IBAN zorunludur." },
-        { status: 400 }
-      );
-    }
+    } = parsed.data;
 
     // Gönderen hesabı kontrol et
     const senderAccount = await prisma.financialAccount.findFirst({
@@ -121,14 +94,6 @@ async function postHandler(req: Request) {
       return NextResponse.json(
         { error: "Gönderen hesap bulunamadı." },
         { status: 404 }
-      );
-    }
-
-    // Bakiye kontrolü
-    if (senderAccount.balance < amount) {
-      return NextResponse.json(
-        { error: "Yetersiz bakiye." },
-        { status: 400 }
       );
     }
 
@@ -178,11 +143,15 @@ async function postHandler(req: Request) {
 
       // Transfer işlemini transaction ile yap (gönderen ve alıcı için)
       const transferResult = await prisma.$transaction(async (tx) => {
-        // 1. Gönderen hesaptan düş
-        await tx.financialAccount.update({
-          where: { id: senderAccount.id },
-          data: { balance: { increment: -amount } },
+        // 1. Gönderen hesaptan düş (bakiye kontrolü ile birlikte)
+        const updatedSender = await tx.financialAccount.updateMany({
+          where: { id: senderAccount.id, balance: { gte: amount } },
+          data: { balance: { decrement: amount } },
         });
+
+        if (updatedSender.count === 0) {
+          throw new Error("Yetersiz bakiye.");
+        }
 
         // 2. Alıcı hesaba ekle
         await tx.financialAccount.update({
@@ -255,7 +224,7 @@ async function postHandler(req: Request) {
         emitBalanceEvent(userId, {
           accountId: senderAccount.id,
           accountName: senderAccount.name,
-          newBalance: senderAccount.balance - amount,
+          newBalance: Number(senderAccount.balance) - amount,
           currency: currency || senderAccount.currency,
           change: -amount,
         });
@@ -289,7 +258,7 @@ async function postHandler(req: Request) {
         emitBalanceEvent(recipient.id, {
           accountId: recipientAccount.id,
           accountName: recipientAccount.name,
-          newBalance: recipientAccount.balance + inAmount,
+          newBalance: Number(recipientAccount.balance) + inAmount,
           currency: currency || senderAccount.currency,
           change: inAmount,
         });
@@ -327,11 +296,15 @@ async function postHandler(req: Request) {
     // EFT transfer: Harici IBAN'a gönder
     if (type === "eft") {
       const transferResult = await prisma.$transaction(async (tx) => {
-        // 1. Hesaptan düş
-        await tx.financialAccount.update({
-          where: { id: senderAccount.id },
-          data: { balance: { increment: -amount } },
+        // 1. Hesaptan düş (bakiye kontrolü ile birlikte)
+        const updatedSender = await tx.financialAccount.updateMany({
+          where: { id: senderAccount.id, balance: { gte: amount } },
+          data: { balance: { decrement: amount } },
         });
+
+        if (updatedSender.count === 0) {
+          throw new Error("Yetersiz bakiye.");
+        }
 
         // 2. Transfer kaydı oluştur
         const txRecord = await tx.transaction.create({
@@ -384,7 +357,7 @@ async function postHandler(req: Request) {
         emitBalanceEvent(userId, {
           accountId: senderAccount.id,
           accountName: senderAccount.name,
-          newBalance: senderAccount.balance - amount,
+          newBalance: Number(senderAccount.balance) - amount,
           currency: currency || senderAccount.currency,
           change: -amount,
         });
@@ -424,6 +397,10 @@ async function postHandler(req: Request) {
       { status: 400 }
     );
   } catch (error) {
+    const message = error instanceof Error ? error.message : "Transfer gerçekleştirilirken bir hata oluştu.";
+    if (message === "Yetersiz bakiye.") {
+      return NextResponse.json({ error: "Yetersiz bakiye." }, { status: 400 });
+    }
     console.error("Transfers POST error:", error);
     return NextResponse.json(
       { error: "Transfer gerçekleştirilirken bir hata oluştu." },

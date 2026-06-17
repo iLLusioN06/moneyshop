@@ -5,9 +5,10 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { withRateLimit } from "@/lib/rate-limit";
+import { createDepositSchema, validateRequest } from "@/lib/validations";
 
-// POST /api/deposits - Yeni para yatırma işlemi oluştur
-export async function POST(req: Request) {
+async function handler(req: Request) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -16,29 +17,10 @@ export async function POST(req: Request) {
 
     const userId = session.user.id;
     const body = await req.json();
-    const { accountId, amount, method } = body; // method: "iban" | "card" | "atm"
+    const parsed = validateRequest(createDepositSchema, body);
+    if (!parsed.success) return parsed.response;
 
-    // Validasyon
-    if (!accountId || !amount || !method) {
-      return NextResponse.json(
-        { error: "Hesap, tutar ve yöntem zorunludur." },
-        { status: 400 }
-      );
-    }
-
-    if (amount <= 0) {
-      return NextResponse.json(
-        { error: "Tutar 0'dan büyük olmalıdır." },
-        { status: 400 }
-      );
-    }
-
-    if (!["iban", "card", "atm"].includes(method)) {
-      return NextResponse.json(
-        { error: "Geçersiz para yatırma yöntemi." },
-        { status: 400 }
-      );
-    }
+    const { accountId, amount, method } = parsed.data;
 
     // Hesabı kontrol et
     const account = await prisma.financialAccount.findFirst({
@@ -98,3 +80,5 @@ export async function POST(req: Request) {
     );
   }
 }
+
+export const POST = withRateLimit({ maxRequests: 10, windowMs: 60_000 }, handler);
