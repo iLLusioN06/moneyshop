@@ -42,7 +42,10 @@ export async function createAuditLog(input: AuditLogInput): Promise<void> {
  */
 export function getRequestMetadata(req: Request): { ip?: string; userAgent?: string } {
   const forwarded = req.headers.get("x-forwarded-for");
-  const ip = forwarded?.split(",")[0]?.trim() || undefined;
+  const ip = forwarded?.split(",")[0]?.trim()
+    || req.headers.get("x-real-ip")
+    || req.headers.get("cf-connecting-ip")
+    || undefined;
   const userAgent = req.headers.get("user-agent") || undefined;
   return { ip, userAgent };
 }

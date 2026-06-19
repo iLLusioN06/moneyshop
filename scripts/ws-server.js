@@ -93,6 +93,12 @@ io.on("connection", (socket) => {
   socket.on("join", (userId) => {
     if (!userId || typeof userId !== "string") return;
     socket.join(`user:${userId}`);
+    console.log(`[WS] ${socket.id} joined user:${userId}`);
+  });
+
+  // Heartbeat ping/pong
+  socket.on("ping", () => {
+    socket.emit("pong");
   });
 
   socket.on("disconnect", (reason) => {

@@ -253,9 +253,9 @@ export default function AdminUsersPage() {
   };
 
   const roleLabels: Record<string, string> = {
-    ADMIN: "Admin",
-    MODERATOR: "Moderatör",
-    USER: "Kullanıcı",
+    ADMIN: t("nav.admin"),
+    MODERATOR: t("admin.users.moderator"),
+    USER: t("admin.users.kullaniciLabel"),
   };
 
   return (
@@ -270,13 +270,13 @@ export default function AdminUsersPage() {
           <div>
             <h2 className="text-2xl font-bold text-text-primary">{t("admin.users.title")}</h2>
             <p className="text-sm text-text-muted mt-1">
-              {data ? `${data.total} kullanıcı bulundu` : "Tüm kullanıcıları yönetin"}
+              {data ? `${data.total} ${t("admin.users.title")}` : t("admin.dashboardSubtitle")}
             </p>
           </div>
         </div>
         <Button variant="outline" size="sm" onClick={fetchUsers} isLoading={loading}>
           <RefreshCw className="w-4 h-4" />
-          Yenile
+          {t("admin.users.yenile")}
         </Button>
       </div>
 
@@ -294,9 +294,9 @@ export default function AdminUsersPage() {
       {/* Filters */}
       <Card className="overflow-hidden">
         <div className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent px-5 py-3 border-b border-border">
-          <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2">
-            <Search className="w-4 h-4 text-secondary" />
-            Filtrele
+            <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2">
+              <Search className="w-4 h-4 text-secondary" />
+              {t("admin.users.filtrele")}
           </h3>
         </div>
         <CardContent className="p-4">
@@ -306,7 +306,7 @@ export default function AdminUsersPage() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted" />
                 <input
                   type="text"
-                  placeholder="Kullanıcı adı, e-posta veya telefon ile ara..."
+                  placeholder={t("admin.users.kullaniciAra")}
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                   className="h-9 w-full rounded-lg border border-border bg-surface-secondary pl-9 pr-3 text-sm placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-secondary transition-all"
@@ -319,10 +319,10 @@ export default function AdminUsersPage() {
               onChange={(e) => { setRoleFilter(e.target.value); setPage(1); }}
               className="h-9 rounded-lg border border-border bg-surface-secondary px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-secondary/30"
             >
-              <option value="">Tüm Roller</option>
-              <option value="USER">Kullanıcı</option>
-              <option value="MODERATOR">Moderatör</option>
-              <option value="ADMIN">Admin</option>
+              <option value="">{t("admin.users.tumRoller")}</option>
+              <option value="USER">{t("admin.users.kullaniciLabel")}</option>
+              <option value="MODERATOR">{t("admin.users.moderator")}</option>
+              <option value="ADMIN">{t("nav.admin")}</option>
             </select>
 
             <select
@@ -330,9 +330,9 @@ export default function AdminUsersPage() {
               onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
               className="h-9 rounded-lg border border-border bg-surface-secondary px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-secondary/30"
             >
-              <option value="">Tüm Durumlar</option>
-              <option value="active">Aktif</option>
-              <option value="suspended">Askıda</option>
+              <option value="">{t("admin.users.tumDurumlar")}</option>
+              <option value="active">{t("admin.users.aktif")}</option>
+              <option value="suspended">{t("admin.users.askida")}</option>
             </select>
           </div>
         </CardContent>
@@ -343,7 +343,7 @@ export default function AdminUsersPage() {
         <div className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent px-5 py-3 border-b border-border flex-shrink-0">
           <h3 className="text-sm font-semibold text-text-primary flex items-center gap-2">
             <UserCog className="w-4 h-4 text-secondary" />
-            Kullanıcılar
+            {t("admin.users.kullanicilar")}
           </h3>
         </div>
         <CardContent className="p-0 flex-1 min-h-0 flex flex-col">
@@ -353,7 +353,7 @@ export default function AdminUsersPage() {
             </div>
           ) : data && data.data.length === 0 ? (
             <div className="py-12 text-center text-sm text-text-muted flex-1 flex items-center justify-center">
-              Kullanıcı bulunamadı.
+              {t("admin.users.bulunamadi")}
             </div>
           ) : data ? (
             <>
@@ -361,14 +361,14 @@ export default function AdminUsersPage() {
                 <table className="w-full text-sm">
                   <thead className="sticky top-0 z-[1]">
                     <tr className="border-b border-border bg-surface-tertiary/50">
-                      <th className="text-left py-3 px-4 text-text-muted font-medium">Kullanıcı</th>
-                      <th className="text-left py-3 px-4 text-text-muted font-medium">İletişim</th>
-                      <th className="text-left py-3 px-4 text-text-muted font-medium">Rol</th>
-                      <th className="text-left py-3 px-4 text-text-muted font-medium">Durum</th>
-                      <th className="text-left py-3 px-4 text-text-muted font-medium">Güvenlik</th>
-                      <th className="text-left py-3 px-4 text-text-muted font-medium">İstatistik</th>
-                      <th className="text-left py-3 px-4 text-text-muted font-medium">Kayıt</th>
-                      <th className="text-right py-3 px-4 text-text-muted font-medium">İşlem</th>
+                      <th className="text-left py-3 px-4 text-text-muted font-medium">{t("admin.users.kullanici")}</th>
+                      <th className="text-left py-3 px-4 text-text-muted font-medium">{t("admin.users.iletisim")}</th>
+                      <th className="text-left py-3 px-4 text-text-muted font-medium">{t("admin.users.rol")}</th>
+                      <th className="text-left py-3 px-4 text-text-muted font-medium">{t("admin.users.durum")}</th>
+                      <th className="text-left py-3 px-4 text-text-muted font-medium">{t("admin.users.guvenlik")}</th>
+                      <th className="text-left py-3 px-4 text-text-muted font-medium">{t("admin.users.istatistik")}</th>
+                      <th className="text-left py-3 px-4 text-text-muted font-medium">{t("admin.users.kayit")}</th>
+                      <th className="text-right py-3 px-4 text-text-muted font-medium">{t("admin.users.islem")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -380,7 +380,7 @@ export default function AdminUsersPage() {
                               {(user.name || user.email)[0]?.toUpperCase()}
                             </div>
                             <div>
-                              <p className="font-medium text-text-primary">{user.name || "İsimsiz"}</p>
+                              <p className="font-medium text-text-primary">{user.name || t("admin.users.bulunamadi")}</p>
                               <p className="text-xs text-text-muted">{user.id.slice(0, 8)}...</p>
                             </div>
                           </div>
@@ -397,7 +397,7 @@ export default function AdminUsersPage() {
                         </td>
                         <td className="py-3 px-4">
                           <Badge variant={user.isActive ? "success" : "danger"}>
-                            {user.isActive ? "Aktif" : "Askıda"}
+                            {user.isActive ? t("admin.users.aktif") : t("admin.users.askida")}
                           </Badge>
                         </td>
                         <td className="py-3 px-4">
@@ -416,9 +416,9 @@ export default function AdminUsersPage() {
                         </td>
                         <td className="py-3 px-4">
                           <div className="flex items-center gap-3 text-xs text-text-muted">
-                            <span title="Hesap">{user._count.accounts} hesap</span>
-                            <span>·</span>
-                            <span title="İşlem">{user._count.transactions} işlem</span>
+                            <span title={t("admin.users.istatistik")}>{user._count.accounts} {t("admin.users.hesap")}</span>
+
+                            <span title={t("admin.users.istatistik")}>{user._count.transactions} {t("admin.users.islemSayisi")}</span>
                           </div>
                         </td>
                         <td className="py-3 px-4 text-xs text-text-muted">
@@ -454,9 +454,9 @@ export default function AdminUsersPage() {
                                 disabled={updatingId === user.id}
                                 className="h-8 text-xs rounded-lg border border-border bg-surface-secondary px-2 text-text-primary focus:outline-none focus:ring-2 focus:ring-secondary/30 disabled:opacity-50"
                               >
-                                <option value="USER">Kullanıcı</option>
-                                <option value="MODERATOR">Moderatör</option>
-                                <option value="ADMIN">Admin</option>
+                                <option value="USER">{t("admin.users.kullaniciLabel")}</option>
+                                <option value="MODERATOR">{t("admin.users.moderator")}</option>
+                                <option value="ADMIN">{t("nav.admin")}</option>
                               </select>
                             )}
 
@@ -466,7 +466,7 @@ export default function AdminUsersPage() {
                               size="sm"
                               onClick={() => updateUser(user.id, { isActive: !user.isActive })}
                               isLoading={updatingId === user.id}
-                              title={user.isActive ? "Askıya Al" : "Aktifleştir"}
+                              title={user.isActive ? t("admin.users.askida") : t("admin.users.aktif")}
                             >
                               {user.isActive ? (
                                 <UserX className="w-4 h-4 text-loss" />
@@ -493,7 +493,7 @@ export default function AdminUsersPage() {
                                   className="w-full flex items-center gap-2 px-3 py-2 text-sm text-loss hover:bg-loss/5 transition-colors rounded-b-lg"
                                 >
                                   <Trash2 className="w-4 h-4" />
-                                  Kullanıcıyı Sil
+                                  {t("admin.users.title")} {t("common.delete")}
                                 </button>
                               </div>
                             </div>
@@ -544,7 +544,7 @@ export default function AdminUsersPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-surface rounded-xl border border-border w-full max-w-2xl max-h-[90vh] overflow-hidden animate-[slide-up_0.3s_ease-out]">
             <div className="flex items-center justify-between p-4 border-b border-border">
-              <h2 className="text-lg font-semibold text-text-primary">Kullanıcı Detayı</h2>
+                <h2 className="text-lg font-semibold text-text-primary">{t("admin.users.title")} {t("common.edit")}</h2>
               <button onClick={() => setShowDetailModal(false)} className="p-1 rounded-lg hover:bg-surface-tertiary text-text-muted">
                 <X className="w-5 h-5" />
               </button>
@@ -563,7 +563,7 @@ export default function AdminUsersPage() {
                       {roleLabels[selectedUser.role]}
                     </span>
                     <Badge variant={selectedUser.isActive ? "success" : "danger"}>
-                      {selectedUser.isActive ? "Aktif" : "Askıda"}
+                      {selectedUser.isActive ? t("admin.users.aktif") : t("admin.users.askida")}
                     </Badge>
                   </div>
                 </div>
@@ -601,7 +601,7 @@ export default function AdminUsersPage() {
                     <span className="text-xs">2FA Durumu</span>
                   </div>
                   <p className="text-sm font-medium text-text-primary">
-                    {selectedUser.twoFactorEnabled ? "Aktif" : "Pasif"}
+                      {selectedUser.twoFactorEnabled ? t("admin.users.aktif") : t("admin.users.pasif")}
                   </p>
                 </div>
               </div>
@@ -646,7 +646,7 @@ export default function AdminUsersPage() {
                   onClick={() => updateUser(selectedUser.id, { isActive: !selectedUser.isActive })}
                 >
                   {selectedUser.isActive ? <Ban className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
-                  {selectedUser.isActive ? "Askıya Al" : "Aktifleştir"}
+                      {selectedUser.isActive ? t("admin.users.askida") : t("admin.users.aktif")}
                 </Button>
                 <Button
                   variant="outline"
@@ -678,7 +678,7 @@ export default function AdminUsersPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-surface rounded-xl border border-border w-full max-w-md animate-[slide-up_0.3s_ease-out]">
             <div className="flex items-center justify-between p-4 border-b border-border">
-              <h2 className="text-lg font-semibold text-text-primary">Kullanıcıyı Düzenle</h2>
+                <h2 className="text-lg font-semibold text-text-primary">{t("admin.users.title")} {t("common.edit")}</h2>
               <button onClick={() => setShowEditModal(false)} className="p-1 rounded-lg hover:bg-surface-tertiary text-text-muted">
                 <X className="w-5 h-5" />
               </button>
@@ -718,9 +718,9 @@ export default function AdminUsersPage() {
                   onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
                   className="w-full px-3 py-2 rounded-lg border border-border bg-surface text-text-primary focus:outline-none focus:ring-2 focus:ring-secondary/30"
                 >
-                  <option value="USER">Kullanıcı</option>
-                  <option value="MODERATOR">Moderatör</option>
-                  <option value="ADMIN">Admin</option>
+                  <option value="USER">{t("admin.users.kullaniciLabel")}</option>
+                  <option value="MODERATOR">{t("admin.users.moderator")}</option>
+                  <option value="ADMIN">{t("nav.admin")}</option>
                 </select>
               </div>
               <div className="flex items-center gap-2">
@@ -731,7 +731,7 @@ export default function AdminUsersPage() {
                   onChange={(e) => setEditForm({ ...editForm, isActive: e.target.checked })}
                   className="w-4 h-4 rounded border-border text-secondary focus:ring-secondary/30"
                 />
-                <label htmlFor="isActive" className="text-sm text-text-primary">Aktif</label>
+                <label htmlFor="isActive" className="text-sm text-text-primary">{t("admin.users.aktif")}</label>
               </div>
             </div>
             <div className="flex items-center justify-end gap-2 p-4 border-t border-border">
@@ -751,7 +751,7 @@ export default function AdminUsersPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-surface rounded-xl border border-border w-full max-w-md animate-[slide-up_0.3s_ease-out]">
             <div className="flex items-center justify-between p-4 border-b border-border">
-              <h2 className="text-lg font-semibold text-loss">Kullanıcıyı Sil</h2>
+                <h2 className="text-lg font-semibold text-loss">{t("admin.users.title")} {t("common.delete")}</h2>
               <button onClick={() => setShowDeleteModal(false)} className="p-1 rounded-lg hover:bg-surface-tertiary text-text-muted">
                 <X className="w-5 h-5" />
               </button>
@@ -760,7 +760,7 @@ export default function AdminUsersPage() {
               <div className="flex items-center gap-3 p-4 rounded-lg bg-loss/10 border border-loss/20 mb-4">
                 <AlertTriangle className="w-5 h-5 text-loss flex-shrink-0" />
                 <p className="text-sm text-loss">
-                  Bu işlem geri alınamaz! Kullanıcının tüm verileri silinecektir.
+                  {t("admin.users.title")} {t("common.delete")}
                 </p>
               </div>
               <p className="text-sm text-text-muted mb-4">
@@ -811,7 +811,7 @@ export default function AdminUsersPage() {
               <div className="flex items-center gap-3 p-4 rounded-lg bg-secondary/10 border border-secondary/20 mb-4">
                 <Key className="w-5 h-5 text-secondary flex-shrink-0" />
                 <p className="text-sm text-text-muted">
-                  Kullanıcıya şifre sıfırlama e-postası gönderilecektir.
+                  {t("admin.users.title")} {t("admin.users.title")}
                 </p>
               </div>
               <p className="text-sm text-text-muted">

@@ -57,7 +57,12 @@ tmp/
 
 # dev artifacts
 dev.log
+dev_full_output.log
+.server-output.log
 nul
+test-password.ts.ts
+pagesnapshot.md
+page-snapshot.md
 
 # playwright
 .playwright-mcp/

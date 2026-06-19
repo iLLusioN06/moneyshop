@@ -13,6 +13,7 @@ import {
 import { ErrorBoundary } from "@/components/error-boundary";
 import { useRouter } from "next/navigation";
 import { formatCurrency, formatNumber, formatDate } from "@/lib/utils";
+import { t } from "@/lib/dashboard-i18n";
 import {
   Users,
   Building2,
@@ -148,7 +149,10 @@ export default function AdminPage() {
     setLoading(true);
     setError(null);
     fetch("/api/admin/stats")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
       .then((data) => {
         if (data.success) {
           setStats(data.data);
@@ -156,7 +160,10 @@ export default function AdminPage() {
           setError(data.error || "Veriler alınamadı.");
         }
       })
-      .catch(() => setError("Sunucuya bağlanılamadı."))
+      .catch((err) => {
+        console.error("Admin stats error:", err);
+        setError("Sunucuya bağlanılamadı.");
+      })
       .finally(() => setLoading(false));
   }
 
@@ -188,14 +195,14 @@ export default function AdminPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-text-primary">Admin Paneli</h2>
+          <h2 className="text-2xl font-bold text-text-primary">{t("admin.dashboard")}</h2>
           <p className="text-sm text-text-muted mt-1">
-            Sistem genelindeki istatistikler ve yönetim araçları
+            {t("admin.dashboardSubtitle")}
           </p>
         </div>
-        <Button variant="outline" size="sm" onClick={fetchStats} isLoading={loading}>
-          <RefreshCw className="w-4 h-4" />
-          Yenile
+        <Button variant="outline" size="sm" onClick={fetchStats} disabled={loading}>
+          <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+          {loading ? t("common.loading") : t("common.refresh")}
         </Button>
       </div>
 
@@ -222,7 +229,7 @@ export default function AdminPage() {
           {/* Stats Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard
-              title="Toplam Kullanıcı"
+              title={t("admin.totalUsers")}
               value={formatNumber(stats.totalUsers)}
               subtitle={`${stats.activeUsers} aktif, ${stats.suspendedUsers} askıda`}
               icon={Users}
@@ -230,7 +237,7 @@ export default function AdminPage() {
               bgColor="bg-secondary/10"
             />
             <StatCard
-              title="Aktif Kullanıcı"
+              title={t("admin.activeUsers")}
               value={formatNumber(stats.activeUsers)}
               subtitle={`%${stats.totalUsers > 0 ? Math.round((stats.activeUsers / stats.totalUsers) * 100) : 0} katılım`}
               icon={UserCheck}
@@ -238,14 +245,14 @@ export default function AdminPage() {
               bgColor="bg-profit/10"
             />
             <StatCard
-              title="Askıdaki Kullanıcı"
+              title={t("admin.suspendedUsers")}
               value={formatNumber(stats.suspendedUsers)}
               icon={UserX}
               color="text-loss"
               bgColor="bg-loss/10"
             />
             <StatCard
-              title="Toplam Hesap"
+              title={t("admin.totalAccounts")}
               value={formatNumber(stats.totalAccounts)}
               subtitle="Tüm finansal hesaplar"
               icon={Building2}
@@ -253,7 +260,7 @@ export default function AdminPage() {
               bgColor="bg-accent/10"
             />
             <StatCard
-              title="Toplam İşlem"
+              title={t("admin.totalTransactions")}
               value={formatNumber(stats.totalTransactions)}
               subtitle={`Bu ay ${stats.monthlyTransactions} işlem`}
               icon={ArrowUpDown}
@@ -261,7 +268,7 @@ export default function AdminPage() {
               bgColor="bg-secondary/10"
             />
             <StatCard
-              title="Bu Ay Gelir"
+              title={t("admin.monthlyIncome")}
               value={formatCurrency(stats.monthlyIncome)}
               subtitle={stats.incomeGrowth !== 0 ? `Geçen aya göre %${stats.incomeGrowth > 0 ? '+' : ''}${stats.incomeGrowth}` : undefined}
               icon={TrendingUp}
@@ -269,14 +276,14 @@ export default function AdminPage() {
               bgColor="bg-profit/10"
             />
             <StatCard
-              title="Bu Ay Gider"
+              title={t("admin.monthlyExpense")}
               value={formatCurrency(stats.monthlyExpense)}
               icon={TrendingDown}
               color="text-loss"
               bgColor="bg-loss/10"
             />
             <StatCard
-              title="Toplam Hacim"
+              title={t("admin.totalVolume")}
               value={formatCurrency(stats.totalVolume)}
               subtitle={`Son 7 gün: ${formatCurrency(stats.weeklyVolume)} (${stats.weeklyTransactionCount} işlem)`}
               icon={Wallet}
@@ -284,7 +291,7 @@ export default function AdminPage() {
               bgColor="bg-secondary/10"
             />
             <StatCard
-              title="Ortalama İşlem"
+              title={t("admin.avgTransaction")}
               value={formatCurrency(stats.avgTransactionAmount)}
               subtitle="İşlem başına ortalama tutar"
               icon={BarChart3}
@@ -297,10 +304,10 @@ export default function AdminPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Monthly Revenue Chart */}
             <Card className="overflow-hidden">
-              <CardHeader className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent border-b border-border">
+              <CardHeader className="bg-gradient-to-r from-profit/10 via-profit/5 to-transparent border-b border-border">
                 <div className="flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-secondary" />
-                  <CardTitle className="text-sm">Aylık Gelir/Gider Trendi</CardTitle>
+                  <TrendingUp className="w-5 h-5 text-profit" />
+                  <CardTitle className="text-sm">{t("admin.revenueChart")}</CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="p-5">
@@ -329,13 +336,13 @@ export default function AdminPage() {
               <CardHeader className="bg-gradient-to-r from-accent/10 via-accent/5 to-transparent border-b border-border">
                 <div className="flex items-center gap-2">
                   <Activity className="w-5 h-5 text-accent" />
-                  <CardTitle className="text-sm">Kullanıcı Büyümesi</CardTitle>
+                  <CardTitle className="text-sm">{t("admin.userGrowth")}</CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="p-5">
                 {stats.userGrowth.length === 0 ? (
                   <div className="h-64 flex items-center justify-center text-sm text-text-muted">
-                    Grafik için veri bulunamadı
+                    {t("admin.noChartData")}
                   </div>
                 ) : (
                   <ResponsiveContainer width="100%" height={280}>
@@ -348,13 +355,13 @@ export default function AdminPage() {
                           return (
                             <div className="bg-surface border border-border rounded-lg shadow-lg p-3 text-sm">
                               <p className="font-medium text-text-primary">{label}</p>
-                              <p className="font-medium text-accent">{payload[0].value} yeni kullanıcı</p>
+                              <p className="font-medium text-accent">{payload[0].value} {t("admin.yeniKullanici")}</p>
                             </div>
                           );
                         }
                         return null;
                       }} />
-                      <Line type="monotone" dataKey="count" name="Yeni Kullanıcı" stroke="#8b5cf6" strokeWidth={2} dot={{ fill: '#8b5cf6', r: 4 }} />
+                      <Line type="monotone" dataKey="count" name={t("admin.newUsers")} stroke="#8b5cf6" strokeWidth={2} dot={{ fill: '#8b5cf6', r: 4 }} />
                     </LineChart>
                   </ResponsiveContainer>
                 )}
@@ -369,13 +376,13 @@ export default function AdminPage() {
               <CardHeader className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent border-b border-border">
                 <div className="flex items-center gap-2">
                   <BarChart3 className="w-5 h-5 text-secondary" />
-                  <CardTitle className="text-sm">İşlem Dağılımı</CardTitle>
+                  <CardTitle className="text-sm">{t("admin.transactionDist")}</CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="p-5">
                 {(stats.transactionsByType?.length ?? 0) === 0 ? (
                   <div className="h-48 flex items-center justify-center text-sm text-text-muted">
-                    Veri bulunamadı
+                    {t("admin.noChartData")}
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -414,13 +421,13 @@ export default function AdminPage() {
               <CardHeader className="bg-gradient-to-r from-accent/10 via-accent/5 to-transparent border-b border-border">
                 <div className="flex items-center gap-2">
                   <Users className="w-5 h-5 text-accent" />
-                  <CardTitle className="text-sm">En Çok İşlem Yapan Kullanıcılar</CardTitle>
+                  <CardTitle className="text-sm">{t("admin.topUsers")}</CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="p-5">
                 {(stats.topUsers?.length ?? 0) === 0 ? (
                   <div className="h-48 flex items-center justify-center text-sm text-text-muted">
-                    Veri bulunamadı
+                    {t("admin.noChartData")}
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -460,7 +467,7 @@ export default function AdminPage() {
               <CardContent className="p-5">
                 {(stats.transactionsByDay?.length ?? 0) === 0 ? (
                   <div className="h-48 flex items-center justify-center text-sm text-text-muted">
-                    Veri bulunamadı
+                    {t("admin.noChartData")}
                   </div>
                 ) : (
                   <div className="space-y-2">
@@ -536,15 +543,15 @@ export default function AdminPage() {
 
           {/* Recent Transactions */}
           <Card className="overflow-hidden">
-            <CardHeader className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent">
+            <CardHeader className="bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent border-b border-border">
               <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle>Son İşlemler</CardTitle>
-                  <p className="text-sm text-text-muted mt-1">Sistemdeki son 10 işlem</p>
+                <div className="flex items-center gap-2">
+                  <History className="w-5 h-5 text-secondary" />
+                  <CardTitle className="text-sm">{t("admin.recentTransactions")}</CardTitle>
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => router.push("/admin/transactions")}>
-                  Tümü
-                  <ArrowRight className="w-4 h-4" />
+                  {t("admin.allTransactions")}
+                  <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
               </div>
             </CardHeader>

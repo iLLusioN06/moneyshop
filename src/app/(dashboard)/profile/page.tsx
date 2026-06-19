@@ -119,18 +119,18 @@ function ProfileHeader({
   const roleCfg = ROLE_CONFIG[role] || ROLE_CONFIG.USER;
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800 shadow-xl">
+    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-secondary/20 via-secondary/10 to-transparent border border-secondary/20 shadow-xl">
       {/* Decorative Elements — pointer-events-none lets clicks pass through to tabs */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-secondary/10 to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-accent/10 to-transparent rounded-full blur-3xl translate-y-1/3 -translate-x-1/4 pointer-events-none" />
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-50 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-secondary/5 to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-accent/5 to-transparent rounded-full blur-3xl translate-y-1/3 -translate-x-1/4 pointer-events-none" />
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMiI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-30 pointer-events-none" />
 
       <div className="relative p-6 md:p-8">
         {/* Top Row — Avatar + Name + Role */}
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
           {/* Avatar with camera overlay */}
           <div className="relative group flex-shrink-0">
-            <div className={`w-24 h-24 rounded-full bg-gradient-to-br ${roleCfg.color} flex items-center justify-center text-white font-bold text-4xl shadow-lg shadow-secondary/20 ring-4 ring-white/20`}>
+            <div className={`w-24 h-24 rounded-full bg-gradient-to-br ${roleCfg.color} flex items-center justify-center text-white font-bold text-4xl shadow-lg shadow-secondary/20 ring-4 ring-border`}>
               {profile?.image ? (
                 <img
                   src={profile.image}
@@ -142,7 +142,7 @@ function ProfileHeader({
               )}
             </div>
             <button
-              className="absolute -bottom-1 -right-1 w-8 h-8 bg-white dark:bg-slate-700 rounded-full flex items-center justify-center shadow-lg border-2 border-slate-800 dark:border-slate-600 hover:scale-110 transition-transform text-slate-600 dark:text-slate-300"
+              className="absolute -bottom-1 -right-1 w-8 h-8 bg-surface rounded-full flex items-center justify-center shadow-lg border-2 border-border hover:scale-110 transition-transform text-text-muted"
               title="Fotoğraf değiştir"
             >
               <Camera className="w-4 h-4" />
@@ -151,17 +151,17 @@ function ProfileHeader({
 
           {/* Name + Email + Role */}
           <div className="text-center sm:text-left flex-1 min-w-0">
-            <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
+            <h1 className="text-2xl md:text-3xl font-bold text-text-primary tracking-tight">
               {displayName}
             </h1>
-            <p className="text-sm text-white/60 mt-1 truncate">{displayEmail}</p>
+            <p className="text-sm text-text-muted mt-1 truncate">{displayEmail}</p>
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mt-3">
-              <Badge variant={roleCfg.variant} size="md" className="bg-white/10 text-white border border-white/10 backdrop-blur-sm">
+              <Badge variant={roleCfg.variant} size="md" className="border border-secondary/20">
                 <Shield className="w-3.5 h-3.5 mr-1" />
                 {roleCfg.label}
               </Badge>
               {profile?.isActive !== false ? (
-                <Badge variant="success" size="sm" className="bg-white/10 text-emerald-300 border border-white/10 backdrop-blur-sm">
+                <Badge variant="success" size="sm" className="border border-profit/20">
                   <CheckCircle2 className="w-3 h-3 mr-1" />
                   Aktif
                 </Badge>
@@ -182,10 +182,10 @@ function ProfileHeader({
                 { icon: ArrowUpDown, value: profile._count.transactions, label: "İşlem" },
                 { icon: PiggyBank, value: profile._count.budgets, label: "Bütçe" },
               ].map((stat, i) => (
-                <div key={i} className="text-center px-4 py-2 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
-                  <stat.icon className="w-4 h-4 text-white/50 mx-auto mb-1" />
-                  <p className="text-lg font-bold text-white">{stat.value}</p>
-                  <p className="text-[10px] text-white/40 uppercase tracking-wider">{stat.label}</p>
+                <div key={i} className="text-center px-4 py-2 rounded-xl bg-surface-secondary border border-border">
+                  <stat.icon className="w-4 h-4 text-text-muted mx-auto mb-1" />
+                  <p className="text-lg font-bold text-text-primary">{stat.value}</p>
+                  <p className="text-[10px] text-text-muted uppercase tracking-wider">{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -194,7 +194,7 @@ function ProfileHeader({
 
         {/* Member Since */}
         {profile && (
-          <div className="flex items-center justify-center sm:justify-start gap-1.5 mt-4 text-xs text-white/40">
+          <div className="flex items-center justify-center sm:justify-start gap-1.5 mt-4 text-xs text-text-muted">
             <Calendar className="w-3.5 h-3.5" />
             <span>Üyelik: {formatDate(new Date(profile.createdAt), "long")}</span>
           </div>
@@ -202,7 +202,7 @@ function ProfileHeader({
       </div>
 
       {/* Tab Navigation */}
-      <div className="border-t border-white/10 px-6 md:px-8">
+      <div className="border-t border-border px-6 md:px-8">
         <div className="flex gap-1 -mb-px overflow-x-auto scrollbar-none">
           {TABS.map((tab) => {
             const TabIcon = tab.icon;
@@ -226,8 +226,8 @@ function ProfileHeader({
                 }}
                 className={`flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-all duration-200 border-b-2 ${
                   isActive
-                    ? "text-white border-white bg-white/5"
-                    : "text-white/50 border-transparent hover:text-white/80 hover:bg-white/5"
+                    ? "text-secondary border-secondary bg-secondary/5"
+                    : "text-text-muted border-transparent hover:text-text-primary hover:bg-surface-secondary"
                 }`}
               >
                 <TabIcon className="w-4 h-4" />

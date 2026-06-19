@@ -23,6 +23,12 @@ const pageTitleKeys: Record<string, string> = {
   "/portfolio": "header.portfolio",
   "/reports": "header.reports",
   "/my-card": "header.card",
+  "/templates": "header.templates",
+  "/split-bills": "header.splitBills",
+  "/installments": "header.installments",
+  "/support": "header.support",
+  "/deposit": "header.deposit",
+  "/withdraw": "header.withdraw",
 };
 
 export function Header() {

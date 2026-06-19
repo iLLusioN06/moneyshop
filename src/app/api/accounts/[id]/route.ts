@@ -6,154 +6,86 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { createAuditLog, getRequestMetadata } from "@/lib/audit";
+import { apiHandler, NotFoundError, successResponse } from "@/lib/api-handler";
 
 // GET /api/accounts/[id] - Hesap detayı
-export async function GET(
-  _req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Yetkilendirme gerekli." }, { status: 401 });
-    }
+export const GET = apiHandler(async (_req, context) => {
+  const session = await auth();
+  const { id } = (context as { params: Promise<{ id: string }> }).params;
+  const params = await (context as { params: Promise<{ id: string }> }).params;
 
-    const { id } = await params;
+  const account = await prisma.financialAccount.findFirst({
+    where: { id: params.id, userId: session!.user!.id },
+  });
 
-    const account = await prisma.financialAccount.findFirst({
-      where: { id, userId: session.user.id },
-    });
-
-    if (!account) {
-      return NextResponse.json(
-        { error: "Hesap bulunamadı." },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json({ success: true, data: account });
-  } catch (error) {
-    console.error("Account GET error:", error);
-    return NextResponse.json(
-      { error: "Hesap alınırken bir hata oluştu." },
-      { status: 500 }
-    );
-  }
-}
+  if (!account) throw new NotFoundError("Hesap bulunamadı.");
+  return successResponse(account);
+}, { requireAuth: true });
 
 // PUT /api/accounts/[id] - Hesap güncelle
-export async function PUT(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Yetkilendirme gerekli." }, { status: 401 });
-    }
+export const PUT = apiHandler(async (req, context) => {
+  const session = await auth();
+  const { id } = await (context as { params: Promise<{ id: string }> }).params;
 
-    const { id } = await params;
+  const existing = await prisma.financialAccount.findFirst({
+    where: { id, userId: session!.user!.id },
+  });
+  if (!existing) throw new NotFoundError("Hesap bulunamadı.");
 
-    // Hesabın kullanıcıya ait olduğunu kontrol et
-    const existing = await prisma.financialAccount.findFirst({
-      where: { id, userId: session.user.id },
-    });
+  const body = await req.json();
+  const { name, type, balance, currency, icon, color, isActive } = body;
 
-    if (!existing) {
-      return NextResponse.json(
-        { error: "Hesap bulunamadı." },
-        { status: 404 }
-      );
-    }
+  const account = await prisma.financialAccount.update({
+    where: { id },
+    data: {
+      ...(name !== undefined && { name }),
+      ...(type !== undefined && { type }),
+      ...(balance !== undefined && { balance }),
+      ...(currency !== undefined && { currency }),
+      ...(icon !== undefined && { icon }),
+      ...(color !== undefined && { color }),
+      ...(isActive !== undefined && { isActive }),
+    },
+  });
 
-    const body = await req.json();
-    const { name, type, balance, currency, icon, color, isActive } = body;
+  const meta = getRequestMetadata(req);
+  await createAuditLog({
+    userId: session!.user!.id,
+    action: "UPDATE",
+    entity: "ACCOUNT",
+    entityId: id,
+    details: body,
+    ip: meta.ip,
+    userAgent: meta.userAgent,
+  });
 
-    const account = await prisma.financialAccount.update({
-      where: { id },
-      data: {
-        ...(name !== undefined && { name }),
-        ...(type !== undefined && { type }),
-        ...(balance !== undefined && { balance }),
-        ...(currency !== undefined && { currency }),
-        ...(icon !== undefined && { icon }),
-        ...(color !== undefined && { color }),
-        ...(isActive !== undefined && { isActive }),
-      },
-    });
-
-    // Denetim günlüğü
-    const meta = getRequestMetadata(req);
-    await createAuditLog({
-      userId: session.user.id,
-      action: "UPDATE",
-      entity: "ACCOUNT",
-      entityId: id,
-      details: body,
-      ip: meta.ip,
-      userAgent: meta.userAgent,
-    });
-
-    return NextResponse.json({ success: true, data: account });
-  } catch (error) {
-    console.error("Account PUT error:", error);
-    return NextResponse.json(
-      { error: "Hesap güncellenirken bir hata oluştu." },
-      { status: 500 }
-    );
-  }
-}
+  return successResponse(account);
+}, { requireAuth: true });
 
 // DELETE /api/accounts/[id] - Hesap sil (soft delete)
-export async function DELETE(
-  _req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Yetkilendirme gerekli." }, { status: 401 });
-    }
+export const DELETE = apiHandler(async (_req, context) => {
+  const session = await auth();
+  const { id } = await (context as { params: Promise<{ id: string }> }).params;
 
-    const { id } = await params;
+  const existing = await prisma.financialAccount.findFirst({
+    where: { id, userId: session!.user!.id },
+  });
+  if (!existing) throw new NotFoundError("Hesap bulunamadı.");
 
-    const existing = await prisma.financialAccount.findFirst({
-      where: { id, userId: session.user.id },
-    });
+  await prisma.financialAccount.update({
+    where: { id },
+    data: { isActive: false },
+  });
 
-    if (!existing) {
-      return NextResponse.json(
-        { error: "Hesap bulunamadı." },
-        { status: 404 }
-      );
-    }
+  const meta = getRequestMetadata(_req);
+  await createAuditLog({
+    userId: session!.user!.id,
+    action: "DEACTIVATE",
+    entity: "ACCOUNT",
+    entityId: id,
+    ip: meta.ip,
+    userAgent: meta.userAgent,
+  });
 
-    // Soft delete - hesabı pasif yap
-    await prisma.financialAccount.update({
-      where: { id },
-      data: { isActive: false },
-    });
-
-    // Denetim günlüğü
-    const meta = getRequestMetadata(_req);
-    await createAuditLog({
-      userId: session.user.id,
-      action: "DEACTIVATE",
-      entity: "ACCOUNT",
-      entityId: id,
-      ip: meta.ip,
-      userAgent: meta.userAgent,
-    });
-
-    return NextResponse.json({
-      success: true,
-      message: "Hesap devre dışı bırakıldı.",
-    });
-  } catch (error) {
-    console.error("Account DELETE error:", error);
-    return NextResponse.json(
-      { error: "Hesap silinirken bir hata oluştu." },
-      { status: 500 }
-    );
-  }
-}
+  return successResponse({ message: "Hesap devre dışı bırakıldı." });
+}, { requireAuth: true });

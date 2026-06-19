@@ -5,6 +5,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { createAuditLog, getRequestMetadata } from "@/lib/audit";
 
 // GET /api/admin/users/[id] - Kullanıcı detayı
 export async function GET(
@@ -234,17 +235,18 @@ export async function DELETE(
     }
 
     // Audit log (silmeden önce)
-    await prisma.auditLog.create({
-      data: {
-        userId: session.user.id,
-        action: "DELETE",
-        entity: "USER",
-        entityId: id,
-        details: JSON.stringify({
-          deletedUser: user.email,
-          deletedBy: session.user.email,
-        }),
+    const meta = getRequestMetadata(req);
+    await createAuditLog({
+      userId: session.user.id,
+      action: "DELETE",
+      entity: "USER",
+      entityId: id,
+      details: {
+        deletedUser: user.email,
+        deletedBy: session.user.email,
       },
+      ip: meta.ip,
+      userAgent: meta.userAgent,
     });
 
     // İlişkili verileri sil (cascade ile otomatik silinecek)

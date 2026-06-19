@@ -23,8 +23,8 @@ export function formatCurrency(
     EUR: { locale: "de-DE", currency: "EUR" },
     GBP: { locale: "en-GB", currency: "GBP" },
     CHF: { locale: "de-CH", currency: "CHF" },
-    AED: { locale: "ar-AE", currency: "AED" },
-    IQD: { locale: "ar-IQ", currency: "IQD" },
+    AED: { locale: "tr-TR", currency: "AED" },
+    IQD: { locale: "tr-TR", currency: "IQD" },
     XAU: { locale: "en-US", currency: "XAU" },
   };
 

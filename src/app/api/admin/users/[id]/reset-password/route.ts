@@ -5,6 +5,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { createAuditLog, getRequestMetadata } from "@/lib/audit";
 import crypto from "crypto";
 
 // POST /api/admin/users/[id]/reset-password - Kullanıcı şifresini sıfırla
@@ -46,17 +47,18 @@ export async function POST(
     });
 
     // Audit log
-    await prisma.auditLog.create({
-      data: {
-        userId: session.user.id,
-        action: "PASSWORD_RESET",
-        entity: "USER",
-        entityId: id,
-        details: JSON.stringify({
-          targetUser: user.email,
-          resetBy: session.user.email,
-        }),
+    const meta = getRequestMetadata(_req);
+    await createAuditLog({
+      userId: session.user.id,
+      action: "PASSWORD_RESET",
+      entity: "USER",
+      entityId: id,
+      details: {
+        targetUser: user.email,
+        resetBy: session.user.email,
       },
+      ip: meta.ip,
+      userAgent: meta.userAgent,
     });
 
     // Not: Gerçek uygulamada burada kullanıcıya e-posta gönderilir
