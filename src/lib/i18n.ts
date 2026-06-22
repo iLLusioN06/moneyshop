@@ -198,6 +198,7 @@ const flatDict: FlatDict = {
   "header.subtitle":{tr:"Finansal durumunuzu takip edin ve yönetin",en:"Track and manage your financial status",ar:"تتبع وأدر حالتك المالية",ku:"Rewşa xwe bişopîne û veşêrîne",fr:"Suivez et gérez votre situation",ru:"Отслеживайте и управляйте финансами"},
   "header.search":{tr:"Ara...",en:"Search...",ar:"بحث...",ku:"Lêbigere...",fr:"Rechercher...",ru:"Поиск..."},
   "header.notifications":{tr:"Bildirimler",en:"Notifications",ar:"الإشعارات",ku:"Agahdarî",fr:"Notifications",ru:"Уведомления"},
+  "header.noNotifications":{tr:"Bildirim bulunmuyor",en:"No notifications",ar:"لا توجد إشعارات",ku:"Agahdarî tune ye",fr:"Aucune notification",ru:"Нет уведомлений"},
   "header.accounts":{tr:"Hesaplar",en:"Accounts",ar:"الحسابات",ku:"Hesab",fr:"Comptes",ru:"Счета"},
   "header.transactions":{tr:"İşlem Geçmişi",en:"Transactions",ar:"المعاملات",ku:"Danûstandin",fr:"Transactions",ru:"Операции"},
   "header.categories":{tr:"Kategoriler",en:"Categories",ar:"الفئات",ku:"Kategorî",fr:"Catégories",ru:"Категории"},
