@@ -7,6 +7,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import type { Prisma, TransactionType } from "@prisma/client";
 import * as XLSX from "xlsx";
+import { withRateLimit } from "@/lib/rate-limit";
 
 function buildWhere(userId: string, searchParams: URLSearchParams): Prisma.TransactionWhereInput {
   const where: Prisma.TransactionWhereInput = { userId };
@@ -62,7 +63,7 @@ function buildExportData(
   }));
 }
 
-export async function GET(req: Request) {
+export const GET = withRateLimit({ maxRequests: 10, windowMs: 60_000 }, async (req: Request) => {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -150,4 +151,4 @@ export async function GET(req: Request) {
       { status: 500 }
     );
   }
-}
+});

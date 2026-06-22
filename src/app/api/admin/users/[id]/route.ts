@@ -235,7 +235,7 @@ export async function DELETE(
     }
 
     // Audit log (silmeden önce)
-    const meta = getRequestMetadata(req);
+    const meta = getRequestMetadata(_req);
     await createAuditLog({
       userId: session.user.id,
       action: "DELETE",

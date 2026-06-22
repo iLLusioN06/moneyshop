@@ -5,9 +5,10 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { withRateLimit } from "@/lib/rate-limit";
 
 // GET /api/admin/stats - Admin paneli istatistikleri
-export async function GET() {
+export const GET = withRateLimit({ maxRequests: 30, windowMs: 60_000 }, async () => {
   try {
     const session = await auth();
     if (!session?.user?.id || session.user.role !== "ADMIN") {
@@ -203,4 +204,4 @@ export async function GET() {
       { status: 500 }
     );
   }
-}
+});

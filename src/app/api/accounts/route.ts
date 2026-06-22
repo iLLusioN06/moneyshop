@@ -29,7 +29,7 @@ async function postHandler(req: Request) {
 
   const account = await prisma.financialAccount.create({
     data: {
-      userId: session!.user!.id,
+      userId: session!.user!.id as string,
       name,
       type: type || "CHECKING",
       balance: balance || 0,
@@ -41,7 +41,7 @@ async function postHandler(req: Request) {
 
   const meta = getRequestMetadata(req);
   await createAuditLog({
-    userId: session!.user!.id,
+    userId: session!.user!.id as string,
     action: "CREATE",
     entity: "ACCOUNT",
     entityId: account.id,

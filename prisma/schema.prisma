@@ -44,49 +44,59 @@ enum CategoryType {
 // =============================================
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  phone         String    @default("")
+  id             String    @id @default(cuid())
+  name           String?
+  email          String    @unique
+  phone          String    @default("")
   emailVerified  DateTime?
   dateOfBirth    DateTime?
   tcKimlik       String?
   address        String?
   identityNumber String?
   image          String?
-  password      String?
-  role          UserRole  @default(USER)
-  isActive      Boolean   @default(true)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  password       String?
+  role           UserRole  @default(USER)
+  isActive       Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
-  accounts              FinancialAccount[]
-  categories            Category[]
-  budgets               Budget[]
-  transactions          Transaction[]
-  recurringTransactions RecurringTransaction[]
-  investments           Investment[]
-  auditLogs             AuditLog[]
-  sessions              Session[]
-  accounts_             AuthAccount[]
-  emailSettings         EmailNotificationSetting[]
-  emailLogs             EmailLog[]
-  smsLogs               SmsLog[]
-  cards                 Card[]
-  pushSubscriptions     PushSubscription[]
+  accounts                FinancialAccount[]
+  categories              Category[]
+  budgets                 Budget[]
+  transactions            Transaction[]
+  recurringTransactions   RecurringTransaction[]
+  investments             Investment[]
+  auditLogs               AuditLog[]
+  sessions                Session[]
+  accounts_               AuthAccount[]
+  emailSettings           EmailNotificationSetting[]
+  emailLogs               EmailLog[]
+  smsLogs                 SmsLog[]
+  cards                   Card[]
+  pushSubscriptions       PushSubscription[]
   pushNotificationSetting PushNotificationSetting?
-  beneficiaries         Beneficiary[]
-  savingsGoals          SavingsGoal[]
-  installments          Installment[]
-  supportTickets        SupportTicket[]
-  supportMessages       SupportMessage[]
-  transactionTemplates  TransactionTemplate[]
-  splitBills            SplitBill[]
+  beneficiaries           Beneficiary[]
+  savingsGoals            SavingsGoal[]
+  installments            Installment[]
+  supportTickets          SupportTicket[]
+  supportMessages         SupportMessage[]
+  transactionTemplates    TransactionTemplate[]
+  splitBills              SplitBill[]
+  notifications           Notification[]
+  kycDocuments            KycDocument[]
+  loginAttempts           LoginAttempt[]
+  referralsMade           Referral[]                 @relation("ReferrerUser")
+  referredBy              Referral?                  @relation("ReferredUser")
+  apiKeys                 ApiKey[]
+  webhooks                Webhook[]
+  devices                 Device[]
+  contracts               Contract[]
+  scheduledReports        ScheduledReport[]
 
   // ─── İki Faktörlü Kimlik Doğrulama (2FA) ──────────────
-  twoFactorEnabled   Boolean @default(false)
-  twoFactorMethod    String?   // "AUTHENTICATOR" | "SMS"
-  twoFactorSecret    String?   // Şifrelenmiş TOTP secret (AUTHENTICATOR için)
+  twoFactorEnabled     Boolean @default(false)
+  twoFactorMethod      String? // "AUTHENTICATOR" | "SMS"
+  twoFactorSecret      String? // Şifrelenmiş TOTP secret (AUTHENTICATOR için)
   twoFactorBackupCodes String? // Virgülle ayrılmış hash'lenmiş yedek kodlar (10 adet)
 }
 
@@ -144,10 +154,10 @@ model PasswordResetToken {
 model AuditLog {
   id        String   @id @default(cuid())
   userId    String
-  action    String                        // CREATE | UPDATE | DELETE | LOGIN | LOGOUT | VERIFY | etc.
-  entity    String                        // "USER" | "ACCOUNT" | "TRANSACTION" | "TRANSFER" | etc.
-  entityId  String?                       // İlgili kaydın ID'si (opsiyonel)
-  details   Json?    @default("{}")       // Değişiklik detayları
+  action    String // CREATE | UPDATE | DELETE | LOGIN | LOGOUT | VERIFY | etc.
+  entity    String // "USER" | "ACCOUNT" | "TRANSACTION" | "TRANSFER" | etc.
+  entityId  String? // İlgili kaydın ID'si (opsiyonel)
+  details   Json?    @default("{}") // Değişiklik detayları
   ip        String?
   userAgent String?
   createdAt DateTime @default(now())
@@ -166,19 +176,19 @@ model AuditLog {
 // =============================================
 
 model Investment {
-  id          String   @id @default(cuid())
-  userId      String
-  accountId   String
-  name        String                        // Örn: "Apple", "BTC", "Altın"
-  symbol      String                        // Örn: "AAPL", "BTC", "XAU"
-  type        String   @default("STOCK")    // STOCK | CRYPTO | COMMODITY | FUND | OTHER
-  shares      Decimal  @db.Decimal(19, 8)  // Adet / Miktar (kripto için hassasiyet)
-  buyPrice    Decimal  @db.Decimal(19, 4)  // Birim alış fiyatı
-  currentPrice Decimal @default(0) @db.Decimal(19, 4) // Güncel birim fiyat (manuel girilir)
-  currency    String   @default("TRY")
-  notes       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String   @id @default(cuid())
+  userId       String
+  accountId    String
+  name         String // Örn: "Apple", "BTC", "Altın"
+  symbol       String // Örn: "AAPL", "BTC", "XAU"
+  type         String   @default("STOCK") // STOCK | CRYPTO | COMMODITY | FUND | OTHER
+  shares       Decimal  @db.Decimal(19, 8) // Adet / Miktar (kripto için hassasiyet)
+  buyPrice     Decimal  @db.Decimal(19, 4) // Birim alış fiyatı
+  currentPrice Decimal  @default(0) @db.Decimal(19, 4) // Güncel birim fiyat (manuel girilir)
+  currency     String   @default("TRY")
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   user    User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   account FinancialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
@@ -225,8 +235,8 @@ model FinancialAccount {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  transactions Transaction[]
+  user                  User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions          Transaction[]
   recurringTransactions RecurringTransaction[]
   investments           Investment[]
   installments          Installment[]
@@ -243,11 +253,11 @@ model Category {
   color     String       @default("#94a3b8")
   type      CategoryType @default(EXPENSE)
   isDefault Boolean      @default(false)
-  createdAt DateTime @default(now())
+  createdAt DateTime     @default(now())
 
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  transactions Transaction[]
-  budgets      Budget[]
+  user                  User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions          Transaction[]
+  budgets               Budget[]
   recurringTransactions RecurringTransaction[]
   installments          Installment[]
   transactionTemplates  TransactionTemplate[]
@@ -262,23 +272,23 @@ model Transaction {
   userId      String
   categoryId  String?
   type        TransactionType   @default(EXPENSE)
-  amount      Decimal  @db.Decimal(19, 4)
+  amount      Decimal           @db.Decimal(19, 4)
   currency    String            @default("TRY")
   description String?
   status      TransactionStatus @default(COMPLETED)
-  date        DateTime @default(now())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  date        DateTime          @default(now())
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
 
   // Transfer bilgileri
-  recipientName  String?
-  recipientIban  String?
-  recipientBank  String?
-  transferFee    Decimal  @default(0) @db.Decimal(19, 4)
+  recipientName   String?
+  recipientIban   String?
+  recipientBank   String?
+  transferFee     Decimal @default(0) @db.Decimal(19, 4)
   // Para transferlerinde karşı tarafın kullanıcı ID'si (MoneyShop içi transferlerde)
   recipientUserId String?
   // MoneyShop Card işlemlerinde kart ID'si
-  cardId String?
+  cardId          String?
 
   card Card? @relation(fields: [cardId], references: [id], onDelete: SetNull)
 
@@ -318,31 +328,31 @@ model Budget {
 // =============================================
 
 model RecurringTransaction {
-  id            String          @id @default(cuid())
-  userId        String
-  accountId     String
-  categoryId    String?
-  type          TransactionType @default(EXPENSE)
-  amount        Decimal         @db.Decimal(19, 4)
-  currency      String   @default("TRY")
-  description   String?
-  frequency     String                        // DAILY | WEEKLY | BIWEEKLY | MONTHLY | QUARTERLY | YEARLY
-  intervalCount Int      @default(1)           // Her N periyotta bir
-  dayOfMonth    Int?                           // Ayın kaçında (MONTHLY/QUARTERLY/YEARLY için)
-  dayOfWeek     Int?                           // Haftanın kaçıncı günü (WEEKLY için, 0=Pazar)
-  startDate     DateTime
-  endDate       DateTime?                      // null = süresiz
-  nextDate      DateTime                       // Bir sonraki işlem tarihi
-  lastProcessed DateTime?
-  status        String   @default("ACTIVE")    // ACTIVE | PAUSED | COMPLETED | CANCELLED
-  totalOccurrences Int?                          // Toplam tekrar sayısı (null=sınırsız)
-  occurrenceCount Int    @default(0)            // Gerçekleşen tekrar sayısı
-  transferRecipientName  String?                // TRANSFER için alıcı adı
-  transferRecipientIban  String?                // TRANSFER için IBAN
-  transferRecipientBank  String?                // TRANSFER için banka
-  recipientUserId String?                       // MoneyShop içi transfer alıcı ID
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id                    String          @id @default(cuid())
+  userId                String
+  accountId             String
+  categoryId            String?
+  type                  TransactionType @default(EXPENSE)
+  amount                Decimal         @db.Decimal(19, 4)
+  currency              String          @default("TRY")
+  description           String?
+  frequency             String // DAILY | WEEKLY | BIWEEKLY | MONTHLY | QUARTERLY | YEARLY
+  intervalCount         Int             @default(1) // Her N periyotta bir
+  dayOfMonth            Int? // Ayın kaçında (MONTHLY/QUARTERLY/YEARLY için)
+  dayOfWeek             Int? // Haftanın kaçıncı günü (WEEKLY için, 0=Pazar)
+  startDate             DateTime
+  endDate               DateTime? // null = süresiz
+  nextDate              DateTime // Bir sonraki işlem tarihi
+  lastProcessed         DateTime?
+  status                String          @default("ACTIVE") // ACTIVE | PAUSED | COMPLETED | CANCELLED
+  totalOccurrences      Int? // Toplam tekrar sayısı (null=sınırsız)
+  occurrenceCount       Int             @default(0) // Gerçekleşen tekrar sayısı
+  transferRecipientName String? // TRANSFER için alıcı adı
+  transferRecipientIban String? // TRANSFER için IBAN
+  transferRecipientBank String? // TRANSFER için banka
+  recipientUserId       String? // MoneyShop içi transfer alıcı ID
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
 
   user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   account  FinancialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
@@ -363,8 +373,8 @@ model PushSubscription {
   id        String   @id @default(cuid())
   userId    String
   endpoint  String   @unique
-  p256dh    String                        // Public key (push message encryption)
-  auth      String                        // Auth secret (push message encryption)
+  p256dh    String // Public key (push message encryption)
+  auth      String // Auth secret (push message encryption)
   userAgent String?
   createdAt DateTime @default(now())
 
@@ -375,17 +385,17 @@ model PushSubscription {
 }
 
 model PushNotificationSetting {
-  id        String   @id @default(cuid())
-  userId    String   @unique
-  enabled   Boolean  @default(false)      // Master toggle
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  enabled            Boolean  @default(false) // Master toggle
   // Event toggles
-  onTransaction  Boolean @default(true)   // Yeni işlem eklendiğinde
-  onTransfer     Boolean @default(true)   // Para transferi gerçekleştiğinde
-  onBudgetAlert  Boolean @default(true)   // Bütçe limiti aşıldığında
-  onMonthlyReport Boolean @default(false) // Aylık özet rapor
-  onLargeTransaction Boolean @default(true) // Yüksek tutarlı işlem (>10000)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  onTransaction      Boolean  @default(true) // Yeni işlem eklendiğinde
+  onTransfer         Boolean  @default(true) // Para transferi gerçekleştiğinde
+  onBudgetAlert      Boolean  @default(true) // Bütçe limiti aşıldığında
+  onMonthlyReport    Boolean  @default(false) // Aylık özet rapor
+  onLargeTransaction Boolean  @default(true) // Yüksek tutarlı işlem (>10000)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -397,26 +407,26 @@ model PushNotificationSetting {
 // =============================================
 
 model Card {
-  id            String   @id @default(cuid())
-  userId        String
-  cardType      String   @default("STANDARD")     // STANDARD | SILVER | GOLD
-  cardNumber    String   @unique                   // Şifrelenmiş kart numarası
-  cardHolderName String
-  expiryMonth   Int
-  expiryYear    Int
-  cvv           String                             // Şifrelenmiş CVV
-  status        String   @default("ACTIVE")        // ACTIVE | BLOCKED | CANCELLED | PENDING
-  dailyLimit    Decimal  @default(5000) @db.Decimal(19, 4)
-  monthlyLimit  Decimal  @default(50000) @db.Decimal(19, 4)
-  currentDailySpent  Decimal @default(0) @db.Decimal(19, 4)
-  currentMonthlySpent Decimal @default(0) @db.Decimal(19, 4)
-  balance       Decimal  @default(0) @db.Decimal(19, 4)
-  currency      String   @default("IQD")
-  issuedAt      DateTime @default(now())
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id                  String   @id @default(cuid())
+  userId              String
+  cardType            String   @default("STANDARD") // STANDARD | SILVER | GOLD
+  cardNumber          String   @unique // Şifrelenmiş kart numarası
+  cardHolderName      String
+  expiryMonth         Int
+  expiryYear          Int
+  cvv                 String // Şifrelenmiş CVV
+  status              String   @default("ACTIVE") // ACTIVE | BLOCKED | CANCELLED | PENDING
+  dailyLimit          Decimal  @default(5000) @db.Decimal(19, 4)
+  monthlyLimit        Decimal  @default(50000) @db.Decimal(19, 4)
+  currentDailySpent   Decimal  @default(0) @db.Decimal(19, 4)
+  currentMonthlySpent Decimal  @default(0) @db.Decimal(19, 4)
+  balance             Decimal  @default(0) @db.Decimal(19, 4)
+  currency            String   @default("IQD")
+  issuedAt            DateTime @default(now())
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   transactions Transaction[]
 
   @@index([userId])
@@ -429,18 +439,18 @@ model Card {
 // =============================================
 
 model EmailNotificationSetting {
-  id        String   @id @default(cuid())
-  userId    String   @unique
-  email     String                        // Bildirimlerin gönderileceği e-posta adresi
-  enabled   Boolean  @default(false)      // Master toggle
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  email              String // Bildirimlerin gönderileceği e-posta adresi
+  enabled            Boolean  @default(false) // Master toggle
   // Event toggles
-  onTransaction Boolean @default(true)    // Yeni işlem eklendiğinde
-  onTransfer    Boolean @default(true)    // Para transferi gerçekleştiğinde
-  onBudgetAlert Boolean @default(true)    // Bütçe limiti aşıldığında
-  onMonthlyReport Boolean @default(false) // Aylık özet rapor
-  onLargeTransaction Boolean @default(true) // Yüksek tutarlı işlem (>10000)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  onTransaction      Boolean  @default(true) // Yeni işlem eklendiğinde
+  onTransfer         Boolean  @default(true) // Para transferi gerçekleştiğinde
+  onBudgetAlert      Boolean  @default(true) // Bütçe limiti aşıldığında
+  onMonthlyReport    Boolean  @default(false) // Aylık özet rapor
+  onLargeTransaction Boolean  @default(true) // Yüksek tutarlı işlem (>10000)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -450,12 +460,12 @@ model EmailNotificationSetting {
 model EmailLog {
   id        String   @id @default(cuid())
   userId    String
-  to        String                        // Alıcı e-posta adresi
-  subject   String                        // E-posta konusu
-  body      String   @db.Text             // E-posta içeriği (düz metin)
-  event     String                        // TRANSACTION | TRANSFER | BUDGET_ALERT | MONTHLY_REPORT | TEST
-  status    String   @default("SENT")     // SENT | FAILED
-  error     String?                       // Hata mesajı (varsa)
+  to        String // Alıcı e-posta adresi
+  subject   String // E-posta konusu
+  body      String   @db.Text // E-posta içeriği (düz metin)
+  event     String // TRANSACTION | TRANSFER | BUDGET_ALERT | MONTHLY_REPORT | TEST
+  status    String   @default("SENT") // SENT | FAILED
+  error     String? // Hata mesajı (varsa)
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -468,12 +478,12 @@ model EmailLog {
 model SmsLog {
   id        String   @id @default(cuid())
   userId    String
-  phone     String                        // Alıcı telefon numarası
-  message   String   @db.Text             // SMS içeriği
-  event     String                        // VERIFICATION | TRANSACTION | TRANSFER | ALERT | TEST
-  status    String   @default("SENT")     // SENT | FAILED
-  sid       String?                       // Twilio Message SID (varsa)
-  error     String?                       // Hata mesajı (varsa)
+  phone     String // Alıcı telefon numarası
+  message   String   @db.Text // SMS içeriği
+  event     String // VERIFICATION | TRANSACTION | TRANSFER | ALERT | TEST
+  status    String   @default("SENT") // SENT | FAILED
+  sid       String? // Twilio Message SID (varsa)
+  error     String? // Hata mesajı (varsa)
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -514,20 +524,20 @@ model Beneficiary {
 // =============================================
 
 model SavingsGoal {
-  id            String   @id @default(cuid())
+  id            String    @id @default(cuid())
   userId        String
   name          String
   description   String?
-  targetAmount  Decimal  @db.Decimal(19, 4)
-  currentAmount Decimal  @default(0) @db.Decimal(19, 4)
-  currency      String   @default("TRY")
-  icon          String?  @default("piggy-bank")
-  color         String?  @default("#10b981")
+  targetAmount  Decimal   @db.Decimal(19, 4)
+  currentAmount Decimal   @default(0) @db.Decimal(19, 4)
+  currency      String    @default("TRY")
+  icon          String?   @default("piggy-bank")
+  color         String?   @default("#10b981")
   deadline      DateTime?
-  isCompleted   Boolean  @default(false)
+  isCompleted   Boolean   @default(false)
   completedAt   DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -541,23 +551,23 @@ model SavingsGoal {
 // =============================================
 
 model Installment {
-  id            String   @id @default(cuid())
-  userId        String
-  accountId     String
-  categoryId    String?
-  title         String                        // Taksit açıklaması (ör: "iPhone 15 Pro Max")
-  totalAmount   Decimal  @db.Decimal(19, 4)   // Toplam tutar
-  monthlyAmount Decimal  @db.Decimal(19, 4)   // Aylık taksit tutarı
-  totalPayments Int                           // Toplam taksit sayısı
-  paidPayments  Int      @default(0)          // Ödenen taksit sayısı
-  currency      String   @default("TRY")
-  startDate     DateTime                      // İlk taksit tarihi
-  nextPaymentDate DateTime                    // Bir sonraki ödeme tarihi
-  status        String   @default("ACTIVE")   // ACTIVE | COMPLETED | CANCELLED
-  merchantName  String?                       // Üye işyeri adı
-  notes         String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id              String   @id @default(cuid())
+  userId          String
+  accountId       String
+  categoryId      String?
+  title           String // Taksit açıklaması (ör: "iPhone 15 Pro Max")
+  totalAmount     Decimal  @db.Decimal(19, 4) // Toplam tutar
+  monthlyAmount   Decimal  @db.Decimal(19, 4) // Aylık taksit tutarı
+  totalPayments   Int // Toplam taksit sayısı
+  paidPayments    Int      @default(0) // Ödenen taksit sayısı
+  currency        String   @default("TRY")
+  startDate       DateTime // İlk taksit tarihi
+  nextPaymentDate DateTime // Bir sonraki ödeme tarihi
+  status          String   @default("ACTIVE") // ACTIVE | COMPLETED | CANCELLED
+  merchantName    String? // Üye işyeri adı
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   account  FinancialAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
@@ -577,16 +587,16 @@ model Installment {
 model SupportTicket {
   id          String   @id @default(cuid())
   userId      String
-  subject     String                        // Konu
-  description String   @db.Text             // Açıklama
-  category    String   @default("GENERAL")  // GENERAL | ACCOUNT | TRANSACTION | CARD | TECHNICAL | OTHER
-  priority    String   @default("MEDIUM")   // LOW | MEDIUM | HIGH | URGENT
-  status      String   @default("OPEN")     // OPEN | IN_PROGRESS | WAITING | RESOLVED | CLOSED
-  assignedTo  String?                       // Atanan yönetici
+  subject     String // Konu
+  description String   @db.Text // Açıklama
+  category    String   @default("GENERAL") // GENERAL | ACCOUNT | TRANSACTION | CARD | TECHNICAL | OTHER
+  priority    String   @default("MEDIUM") // LOW | MEDIUM | HIGH | URGENT
+  status      String   @default("OPEN") // OPEN | IN_PROGRESS | WAITING | RESOLVED | CLOSED
+  assignedTo  String? // Atanan yönetici
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  user     User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   messages SupportMessage[]
 
   @@index([userId])
@@ -601,7 +611,7 @@ model SupportMessage {
   ticketId  String
   userId    String
   message   String   @db.Text
-  isStaff   Boolean  @default(false)       // Çalışan mesajı mı?
+  isStaff   Boolean  @default(false) // Çalışan mesajı mı?
   createdAt DateTime @default(now())
 
   ticket SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
@@ -613,25 +623,25 @@ model SupportMessage {
 }
 
 model TransactionTemplate {
-  id              String   @id @default(cuid())
+  id              String          @id @default(cuid())
   userId          String
-  name            String                          // Şablon adı (ör: "Kira Ödemesi")
+  name            String // Şablon adı (ör: "Kira Ödemesi")
   type            TransactionType @default(TRANSFER)
-  amount          Decimal  @db.Decimal(19, 4)
-  currency        String   @default("IQD")
+  amount          Decimal         @db.Decimal(19, 4)
+  currency        String          @default("IQD")
   description     String?
   recipientName   String?
   recipientIban   String?
   recipientBank   String?
-  recipientUserId String?                         // MoneyShop içi transfer
+  recipientUserId String? // MoneyShop içi transfer
   categoryId      String?
-  isFavorite      Boolean  @default(false)
-  usageCount      Int      @default(0)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  isFavorite      Boolean         @default(false)
+  usageCount      Int             @default(0)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
 
-  user     User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  category Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([isFavorite])
@@ -649,6 +659,61 @@ enum SplitBillStatus {
   CANCELLED
 }
 
+// =============================================
+// Yeni Eklenen Modeller
+// =============================================
+
+enum NotificationType {
+  TRANSACTION
+  TRANSFER
+  BUDGET_ALERT
+  SYSTEM
+  SECURITY
+  PROMOTION
+}
+
+enum AnnouncementStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum KycStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  EXPIRED
+}
+
+enum KycDocumentType {
+  ID_CARD
+  PASSPORT
+  DRIVERS_LICENSE
+  UTILITY_BILL
+  BANK_STATEMENT
+  SELFIE
+  OTHER
+}
+
+enum ReferralStatus {
+  PENDING
+  COMPLETED
+  EXPIRED
+}
+
+enum ContractStatus {
+  DRAFT
+  ACTIVE
+  TERMINATED
+  EXPIRED
+}
+
+enum DeviceStatus {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+}
+
 model SplitBill {
   id          String          @id @default(cuid())
   userId      String
@@ -657,12 +722,12 @@ model SplitBill {
   totalAmount Decimal         @db.Decimal(19, 4)
   currency    String          @default("IQD")
   status      SplitBillStatus @default(PENDING)
-  category    String?         // Yemek, Ulaşım, Konaklama, vb.
+  category    String? // Yemek, Ulaşım, Konaklama, vb.
   date        DateTime        @default(now())
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
 
-  user         User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
   participants SplitBillParticipant[]
 
   @@index([userId])
@@ -672,19 +737,328 @@ model SplitBill {
 }
 
 model SplitBillParticipant {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   splitBillId String
-  name        String                          // Katılımcı adı
-  email       String?                         // E-posta (opsiyonel)
-  userId      String?                         // MoneyShop kullanıcısı ise
-  amount      Decimal  @db.Decimal(19, 4)     // Ödenmesi gereken tutar
-  isPaid      Boolean  @default(false)        // Ödeme durumu
-  paidAt      DateTime?                       // Ödeme tarihi
-  createdAt   DateTime @default(now())
+  name        String // Katılımcı adı
+  email       String? // E-posta (opsiyonel)
+  userId      String? // MoneyShop kullanıcısı ise
+  amount      Decimal   @db.Decimal(19, 4) // Ödenmesi gereken tutar
+  isPaid      Boolean   @default(false) // Ödeme durumu
+  paidAt      DateTime? // Ödeme tarihi
+  createdAt   DateTime  @default(now())
 
   splitBill SplitBill @relation(fields: [splitBillId], references: [id], onDelete: Cascade)
 
   @@index([splitBillId])
   @@index([userId])
   @@map("split_bill_participants")
+}
+
+// =============================================
+// Uygulama İçi Bildirimler (In-App Notifications)
+// =============================================
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType @default(SYSTEM)
+  title     String
+  message   String           @db.Text
+  link      String? // Yönlendirilecek sayfa URL'i
+  isRead    Boolean          @default(false)
+  readAt    DateTime?
+  metadata  Json?            @default("{}") // Ekstra veri (işlem ID, tutar vb.)
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, isRead])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+// =============================================
+// Admin Duyuruları (Announcements)
+// =============================================
+
+model Announcement {
+  id        String             @id @default(cuid())
+  title     String
+  content   String             @db.Text
+  type      String             @default("INFO") // INFO | WARNING | MAINTENANCE | UPDATE
+  status    AnnouncementStatus @default(DRAFT)
+  priority  Int                @default(0) // Yüksek öncelik = yüksek sayı
+  targetUrl String? // Daha fazla bilgi linki
+  startsAt  DateTime?
+  expiresAt DateTime?
+  createdBy String? // Oluşturan admin ID
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+
+  @@index([status])
+  @@index([expiresAt])
+  @@map("announcements")
+}
+
+// =============================================
+// KYC Belge Saklama (Know Your Customer)
+// =============================================
+
+model KycDocument {
+  id              String          @id @default(cuid())
+  userId          String
+  type            KycDocumentType
+  status          KycStatus       @default(PENDING)
+  fileUrl         String          @db.Text // Şifrelenmiş dosya URL'i
+  fileName        String // Orijinal dosya adı
+  fileSize        Int? // Bayt cinsinden boyut
+  mimeType        String? // application/jpeg, application/pdf vb.
+  rejectionReason String? // Reddetme nedeni (varsa)
+  reviewedBy      String? // İnceleyen admin ID
+  reviewedAt      DateTime?
+  expiresAt       DateTime? // Belge geçerlilik süresi
+  metadata        Json?           @default("{}") // OCR sonuçları, ek bilgiler
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([type])
+  @@index([status])
+  @@map("kyc_documents")
+}
+
+// =============================================
+// Zamanlanmış Raporlar (Scheduled Reports)
+// =============================================
+
+model ScheduledReport {
+  id           String   @id @default(cuid())
+  userId       String
+  name         String
+  type         String   @default("MONTHLY") // MONTHLY | WEEKLY | CUSTOM
+  format       String   @default("PDF") // PDF | CSV | XLSX
+  frequency    String   @default("MONTHLY") // DAILY | WEEKLY | MONTHLY
+  dayOfMonth   Int? // Ayın hangi günü (1-31)
+  dayOfWeek    Int? // Haftanın hangi günü (0-6, Pazar=0)
+  isEnabled    Boolean  @default(true)
+  lastSentAt   DateTime?
+  nextSendAt   DateTime?
+  filters      Json?    @default("{}") // Filtre parametreleri
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isEnabled])
+  @@index([nextSendAt])
+  @@map("scheduled_reports")
+}
+
+// =============================================
+// Başarısız Giriş Takibi (Login Attempts)
+// =============================================
+
+model LoginAttempt {
+  id            String   @id @default(cuid())
+  email         String
+  ip            String?
+  userAgent     String?
+  success       Boolean  @default(false)
+  failureReason String? // INVALID_CREDENTIALS | ACCOUNT_LOCKED | 2FA_FAILED | etc.
+  country       String? // IP'den türetilen ülke
+  city          String? // IP'den türetilen şehir
+  deviceId      String? // Cihaz parmak izi
+  createdAt     DateTime @default(now())
+  user          User?    @relation(fields: [userId], references: [id])
+  userId        String?
+
+  @@index([email])
+  @@index([email, createdAt])
+  @@index([ip])
+  @@index([createdAt])
+  @@map("login_attempts")
+}
+
+// =============================================
+// Referans/Davet Sistemi (Referrals)
+// =============================================
+
+model Referral {
+  id           String         @id @default(cuid())
+  referrerId   String // Davet eden kullanıcı
+  referredId   String?        @unique // Davet edilen kullanıcı (kayıt olduktan sonra)
+  code         String         @unique // Benzersiz davet kodu
+  status       ReferralStatus @default(PENDING)
+  rewardAmount Decimal        @default(0) @db.Decimal(19, 4) // Verilen ödül tutarı
+  rewardType   String? // CREDIT | PREMIUM | DISCOUNT
+  notes       String?
+  createdAt    DateTime       @default(now())
+  completedAt  DateTime?
+  expiresAt    DateTime?
+
+  referrer User  @relation("ReferrerUser", fields: [referrerId], references: [id], onDelete: Cascade)
+  referred User? @relation("ReferredUser", fields: [referredId], references: [id], onDelete: SetNull)
+
+  @@index([referrerId])
+  @@index([referredId])
+  @@index([code])
+  @@index([status])
+  @@map("referrals")
+}
+
+// =============================================
+// Döviz Kuru Geçmişi (Exchange Rate History)
+// =============================================
+
+model ExchangeRate {
+  id            String   @id @default(cuid())
+  baseCurrency  String // Çevrimenin temel para birimi (ör: "USD")
+  quoteCurrency String // Çevrimenin hedef para birimi (ör: "IQD")
+  rate          Decimal  @db.Decimal(19, 8) // Kur oranı
+  source        String   @default("manual") // CBI | MANUAL | API
+  previousRate  Decimal? @db.Decimal(19, 8) // Bir önceki kur (değişim hesaplaması için)
+  changePercent Decimal? @db.Decimal(5, 2) // Yüzde değişim
+  createdAt     DateTime @default(now())
+
+  @@unique([baseCurrency, quoteCurrency, createdAt])
+  @@index([baseCurrency, quoteCurrency])
+  @@index([createdAt])
+  @@map("exchange_rates")
+}
+
+// =============================================
+// İşlem Ücreti/Komisyon (Fees & Commissions)
+// =============================================
+
+model Fee {
+  id              String   @id @default(cuid())
+  name            String // Ücret adı (ör: "Transfer Ücreti", "Döviz Çevrim")
+  type            String // TRANSFER | EXCHANGE | WITHDRAWAL | DEPOSIT | CARD_ISSUANCE
+  calculationType String   @default("FIXED") // FIXED | PERCENTAGE | TIERED
+  rate            Decimal  @default(0) @db.Decimal(19, 4) // Sabit tutar veya yüzde
+  minFee          Decimal  @default(0) @db.Decimal(19, 4) // Minimum ücret
+  maxFee          Decimal? @db.Decimal(19, 4) // Maksimum ücret (null=sınırsız)
+  currency        String   @default("TRY")
+  tierRules       Json? // Kademeli ücret kuralları [{min, max, rate}]
+  isActive        Boolean  @default(true)
+  description     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([type])
+  @@index([isActive])
+  @@map("fees")
+}
+
+// =============================================
+// API Anahtarları (API Keys)
+// =============================================
+
+model ApiKey {
+  id          String    @id @default(cuid())
+  userId      String
+  name        String // Anahtar adı (ör: "Production App")
+  keyHash     String    @unique // Hashlenmiş API anahtarı
+  keyPrefix   String // İlk 8 karakter (gösterim için, "ms_live_")
+  permissions Json      @default("[]") // İzinler: ["read:accounts", "write:transactions"]
+  rateLimit   Int       @default(1000) // Dakika başına istek limiti
+  lastUsedAt  DateTime?
+  expiresAt   DateTime? // null=süresiz
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([keyHash])
+  @@index([isActive])
+  @@map("api_keys")
+}
+
+// =============================================
+// Webhook Endpoint Yönetimi (Webhooks)
+// =============================================
+
+model Webhook {
+  id              String    @id @default(cuid())
+  userId          String
+  url             String    @db.Text // Webhook URL'i
+  secret          String // HMAC imza anahtarı
+  events          Json      @default("[]") // Dinlenen olaylar: ["transaction.created", "transfer.completed"]
+  isActive        Boolean   @default(true)
+  description     String?
+  failCount       Int       @default(0) // Ardışık başarısız istek sayısı
+  lastTriggeredAt DateTime?
+  lastStatus      Int? // Son HTTP durum kodu
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isActive])
+  @@map("webhooks")
+}
+
+// =============================================
+// Cihaz Fingerprinting (Devices)
+// =============================================
+
+model Device {
+  id          String       @id @default(cuid())
+  userId      String
+  fingerprint String       @unique // Cihaz parmak izi (hashlenmiş)
+  name        String? // Kullanıcı dostu cihaz adı (ör: "iPhone 15 Pro")
+  type        String? // MOBILE | TABLET | DESKTOP | UNKNOWN
+  os          String? // iOS 17, Android 14, Windows 11
+  browser     String? // Safari, Chrome, Firefox
+  ip          String?
+  lastSeenAt  DateTime     @default(now())
+  status      DeviceStatus @default(ACTIVE)
+  isTrusted   Boolean      @default(false) // Güvenilir cihaz
+  pushToken   String? // Push bildirim token'ı
+  metadata    Json?        @default("{}") // Ek cihaz bilgileri
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, status])
+  @@index([fingerprint])
+  @@map("devices")
+}
+
+// =============================================
+// Kullanıcı Sözleşmeleri (Contracts/Agreements)
+// =============================================
+
+model Contract {
+  id        String         @id @default(cuid())
+  userId    String
+  title     String // Sözleşme başlığı
+  type      String         @default("TERMS_OF_SERVICE") // TERMS_OF_SERVICE | PRIVACY_POLICY | KYC_CONSENT | CARD_AGREEMENT
+  version   String // Sözleşme versiyonu (ör: "1.0", "2.1")
+  content   String         @db.Text // Sözleşme içeriği (HTML veya Markdown)
+  status    ContractStatus @default(ACTIVE)
+  ipAddress String? // İmza anındaki IP
+  userAgent String? // İmza anındaki tarayıcı
+  signedAt  DateTime? // İmza tarihi
+  expiresAt DateTime? // Geçerlilik süresi
+  metadata  Json?          @default("{}") // Ek bilgiler
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, type])
+  @@index([type, version])
+  @@index([status])
+  @@map("contracts")
 }

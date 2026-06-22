@@ -32,6 +32,14 @@ import {
   Headphones,
   Bookmark,
   Users,
+  FileCheck,
+  Gift,
+  Smartphone,
+  FileSignature,
+  Key,
+  Webhook,
+  TrendingUp,
+  ShieldAlert,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { t } from "@/lib/dashboard-i18n";
@@ -56,6 +64,15 @@ const allNavItems: { href: string; labelKey: string; icon: React.ElementType }[]
   { href: ROUTES.REPORTS, labelKey: "nav.reports", icon: FileText },
   { href: ROUTES.ADMIN, labelKey: "nav.adminPanel", icon: Shield },
   { href: ROUTES.ANNOUNCEMENTS, labelKey: "nav.announcements", icon: Bell },
+  { href: ROUTES.NOTIFICATIONS, labelKey: "nav.notifications", icon: Bell },
+  { href: ROUTES.KYC_DOCUMENTS, labelKey: "nav.kycDocuments", icon: FileCheck },
+  { href: ROUTES.REFERRALS, labelKey: "nav.referrals", icon: Gift },
+  { href: ROUTES.DEVICES, labelKey: "nav.devices", icon: Smartphone },
+  { href: ROUTES.CONTRACTS, labelKey: "nav.contracts", icon: FileSignature },
+  { href: ROUTES.API_KEYS, labelKey: "nav.apiKeys", icon: Key },
+  { href: ROUTES.WEBHOOKS, labelKey: "nav.webhooks", icon: Webhook },
+  { href: ROUTES.EXCHANGE_RATES_HISTORY, labelKey: "nav.exchangeHistory", icon: TrendingUp },
+  { href: ROUTES.LOGIN_ATTEMPTS, labelKey: "nav.loginAttempts", icon: ShieldAlert },
   { href: ROUTES.SMS_SEND, labelKey: "nav.smsSend", icon: MessageSquare },
   { href: ROUTES.PROFILE, labelKey: "nav.profile", icon: User },
 ];

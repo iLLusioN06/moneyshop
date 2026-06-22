@@ -78,8 +78,13 @@ export async function DELETE(request: Request) {
       );
     }
 
-    const body = await request.json().catch(() => ({}));
-    const endpoint = body.endpoint;
+    let endpoint: string | undefined;
+    try {
+      const body = await request.json();
+      endpoint = body.endpoint;
+    } catch {
+      // body couldn't be parsed
+    }
 
     if (!endpoint) {
       return NextResponse.json(

@@ -6,9 +6,10 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { sendPushToAllSubscriptions } from "@/lib/push-notifications";
+import { withRateLimit } from "@/lib/rate-limit";
 
 // POST /api/notifications/push/send - Test push bildirimi gönder (sadece admin)
-export async function POST(request: Request) {
+export const POST = withRateLimit({ maxRequests: 5, windowMs: 60_000 }, async (request: Request) => {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -52,4 +53,4 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-}
+});

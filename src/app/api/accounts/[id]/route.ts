@@ -11,7 +11,6 @@ import { apiHandler, NotFoundError, successResponse } from "@/lib/api-handler";
 // GET /api/accounts/[id] - Hesap detayı
 export const GET = apiHandler(async (_req, context) => {
   const session = await auth();
-  const { id } = (context as { params: Promise<{ id: string }> }).params;
   const params = await (context as { params: Promise<{ id: string }> }).params;
 
   const account = await prisma.financialAccount.findFirst({
@@ -50,7 +49,7 @@ export const PUT = apiHandler(async (req, context) => {
 
   const meta = getRequestMetadata(req);
   await createAuditLog({
-    userId: session!.user!.id,
+    userId: session!.user!.id as string,
     action: "UPDATE",
     entity: "ACCOUNT",
     entityId: id,
@@ -79,7 +78,7 @@ export const DELETE = apiHandler(async (_req, context) => {
 
   const meta = getRequestMetadata(_req);
   await createAuditLog({
-    userId: session!.user!.id,
+    userId: session!.user!.id as string,
     action: "DEACTIVATE",
     entity: "ACCOUNT",
     entityId: id,

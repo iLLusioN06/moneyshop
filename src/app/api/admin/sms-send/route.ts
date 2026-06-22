@@ -6,9 +6,10 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { sendSms, logSms } from "@/lib/sms";
+import { withRateLimit } from "@/lib/rate-limit";
 
 // POST /api/admin/sms-send
-export async function POST(req: Request) {
+export const POST = withRateLimit({ maxRequests: 5, windowMs: 60_000 }, async (req: Request) => {
   try {
     const session = await auth();
     if (!session?.user?.id || session.user.role !== "ADMIN") {
@@ -80,4 +81,4 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
-}
+});

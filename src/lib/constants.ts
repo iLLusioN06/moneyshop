@@ -33,6 +33,15 @@ export const ROUTES = {
   SUPPORT: "/support",
   TEMPLATES: "/templates",
   SPLIT_BILLS: "/split-bills",
+  NOTIFICATIONS: "/notifications",
+  KYC_DOCUMENTS: "/kyc/documents",
+  REFERRALS: "/referrals",
+  DEVICES: "/devices",
+  CONTRACTS: "/contracts",
+  API_KEYS: "/api-keys",
+  WEBHOOKS: "/webhooks",
+  EXCHANGE_RATES_HISTORY: "/exchange-rates/history",
+  LOGIN_ATTEMPTS: "/login-attempts",
 } as const;
 
 // API route'ları

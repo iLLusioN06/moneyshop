@@ -66,7 +66,10 @@ export async function sendEmail({ to, subject, text, html, attachments }: SendEm
       html: html || text.replace(/\n/g, "<br>"),
       attachments,
     });
-    return { success: true, id: result.data?.id };
+    if (result?.error) {
+      return { success: false, error: String(result.error) };
+    }
+    return { success: true, id: result?.data?.id };
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("[email] Send failed:", message);

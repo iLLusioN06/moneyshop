@@ -137,7 +137,7 @@ export function apiHandler(
     } catch (error) {
       // ApiError (özel hatalar)
       if (error instanceof ApiError) {
-        return errorResponse(error.statusCode, error.message, error.code, error.details);
+        return errorResponse(error.statusCode, error.message, error.code, (error as ValidationError).details);
       }
 
       // Prisma hataları

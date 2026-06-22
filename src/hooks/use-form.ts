@@ -1,10 +1,9 @@
 import { useForm as useReactHookForm, type UseFormProps, type FieldValues, type UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { ZodError } from "zod";
+import type { ZodError, ZodType } from "zod";
 
 export interface UseFormOptions<T extends FieldValues> extends Omit<UseFormProps<T>, "resolver"> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  schema: any;
+  schema: ZodType<T>;
 }
 
 export interface UseFormResult<T extends FieldValues> extends UseFormReturn<T> {
@@ -12,7 +11,6 @@ export interface UseFormResult<T extends FieldValues> extends UseFormReturn<T> {
 }
 
 export function useForm<T extends FieldValues>({ schema, ...options }: UseFormOptions<T>): UseFormResult<T> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const form = useReactHookForm<T>({
     ...options,
     resolver: zodResolver(schema as any) as any,

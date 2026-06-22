@@ -1,5 +1,47 @@
 import "@testing-library/jest-dom";
 
+// ─── Polyfill TextEncoder/TextDecoder for Prisma ──
+if (typeof globalThis.TextEncoder === "undefined") {
+  const { TextEncoder, TextDecoder } = require("util");
+  globalThis.TextEncoder = TextEncoder;
+  globalThis.TextDecoder = TextDecoder as typeof globalThis.TextDecoder;
+}
+
+// ─── Polyfill Request for jsdom (used by NextRequest) ──
+if (typeof globalThis.Request === "undefined") {
+  // Minimal Request polyfill for testing
+  class MockRequest {
+    private _url: string;
+    private _method: string;
+    private _body: string | null;
+    private _headers: Record<string, string>;
+
+    constructor(input: string | URL, init?: RequestInit) {
+      this._url = typeof input === "string" ? input : input.toString();
+      this._method = init?.method?.toUpperCase() || "GET";
+      this._body = init?.body as string | null || null;
+      const h = init?.headers as Record<string, string> | undefined;
+      this._headers = h || {};
+      if (!this._headers["Content-Type"] && this._body) {
+        this._headers["Content-Type"] = "application/json";
+      }
+    }
+
+    get url() { return this._url; }
+    get method() { return this._method; }
+    get headers() { return new Map(Object.entries(this._headers)); }
+
+    json() { return JSON.parse(this._body || "{}"); }
+    text() { return Promise.resolve(this._body || ""); }
+  }
+
+  globalThis.Request = MockRequest as unknown as typeof Request;
+}
+
+// ─── Test Environment Variables ───────────────────
+// Email (Resend) - email.ts module-level const RESEND_API_KEY import anında okunur
+process.env.RESEND_API_KEY = "re_test_key";
+
 // Polyfill Response for jsdom environment (used by NextResponse mock)
 if (typeof globalThis.Response === "undefined") {
   (globalThis as Record<string, unknown>).Response = class MockResponse {
@@ -7,8 +49,10 @@ if (typeof globalThis.Response === "undefined") {
     status: number;
     headers: Record<string, string>;
     ok: boolean;
+    private _body: string;
 
     constructor(body?: string | null, init?: ResponseInit) {
+      this._body = body || "";
       this.body = body || "";
       this.status = init?.status || 200;
       this.headers = (init?.headers as Record<string, string>) || {};
@@ -16,16 +60,20 @@ if (typeof globalThis.Response === "undefined") {
     }
 
     json() {
-      return JSON.parse(this.body);
+      return JSON.parse(this._body);
     }
 
     text() {
-      return this.body;
+      return this._body;
+    }
+
+    static json(data: unknown, init?: ResponseInit) {
+      return new MockResponse(JSON.stringify(data), init) as unknown as Response;
     }
   };
 }
 
-// Mock NextResponse for jsdom environment
+// Mock Next.js server modules for jsdom environment
 jest.mock("next/server", () => ({
   NextResponse: class MockNextResponse {
     static json(data: unknown, init?: ResponseInit) {
@@ -36,6 +84,15 @@ jest.mock("next/server", () => ({
     }
     constructor(body?: BodyInit, init?: ResponseInit) {
       return new Response(body, init);
+    }
+  },
+  NextRequest: class MockNextRequest extends Request {
+    public nextUrl: URL;
+    public cookies: Map<string, string>;
+    constructor(input: string | URL, init?: RequestInit) {
+      super(input, init);
+      this.nextUrl = new URL(input);
+      this.cookies = new Map();
     }
   },
 }));
